@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// Florida Man by Seth Parson aka Deadline
+// Florida Man by Deadline / CityXen
 //////////////////////////////////////////////////////////////////////////////////////
 //
 // NOTES:
@@ -11,25 +11,44 @@
 //////////////////////////////////////////////////////////////////////////////////////
 .const C_ROUTINE_MEM     = $080E
 .const C_LEVEL_ROUTINE   = $5000 // Load level into this area
-#import "../ddl_asm_c64/Deadline_Library.asm"
-#import "floridamanfont-charset.asm"
+*=$0f00
+#import "Constants.asm"
+#import "Disk.asm"
+#import "PrintSubRoutines.asm"
 #import "floridaman_vars.asm"
-.var mem_deadline_sprites = $A000
+#import "Joysticks.asm"
+.var mem_deadline_sprites = $4000
 *=mem_deadline_sprites "DeadlineSprites"
-#import "../ddl_asm_c64/CityXen_Sprites_Data.asm"
-.var mem_floridaman_sprites = $A1C0
+.byte 1,255,128,31,255,224,63,255,248,127,131,252,207,2,204,135,3,238,7,129,54,3,129,247,3,128,183,3,192,191,1,193
+.byte 111,3,225,239,3,225,223,1,227,254,1,211,254,1,221,254,1,251,252,1,247,252,3,255,248,7,255,240,127,255,192,12
+.byte 0,0,0,0,0,0,1,254,0,7,255,128,15,255,192,31,255,224,59,199,224,63,1,224,124,3,224,92,3,192,88,3
+.byte 194,120,7,130,112,15,6,120,126,6,63,216,28,63,240,52,29,225,248,15,255,112,15,255,224,7,255,192,1,255,0,12
+.byte 0,0,0,0,255,0,7,255,192,15,255,240,30,1,120,56,0,252,96,0,126,3,254,222,31,189,255,53,199,183,127,3
+.byte 251,94,1,255,94,0,255,92,0,239,122,0,127,126,0,255,55,129,175,63,199,255,31,255,191,15,255,239,3,255,7,12
+.byte 0,0,31,0,0,23,0,0,63,0,0,53,1,254,125,7,255,237,15,255,255,31,231,247,31,131,253,63,0,255,63,0
+.byte 251,126,0,125,126,0,109,123,0,125,127,0,125,117,192,255,63,251,255,31,255,255,15,255,227,7,255,255,0,255,143,12
+.byte 1,255,0,7,159,128,7,255,128,15,127,128,7,223,128,3,55,0,0,63,128,0,63,0,0,127,0,0,254,0,0,190
+.byte 0,0,252,0,0,248,0,1,248,0,1,216,0,3,184,96,3,227,208,2,254,120,3,255,240,3,255,176,1,247,192,12
+.byte 0,28,0,0,127,192,0,112,64,0,127,192,0,7,0,0,0,0,0,255,0,1,230,128,3,255,128,0,255,128,0,30
+.byte 128,0,63,0,0,127,0,0,250,0,1,252,0,3,232,0,3,236,0,3,255,128,3,198,192,1,253,128,0,239,0,12
+.byte 0,0,0,0,31,128,28,126,224,63,255,248,126,191,52,127,226,212,111,129,204,111,0,204,119,0,252,119,0,244,103,0
+.byte 244,103,0,236,103,1,200,125,1,216,121,3,176,121,7,224,123,7,192,127,15,128,127,30,0,127,28,0,62,48,0,12
+.var mem_floridaman_sprites = $41c0
 *=mem_floridaman_sprites "floridamansprites";
 #import "floridaman_sprites.asm"
-*=$CE00 "Data Tables"
+*=$1027 "Data Tables"
 #import "floridaman_data.asm"
+.var mem_floridaman_font = $10d0
+*=mem_floridaman_font "floridamanfont"
+#import "floridamanfont-charset.asm"
 //////////////////////////////////////////////////////////////////////////////////////
 // File stuff
-.file [name="prg_files/floridaman.prg", segments="Main,DDL,DefaultLevel"]
+.file [name="prg_files/floridaman.prg", segments="Main,Default"]
 .file [name="prg_files/0.prg", segments="DefaultLevel"]
 .file [name="prg_files/1.prg", segments="Level1"]
 .file [name="prg_files/2.prg", segments="Level2"]
 .disk [filename="floridaman.d64", name="FLORIDAMAN", id="2020!" ] {
-	[name="FLORIDAMAN", type="prg",  segments="Main,DDL,DefaultLevel"],
+	[name="FLORIDAMAN", type="prg",  segments="Main,Default"],
 	[name="----------------", type="rel"],
 	[name="0", type="prg", segments="DefaultLevel"],
 	[name="1", type="prg", segments="Level1"],
@@ -42,7 +61,7 @@ BasicUpstart(C_ROUTINE_MEM)
 *=C_ROUTINE_MEM "Main ROUTINE"
 program_start:
 	sei
-	DDL_Load_StringName("0",$50,$00)
+	Disk_Load_StringName("0",$50,$00)
   	jsr sub_initialize
   	jsr sub_title_screen
 	jsr sub_initialize_vars
@@ -359,7 +378,7 @@ set_filename_loop1:
 	PrintAtColor(19,5,var_filename,RED)
 	PrintStrAtColor(5,7,"filename:",WHITE)
 	PrintAtColor(14,7,var_filename,RED)
-	DDL_Load_MemName(var_filename,$50,$00)
+	Disk_Load_MemName(var_filename,$50,$00)
 	PrintAtRainbow(5,9,level_message) // show the loaded level message
 	// READ JOYSTICK 2, CHECK FOR FIRE BUTTON PRESS
 	PrintStrAtColor(5,11,"press fire to start",YELLOW)
@@ -448,17 +467,17 @@ do_hud:
 // Subroutine: Copy Florida Man FONT into VIC mem
 //////////////////////////////////////////////////////////////////////////////////////
 sub_copy_floridaman_font:
-	// copy the Florida Man font to the showing area from $4000 to $3800
+	// copy the Florida Man font
 	ldx #$00
 copy_fmf_loopz1:
-	lda $4000,x; sta $3800,x
-	lda $4100,x; sta $3900,x	
-	lda $4200,x; sta $3A00,x
-	lda $4300,x; sta $3B00,x
-	lda $4400,x; sta $3C00,x
-	lda $4500,x; sta $3D00,x
-	lda $4600,x; sta $3E00,x
-	lda $4700,x; sta $3F00,x
+	lda mem_floridaman_font,x; sta $3800,x
+	lda mem_floridaman_font+$100,x; sta $3900,x	
+	lda mem_floridaman_font+$200,x; sta $3A00,x
+	lda mem_floridaman_font+$300,x; sta $3B00,x
+	lda mem_floridaman_font+$400,x; sta $3C00,x
+	lda mem_floridaman_font+$500,x; sta $3D00,x
+	lda mem_floridaman_font+$600,x; sta $3E00,x
+	lda mem_floridaman_font+$700,x; sta $3F00,x
 	inx
 	bne copy_fmf_loopz1
 	rts

@@ -1,6 +1,5 @@
 // Exported using VChar64 v0.2.4
 // Total bytes: 2048
-.pc=$4000 "floridamanfont"
 charset:
 .byte $3c,$66,$6e,$6e,$60,$7e,$3e,$00,$3c,$66,$66,$7e,$66,$66,$66,$00	// 0
 .byte $7c,$66,$66,$7c,$66,$66,$7c,$00,$3e,$70,$60,$60,$60,$70,$3e,$00	// 16

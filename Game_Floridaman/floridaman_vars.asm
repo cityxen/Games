@@ -13,51 +13,50 @@
 .const C_MAX_Y_TILES     = 11
 .const C_CITYXEN_X_POS   = $6c
 .const C_CITYXEN_Y_POS   = $35
-.var sin_counter0  = $cd90
-.var sin_counter1  = $cd91
-.var sin_counter2  = $cd92
-.var sin_counter3  = $cd93
-.var sin_counter4  = $cd94
-.var sin_counter5  = $cd95
-.var sin_counter6  = $cd96
+.var sin_counter0  = $9e90
+.var sin_counter1  = $9e91
+.var sin_counter2  = $9e92
+.var sin_counter3  = $9e93
+.var sin_counter4  = $9e94
+.var sin_counter5  = $9e95
+.var sin_counter6  = $9e96
 //////////////////////////////////////////////////////////////////////////////////////
 // Vars
 // $0313 Unused (1 byte)
 // $032E-$032F Unused (2 bytes)
 // $03FC-$03FF (1020-1023) Unused (4 bytes).
-.var var_score      	 = $03FC // score takes up 4 bytes
+.var var_score      	 = $9f00 // score takes up 4 bytes
 // $07E8-$07F7 (2024-2039) Unused (16 bytes).
 
-// $02A7-$02FF (679-767) Unused (89 bytes).
-.var var_lives      	 = $02A7
-.var var_level           = $02A8
-.var var_timer      	 = $02A9
-.var var_monsters   	 = $02AA
-.var var_scroll_p   	 = $02AB
-.var var_scroll_x   	 = $02AC
-.var var_player_x   	 = $02AD
-.var var_player_y   	 = $02AE
-.var var_player_bullet_x = $02AF
-.var var_player_bullet_y = $02B0
-.var var_sprite_color_reg= $02B1
-.var var_fm_x_min        = $02B2
-.var var_fm_x_max        = $02B3
-.var var_fm_y_min        = $02B4
-.var var_fm_y_max        = $02B5
-.var var_sprite_0_msb    = $02B6
-.var var_sprite_1_msb    = $02B7
-.var var_sprite_2_msb    = $02B8
-.var var_sprite_3_msb    = $02B9
-.var var_sprite_4_msb    = $02BA
-.var var_sprite_5_msb    = $02BB
-.var var_sprite_6_msb    = $02BC
-.var var_sprite_7_msb    = $02BD
+.var var_filename        = $9f10 // 16 bytes for filename
 
-.var var_sprite_7_anim_timer = $02BE
-.var var_squirrely_stop  = $02BF
-.var var_squirrely_stop_timer = $02C0
+.var var_lives      	 = $9fA7
+.var var_level           = $9fA8
+.var var_timer      	 = $9fA9
+.var var_monsters   	 = $9fAA
+.var var_scroll_p   	 = $9fAB
+.var var_scroll_x   	 = $9fAC
+.var var_player_x   	 = $9fAD
+.var var_player_y   	 = $9fAE
+.var var_player_bullet_x = $9fAF
+.var var_player_bullet_y = $9fB0
+.var var_sprite_color_reg= $9fB1
+.var var_fm_x_min        = $9fB2
+.var var_fm_x_max        = $9fB3
+.var var_fm_y_min        = $9fB4
+.var var_fm_y_max        = $9fB5
+.var var_sprite_0_msb    = $9fB6
+.var var_sprite_1_msb    = $9fB7
+.var var_sprite_2_msb    = $9fB8
+.var var_sprite_3_msb    = $9fB9
+.var var_sprite_4_msb    = $9fBA
+.var var_sprite_5_msb    = $9fBB
+.var var_sprite_6_msb    = $9fBC
+.var var_sprite_7_msb    = $9fBD
 
-.var var_filename        = $02F0 // 16 bytes for filename
+.var var_sprite_7_anim_timer  = $9fBE
+.var var_squirrely_stop       = $9fBF
+.var var_squirrely_stop_timer = $9fC0
 
 .var level_list = List(C_MAX_LEVELS)
 .var level_goal = List(C_MAX_LEVELS)
