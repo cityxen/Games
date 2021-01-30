@@ -27,11 +27,11 @@
 .var music              = LoadSid("music/deadline1.sid")
 
 *=var_space "var_space"
-#import "../../Commodore64_Programming/include/Constants.asm"
-#import "../../Commodore64_Programming/include/Macros.asm"
-#import "../../Commodore64_Programming/include/SpriteManagement.asm"
-#import "../../Commodore64_Programming/include/PrintSubRoutines.asm"
-#import "../../Commodore64_Programming/include/Music.asm"
+#import "Constants.asm"
+#import "Macros.asm"
+#import "SpriteManagement.asm"
+#import "PrintSubRoutines.asm"
+#import "Music.asm"
 
 #import "cxngame_vars.asm"
 #import "cxngame_tiledefs.asm"
