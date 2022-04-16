@@ -6,4 +6,4 @@
 
     Optimized in 2022, and now available to you here.
 
-![efmm](https://raw.githubusercontent.com/cityxen/APMs/master/Games/Game_Escape/screenshot.png)
+![efmm](https://raw.githubusercontent.com/cityxen/Games/master/Game_Escape/screenshot.png)
