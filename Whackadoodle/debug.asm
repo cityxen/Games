@@ -4,7 +4,9 @@
 debug_stuff:
 	lda debug_mode
 	and #$01
-	beq dbo
+	bne !+
+	rts
+!:
 
 	lda JOYSTICK_PORT_1
 	PrintHex(0,0)
@@ -42,5 +44,4 @@ debug_stuff:
 	lda random_num
 	PrintHex(33,0)
 
-dbo:
 	rts

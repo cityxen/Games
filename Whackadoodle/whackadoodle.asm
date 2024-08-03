@@ -2,9 +2,10 @@
 // WHACKADOODLE for C64 by Deadline / CityXen 2024
 //////////////////////////////////////////////////////////////////////////////////////
 
-#import "../Commodore64_Programming/include/Constants.asm"
-#import "../Commodore64_Programming/include/Macros.asm"
-#import "../Commodore64_Programming/include/DrawPetMateScreen.asm"
+#import "../../Commodore64_Programming/include/Constants.asm"
+#import "../../Commodore64_Programming/include/Macros.asm"
+#import "../../Commodore64_Programming/include/PrintMacros.asm"
+#import "../../Commodore64_Programming/include/DrawPetMateScreen.asm"
 #import "wad_constants.asm"
 
 .file [name="wad-cxn-w.prg", segments="Main,PRG,Sprites,Screens,Music,SFX"]
@@ -34,10 +35,12 @@
 #import "petmate/qr_code.asm"
 
 *=$0801
-CityXenUpstart()
+CityXenUpstart(start)
 
 .segment PRG [allowOverlap]
 * = $34c0 "PRG"
+dev_play_music:
+.byte 0
 start:
 #import "start.asm"
 #import "main_loop.asm"

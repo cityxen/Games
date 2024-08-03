@@ -1,4 +1,10 @@
 //////////////////////////////////////////////////////////////////
+// some inline subroutines
+
+#import "../../Commodore64_Programming/include/sys.il.asm"
+#import "../../Commodore64_Programming/include/print.il.asm"
+
+//////////////////////////////////////////////////////////////////
 // some vars
 
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
@@ -85,3 +91,4 @@ hiscore_msg:
 
 meatloaf_hiscore_support:
 .byte 0
+

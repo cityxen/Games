@@ -75,9 +75,6 @@ faster_3:
 
 outfaster:
 
-
-	
-
 	// did_hit = 0 // timed out (figure out faction / if missed bad target = -1 life)
 	// did_hit = 1 // hit target +1 score
 	// did_hit = 2 // hit wrong target -1 score / -1 life
@@ -112,14 +109,13 @@ outfaster:
 	cmp #$05
 	bcs !gsd-
 	sta button_to_hit
-
 	cmp last_button
 	beq !gsd-
 
 !gsd:
 	jsr lda_random_kern
-	and #%00000111
-	cmp #$07
+	and #%00001111
+	cmp #$08
 	bcs !gsd-
 	sta doodle
 

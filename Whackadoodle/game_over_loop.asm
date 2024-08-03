@@ -12,21 +12,26 @@ game_over:
 	lda #music.startSong-1						//<- Here we get the startsong and init address from the sid file
 	jsr music.init
 
-	lda #$01
+	lda dev_play_music
 	sta play_music
 
 	jsr reset_timer1
 	jsr reset_timer2
+	jsr reset_timer3
 
 game_over_loop:
 
-	//jsr get_key
-	//cmp #KEY_F1
-	//bne !+
-	//lda #$00
-	//sta play_music
-	//rts
-	//!:
+	lda trig_3 
+	cmp #$03 // time out after 12 seconds
+	bne !+
+	jmp restart // go back to attract mode
+!:
+
+	jsr get_key
+	cmp #KEY_R
+	bne !+
+	jmp game_start
+!:
 
 !gol:
 	// lda JOYSTICK_PORT_1
@@ -43,7 +48,7 @@ game_over_loop:
 	beq !gol+
 	jmp !gol++
 !gol:
-	jmp restart
+	jmp game_start
 !gol:
 	clc
 	lda trig_1

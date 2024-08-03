@@ -3,11 +3,11 @@
 // SOUND STUFF
 
 sfk_sound_on:
-	// jsr $c000
+	jsr $c000
 	rts
 
 sfk_sound_off:
-	// jsr $c010
+	jsr $c010
 	rts
 
 sfk_clear:

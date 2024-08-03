@@ -3,6 +3,7 @@
 // Draw main screen
 
 draw_main_screen:
+	jsr wait_vbl
 	DrawPetMateScreen(was1)
 	jsr debug_stuff
 	jsr init_sprites_ms
@@ -12,6 +13,7 @@ draw_main_screen:
 // Draw Instruct Screen
 
 draw_instruct:
+	jsr wait_vbl
 	DrawPetMateScreen(instruct)
 	jsr debug_stuff
 	jsr init_sprites_iiy
@@ -21,6 +23,7 @@ draw_instruct:
 // Draw Play Screen
 
 draw_hiscores:
+	jsr wait_vbl
 
 	jsr init_sprites_ms
 	lda #$05
@@ -187,6 +190,7 @@ inc_zpa:
 // Draw Play Screen
 
 draw_play_screen:
+	jsr wait_vbl
 	DrawPetMateScreen(play)
  	rts
 
@@ -194,6 +198,7 @@ draw_play_screen:
 // Draw game over
 
 draw_gameover:
+	jsr wait_vbl
 	DrawPetMateScreen(scr_gameover)
 	jsr debug_stuff
 	jsr init_sprites_ms
@@ -204,6 +209,7 @@ draw_gameover:
 // Draw QR
 
 draw_qr:
+	jsr wait_vbl
 	DrawPetMateScreen(qrcode)
 	jsr init_sprites_ms
  	rts 	
@@ -212,4 +218,6 @@ draw_qr:
 // Update Play Screen
 
 update_play_screen:
+	jsr wait_vbl
  	rts 
+

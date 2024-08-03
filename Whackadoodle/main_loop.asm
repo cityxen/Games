@@ -10,7 +10,9 @@ restart:
 
 	lda #00
 	sta sound_playing
-	lda #$01
+	jsr sfk_clear
+
+	lda dev_play_music
 	sta play_music
 
 	ldx #0
