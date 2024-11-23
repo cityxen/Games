@@ -208,11 +208,11 @@ draw_gameover:
 //////////////////////////////////////////////////////////////////
 // Draw QR
 
-draw_qr:
-	jsr wait_vbl
-	DrawPetMateScreen(qrcode)
-	jsr init_sprites_ms
- 	rts 	
+// draw_qr:
+//	jsr wait_vbl
+//	DrawPetMateScreen(qrcode)
+//	jsr init_sprites_ms
+// 	rts 	
 
 //////////////////////////////////////////////////////////////////
 // Update Play Screen

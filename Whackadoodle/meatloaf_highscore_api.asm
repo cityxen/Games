@@ -4,7 +4,7 @@
 // By Deadline / CityXen
 // 2024
 
-#import "MLHS_API_CONFIG.asm"
+#import "meatloaf_highscore_config.asm"
 
 MLHS_API_USER_CONTACT:
 .text "NNNNNNNNNNNNNNNN"

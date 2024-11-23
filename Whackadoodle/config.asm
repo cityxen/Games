@@ -7,6 +7,11 @@
 //////////////////////////////////////////////////////////////////
 // some vars
 
+whack_mode:             .byte 0 // BAR
+                                // KIDS
+                                // WIN
+                                // HARD
+                                // EASY
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
 whack_hit: 				.byte 0 // which button has been hit (if any)
 whack_score_lo:         .byte 0
@@ -18,11 +23,14 @@ whack_score_4:          .byte $30
 whack_score_5:			.byte $30
 whack_score_6:			.byte $30
 
-whack_difficulty: 		.byte 0 // which mode easy or hard ?
 whack_life:             .byte 0
 
 whack_key:              .byte 0
 initial_life:           .byte 6
+initial_life_hard:      .byte 3
+initial_life_easy:
+initial_life_win:
+initial_life_kids:      .byte 10
 up:                     .byte 0
 down:                   .byte 0
 left:                   .byte 0

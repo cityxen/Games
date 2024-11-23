@@ -5,6 +5,6 @@ dir
 cd Usb1
 cd cityxen
 binary
-put prg_files/wad-cxn.prg
+put prg_files/wad-cxn-w.prg
 quit
 

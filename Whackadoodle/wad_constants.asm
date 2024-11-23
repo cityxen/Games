@@ -6,6 +6,13 @@
 .const BUTTON_YELLOW = $FD
 .const BUTTON_BLUE   = $F7
 .const BUTTON_WHITE  = $EF
+
+.const MODE_WIN      = $FB
+.const MODE_BAR      = $FE
+.const MODE_HARD     = $FD
+.const MODE_KIDS     = $F7
+.const MODE_EASY     = $EF
+
 // Buttons Light
 .const BUTTON_LIGHT_RED    = %11110111
 .const BUTTON_LIGHT_GREEN  = %11111110

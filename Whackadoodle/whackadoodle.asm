@@ -13,7 +13,7 @@
 
 .segment SFX [allowOverlap]
 *=$c000 "SFX KIT"
-.import binary "sfxwdp.prg", 2
+.import binary "sound/sfxwdp.prg", 2
 
 // FX PLAYER ON    : sys 49152 : jsr $c000 // sound_on sr
 // FX PLAYER OFF   : sys 49168 : jsr $c010 // sound_off sr
@@ -27,12 +27,12 @@
 
 .segment Sprites [allowOverlap]
 *=$3000 "SPRITES"
-#import "sprites/was-sprites - Sprites.asm"
+#import "sprites/was-sprites-2.0 - Sprites.asm"
 
 .segment Screens [allowOverlap]
 *=$7800 "SCREENS"
-#import "petmate/screen.asm"
-#import "petmate/qr_code.asm"
+#import "petmate/screen2.asm"
+// #import "petmate/qr_code.asm"
 
 *=$0801
 CityXenUpstart(start)
@@ -40,7 +40,7 @@ CityXenUpstart(start)
 .segment PRG [allowOverlap]
 * = $34c0 "PRG"
 dev_play_music:
-.byte 0
+.byte 1
 start:
 #import "start.asm"
 #import "main_loop.asm"
@@ -54,5 +54,5 @@ start:
 #import "sound.asm"
 #import "timers.asm"
 #import "util.asm"
-#import "MLHS_API.asm"
+#import "meatloaf_highscore_api.asm"
 #import "config.asm"

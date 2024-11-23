@@ -66,7 +66,7 @@ game_over_loop:
 	// toggle screen to draw
 	inc screen_draw
 	lda screen_draw
-	cmp #$02
+	cmp #$01
 	bne !gol+
 	lda #$00
 	sta screen_draw
@@ -79,7 +79,7 @@ game_over_loop:
 !gol:
 	cmp #$01
 	bne !gol+
-	jsr draw_qr
+	//jsr draw_qr
 !gol:
 	jmp game_over_loop
 

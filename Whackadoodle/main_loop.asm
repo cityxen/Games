@@ -62,6 +62,7 @@ main_loop:
 
 !ml:
 
+	sta whack_mode
 	jsr game_setup_doodle
 	jmp game_start
 	
@@ -95,7 +96,7 @@ main_loop:
 !sdl:
 	cmp #$02
 	bne !sdl+
-	jsr draw_qr
+	// jsr draw_qr
 	jmp main_loop
 !sdl:
 	cmp #$03
