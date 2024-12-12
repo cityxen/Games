@@ -5,7 +5,7 @@
 .label draw_play_screen=$3b68
 .label isout=$4052
 .label sprite_plus=$3440
-.label instruct=$7fd2
+.label instruct=$4d74
 .label irq_timer_allow_input=$4513
 .label button_to_hit=$4522
 .label sound_playing=$4511
@@ -138,7 +138,7 @@
 .label irq_timer_sound=$4510
 .label sprite_yinyang=$3040
 .label init_sprites_msg=$3cd7
-.label was1=$7800
+.label was1=$45a2
 .label print_hex=$4307
 .label sprite_miss_l=$3300
 .label sprite_miss_r=$3340
@@ -151,7 +151,7 @@
 .label countdown_text=$4529
 .label game_over=$36d7
 .label update_score_to_dec=$3ff8
-.label scr_gameover=$8f76
+.label scr_gameover=$5d18
 .label draw_hiscores=$3a66
 .label ascii_to_petscii=$42ef
 .label debug_stuff=$3d05
@@ -163,7 +163,7 @@
 .label start=$34c1
 .label game_setup_doodle=$3789
 .label MLHS_API_SCORE=$40cf
-.label play=$87a4
+.label play=$5546
 .label MLHS_API_URL_GET_SCORE_LENGTH=$4258
 .label sprite_down=$3240
 .label addto_color_pos=$43ca

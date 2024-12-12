@@ -30,7 +30,7 @@
 #import "sprites/was-sprites-2.0 - Sprites.asm"
 
 .segment Screens [allowOverlap]
-*=$7800 "SCREENS"
+*=$45a2 "SCREENS"
 #import "petmate/screen2.asm"
 // #import "petmate/qr_code.asm"
 
