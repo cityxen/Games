@@ -23,7 +23,7 @@ init_sprites_iiy:
 	lda #$00
 	sta SPRITE_MULTICOLOR
 
-	lda #sp_commodore
+	lda #sp_happyface
 	sta SPRITE_0_POINTER
 	lda #sp_yinyang
 	sta SPRITE_1_POINTER
@@ -35,9 +35,9 @@ init_sprites_iiy:
 	sta SPRITE_4_POINTER
 	lda #sp_skull
 	sta SPRITE_5_POINTER
-	lda #sp_msdos
+	lda #sp_poo
 	sta SPRITE_6_POINTER
-	lda #sp_dollar
+	lda #sp_frown
 	sta SPRITE_7_POINTER
 
 	lda #%01000000

@@ -19,6 +19,7 @@ lda_random_kern:
 	lda $8f
     rts
 
+
 //////////////////////////////////////////////////////////////////
 // Make buttons blink randomly
 
@@ -27,6 +28,64 @@ randomly_flash_buttons:
 	sta random_num
 	sta USER_PORT_DATA
 	rts
+
+
+/////////////////////////////////////////////////////
+draw_mode:
+
+	lda whack_mode
+	cmp #MODE_WIN
+	bne !+
+	zp_str(msg_mode_win)
+	jmp dmo
+!:
+	cmp #MODE_BAR
+	bne !+
+	zp_str(msg_mode_bar)
+	jmp dmo
+!:
+	cmp #MODE_HARD
+	bne !+
+	zp_str(msg_mode_hard)
+	jmp dmo
+!:
+	cmp #MODE_KIDS
+	bne !+
+	zp_str(msg_mode_kids)
+	jmp dmo
+!:
+	cmp #MODE_EASY
+	bne !+
+	zp_str(msg_mode_easy)
+		
+dmo:
+
+	ldy #$00
+!:
+	lda (zp_tmp),y
+	beq !+
+	sta SCREEN_RAM+195,y
+	lda #$01
+	sta COLOR_RAM+195,y
+	iny
+	jmp !-
+!:
+	zp_str(msg_mode_mode)
+	ldy #$00
+!:
+	lda (zp_tmp),y
+	beq !+
+	sta SCREEN_RAM+190,y
+	lda #$01
+	sta COLOR_RAM+190,y
+	iny
+	jmp !-
+!:
+
+	rts
+
+
+/////////////////////////////////////////////////////
 
 get_button:
 	lda trig_joystick
@@ -143,6 +202,27 @@ update_score_to_dec:
 isout:
 	rts
 
+/*
+lda score,x
+and #$f0
+lsr a
+lsr a
+lsr a
+lsr a
+clc
+adc //#decimal to char offset 48 for you
+sta ScreenLocation,y
+iny
+lda score,x
+and #$0f
+clc
+adc //#decimal to char offset 48 for you
+sta ScreenLocation,y
+iny
+inx
+cpx // #number of digits / 2 + 1
+bne loop
+*/
 
 
 draw_score_game_on:

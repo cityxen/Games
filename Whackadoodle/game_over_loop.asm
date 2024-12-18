@@ -22,15 +22,15 @@ game_over:
 game_over_loop:
 
 	lda trig_3 
-	cmp #$03 // time out after 12 seconds
+	cmp #20 // time out
 	bne !+
-	jmp restart // go back to attract mode
+	jmp restart // and go back to attract mode
 !:
 
 	jsr get_key
 	cmp #KEY_R
 	bne !+
-	jmp game_start
+	jmp restart
 !:
 
 !gol:
@@ -48,7 +48,7 @@ game_over_loop:
 	beq !gol+
 	jmp !gol++
 !gol:
-	jmp game_start
+	jmp restart
 !gol:
 	clc
 	lda trig_1

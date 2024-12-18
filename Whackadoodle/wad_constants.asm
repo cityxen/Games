@@ -7,20 +7,26 @@
 .const BUTTON_BLUE   = $F7
 .const BUTTON_WHITE  = $EF
 
-.const MODE_WIN      = $FB
-.const MODE_BAR      = $FE
-.const MODE_HARD     = $FD
-.const MODE_KIDS     = $F7
-.const MODE_EASY     = $EF
+.const MODE_WIN      = $00 // 10 Lives, Only Bad Doodles, no speed up
+.const MODE_BAR      = $01 // 6 Lives, Speed up normal
+.const MODE_HARD     = $02 // 3 Lives, Max Speed from start
+.const MODE_KIDS     = $03 // 6 Lives, Ramp speed divide by 2
+.const MODE_EASY     = $04 // Same as KIDS mode (for now)
 
-// Buttons Light
-.const BUTTON_LIGHT_RED    = %11110111
-.const BUTTON_LIGHT_GREEN  = %11111110
-.const BUTTON_LIGHT_YELLOW = %11111101
-.const BUTTON_LIGHT_BLUE   = %11111011
-.const BUTTON_LIGHT_WHITE  = %10111111
-.const BUTTON_LIGHT_ALL    = %00000000
-.const BUTTON_LIGHT_NONE   = %11111111
+// Buttons Light / Action
+.const BUTTON_LIGHT_GREEN   = %11111110
+.const BUTTON_LIGHT_YELLOW  = %11111101
+.const BUTTON_LIGHT_BLUE    = %11111011
+.const BUTTON_LIGHT_RED     = %11110111
+.const BUTTON_ACTION_MISS   = %11101111
+.const BUTTON_ACTION_POW    = %11011111
+.const BUTTON_LIGHT_WHITE   = %10111111
+.const BUTTON_ACTION_G_OVER = %01111111
+.const BUTTON_LIGHT_ALL     = %00000000
+.const BUTTON_LIGHT_NONE    = %11111111
+
+.const initial_doodle_speed = $AF
+
 // Sprite stuff
 .const butt1_sprite_x = 70
 .const butt1_sprite_y = 165
@@ -39,16 +45,17 @@
 .const butt5_sprite_m = 1
 .const comic_sprite_x = 165
 .const comic_sprite_y = 100
+
 // Sprite Pointers
 .const sp_pointers  = $c0
-.const sp_commodore = $c0
+.const sp_happyface = $c0
 .const sp_yinyang   = $c1
 .const sp_heart     = $c2
 .const sp_star      = $c3
 .const sp_rad       = $c4
 .const sp_skull     = $c5
-.const sp_msdos     = $c6
-.const sp_dollar    = $c7
+.const sp_poo       = $c6
+.const sp_frown     = $c7
 .const sp_up        = $c8
 .const sp_right     = $c9
 .const sp_down      = $ca

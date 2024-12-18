@@ -12,8 +12,19 @@ check_jitter_doodle:
 	rts
 
 game_setup_doodle:
+
 	lda button_to_hit
 	sta last_button
+
+	// TODO: Determine speed based on mode
+	lda whack_mode
+	cmp #MODE_WIN
+	beq win_speed
+    // MODE_WIN      = $01 // 10 Lives, Only Bad Doodles, no speed up
+    // MODE_BAR      = $02 // 6 Lives, Speed up normal
+    // MODE_HARD     = $03 // 3 Lives, Max Speed from start
+    // MODE_KIDS     = $04 // 6 Lives, Ramp speed divide by 2
+    // MODE_EASY     = $05 // Same as KIDS mode (for now)
 	
 	lda whack_score_lo // check score adjust speed
 	cmp #100
@@ -22,7 +33,12 @@ game_setup_doodle:
 	bcs faster_2		
 	cmp #40
 	bcs faster
-		
+	jmp over_mode_speeds
+
+win_speed:
+	lda #initial_doodle_speed
+	sta irq_timer_jitter_cmp
+over_mode_speeds:
 	lda irq_timer_jitter_cmp
 	clc
 	sbc #$05
@@ -75,7 +91,8 @@ faster_3:
 
 outfaster:
 
-	// did_hit = 0 // timed out (figure out faction / if missed bad target = -1 life)
+	// did_hit = 0 // timed out (figure out faction 
+	               //    if missed bad target = -1 life)
 	// did_hit = 1 // hit target +1 score
 	// did_hit = 2 // hit wrong target -1 score / -1 life
 	// did_hit = 3 // hit wrong button -1 life
@@ -91,15 +108,13 @@ outfaster:
 	jsr play_sound_miss
 	lda #$02
 	jsr set_message
-	// life -1
-	dec whack_life
+	dec whack_life // life -1
 
 	rts 
 
 !gsd:
 
 	jsr play_sound_ding
-
 	lda #$09
 	sta button_actually_hit
 
@@ -119,9 +134,21 @@ outfaster:
 	bcs !gsd-
 	sta doodle
 
+
+	// TODO: Check mode parameters here
+	lda whack_mode
+	cmp #MODE_WIN
+	bne !+
+	jsr lda_random_kern
+	and #%00000011
+	adc #$03
+	sta doodle
+	
+!:
+	lda doodle
 	cmp #$00
 	bne !gsd+
-	lda #sp_commodore
+	lda #sp_happyface
 	sta SPRITE_0_POINTER
 	jmp gsdso
 !gsd:
@@ -157,19 +184,18 @@ outfaster:
 !gsd:
 	cmp #$06
 	bne !gsd+
-	lda #sp_msdos
+	lda #sp_poo
 	sta SPRITE_0_POINTER
 	jmp gsdso
 !gsd:
 	cmp #$07
 	bne !gsd+
-	lda #sp_dollar
+	lda #sp_frown
 	sta SPRITE_0_POINTER
 
 gsdso:
 	
 	lda button_to_hit
-
 	cmp #$00
 	bne !gsd+
 

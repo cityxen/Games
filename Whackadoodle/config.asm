@@ -12,6 +12,7 @@ whack_mode:             .byte 0 // BAR
                                 // WIN
                                 // HARD
                                 // EASY
+
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
 whack_hit: 				.byte 0 // which button has been hit (if any)
 whack_score_lo:         .byte 0
@@ -66,7 +67,6 @@ button_to_hit:          .byte 0
 button_actually_hit:    .byte 0
 doodle:                 .byte 0
 message:                .byte 0
-debug_mode:             .byte 0
 did_hit:                .byte 0
 random_num:             .byte 0
 countdown_text: 
@@ -90,6 +90,26 @@ msg4:
 .byte 0
 msg_clr:
 .text "             "
+.byte 0
+
+
+msg_mode_win:
+.text "win!"
+.byte 0
+msg_mode_bar:
+.text "bar"
+.byte 0
+msg_mode_hard:
+.text "hard"
+.byte 0
+msg_mode_kids:
+.text "kids"
+.byte 0
+msg_mode_easy:
+.text "easy"
+.byte 0
+msg_mode_mode:
+.text "mode:"
 .byte 0
 
 hiscore_msg:

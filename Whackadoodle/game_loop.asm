@@ -3,14 +3,21 @@
 // Game start
 
 game_start:
-		
-	// ldx #0
-	// ldy #0
-	// lda #music.startSong-1						//<- Here we get the startsong and init address from the sid file
-	// jsr music.init
-	
+
 	lda initial_life
 	sta whack_life
+
+	lda whack_mode
+	cmp #MODE_WIN // 10 lives
+	bne !+
+	lda initial_life_win
+	sta whack_life
+!:
+	cmp #MODE_HARD // 3 lives
+	bne !+
+	lda initial_life_hard
+	sta whack_life
+!:
 
 	jsr reset_score
 
@@ -24,24 +31,28 @@ game_start:
 	jsr play_sound_get_ready
 
 	jsr draw_instruct
-	jsr pause
 
+	jsr draw_mode
+
+	jsr pause
 	jsr pause
 
 	jsr play_sound_get_ready
 
-	lda #$01	
+	lda #$01
 	jsr set_message
 	jsr reset_input_timer
 	jsr init_sprites_play
 
-
-	lda #$af // initial doodle time 
+	lda #initial_doodle_speed // initial doodle time 
 	sta irq_timer_jitter_cmp
+
 	jsr reset_jitter_timer
 
 	
 game_loop:
+
+	jsr draw_mode
 
 	lda whack_life
 	bne !gl+
@@ -85,6 +96,7 @@ game_loop:
 	
 !gl:
 
+	jsr wait_vbl
 	inc SPRITE_0_COLOR
 	jsr check_jitter_doodle
 	jsr debug_stuff

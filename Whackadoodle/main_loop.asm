@@ -17,7 +17,7 @@ restart:
 
 	ldx #0
 	ldy #0
-	lda #music.startSong-1						//<- Here we get the startsong and init address from the sid file
+	lda #music.startSong-1 // <- Here we get the startsong and init address from the sid file
 	jsr music.init
 
 	lda #$ff // reset user port values to output and zero
@@ -34,11 +34,10 @@ restart:
 	lda #$02
 	sta screen_draw
 
-	lda #$00
-	sta debug_mode
-
 main_loop:
+	
 	jsr debug_stuff
+	
 
 	lda trig_1
 	beq !ml+
@@ -49,16 +48,34 @@ main_loop:
 	jsr get_button
 
 	cmp #BUTTON_RED
-	beq !ml+
+	bne !nbc+
+	lda #MODE_WIN
+	sta whack_mode
+	jmp !ml+
+!nbc:
 	cmp #BUTTON_GREEN 
-	beq !ml+
+	bne !nbc+
+	lda #MODE_BAR
+	sta whack_mode	
+	jmp !ml+
+!nbc:
 	cmp #BUTTON_YELLOW
-	beq !ml+
+	bne !nbc+
+	lda #MODE_HARD
+	sta whack_mode	
+	jmp !ml+
+!nbc:
  	cmp #BUTTON_BLUE
-	beq !ml+
+	bne !nbc+
+	lda #MODE_KIDS
+	sta whack_mode	
+	jmp !ml+
+!nbc:
 	cmp #BUTTON_WHITE
-	beq !ml+
-	jmp !ml++
+	bne !ml++
+	lda #MODE_EASY
+	sta whack_mode	
+	jmp !ml+
 
 !ml:
 

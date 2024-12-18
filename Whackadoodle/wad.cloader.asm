@@ -1,42 +1,43 @@
-//; CityXen - CART PRG Loader
-//; By Jaime Idolpx (Meatloaf.cc)
+// CityXen - CART PRG Loader
+// ported to Kick Assembler and modified
+// by Jaime Idolpx (20241212)
 
             .file [name="%o.bin", type="bin", segments="loader"]
 
-            .segment loader [min=$8000, max=$9fff, fill]  //; Make 8K BIN file
+            .segment loader [min=$8000, max=$9fff, fill]  // Make 8K BIN file
             * = $8000 "main"
-            .const cart_bank     = $57             //; $0057-$005B Arithmetic register #3 (5 bytes).
+            .const cart_bank     = $57             // $0057-$005B Arithmetic register #3 (5 bytes).
             .const prg_size_low  = $58
             .const prg_size_high = $59
             .const prg_data_low  = $5A
             .const prg_data_high = $5B
-            .const prg_dest_low  = $2D             //; $002D-$002E Pointer to beginning of variable area. (End of program plus 1.)
+            .const prg_dest_low  = $2D             // $002D-$002E Pointer to beginning of variable area. (End of program plus 1.)
             .const prg_dest_high = $2E
             .const screen_dest   = $0400
             .const tag_dest      = $07C0
 
-            .word loader_start  //; START CART LOADER
-            .word $fe5e         //; WARM START BASIC
+            .word loader_start  // COLD START CART LOADER
+            .word loader_start  // WARM START CART LOADER
             .encoding "petscii_mixed"
             .text "CBM80"
 
 loader_start:
             sei
-            stx $d016           //; VIC control
-            jsr $fda3           //; Kernal Init I/O
-            jsr $fd50           //; Kernal Init Memory Pointers
+            stx $d016           // VIC control
+            jsr $fda3           // Kernal Init I/O
+            jsr $fd50           // Kernal Init Memory Pointers
             lda #$a0
-            sta $0284           //; Pointer to end of BASIC area after memory test. $a0
-            jsr $fd15           //; Kernal Restore I/O vectors
-            jsr $ff5b           //; Kernal Init Video
+            sta $0284           // Pointer to end of BASIC area after memory test. $a0
+            jsr $fd15           // Kernal Restore I/O vectors
+            jsr $ff5b           // Kernal Init Video
             cli
-            jsr $e453           //; initialise the BASIC vectors
-            jsr $e3bf           //; initialise the BASIC RAM locations
-            jsr $e422           //; print the start up message and initialise the memory pointers
+            jsr $e453           // initialise the BASIC vectors
+            jsr $e3bf           // initialise the BASIC RAM locations
+            jsr $e422           // print the start up message and initialise the memory pointers
             ldx #$fb
             txs
 
-//; Set PRG size, load address, data pointer in zero page
+// Set PRG size, load address, data pointer in zero page
 init:
             lda #$00
             sta cart_bank
@@ -48,13 +49,13 @@ init:
             sta prg_dest_low
             lda prg_data + 1
             sta prg_dest_high
-            lda #<(prg_data + 2)    //; Skip load address
+            lda #<(prg_data + 2)    // Skip load address
             sta prg_data_low
             lda #>prg_data
             sta prg_data_high
             ldx #$00
 
-//; Copy tag to screen
+// Copy tag to screen
 !loop:
             lda tag,x
             beq break
@@ -63,7 +64,7 @@ init:
             bne !loop-
 break:      ldx #$00
 
-//; Copy loader to screen and run!
+// Copy loader to screen and run!
 !loop:
             lda screen_loader,x
             sta screen_dest,x
@@ -71,7 +72,7 @@ break:      ldx #$00
             bne !loop-
             jmp screen_dest
 
-//; Screen Loader
+// Screen Loader
 screen_loader:
             sei
             ldx #$00
@@ -79,6 +80,7 @@ screen_loader:
 prg_load_block:
             lda (prg_data_low,x)
             sta (prg_dest_low,x)
+            sta $d020
             inc prg_data_low
             bne prg_next_dest
 
@@ -104,18 +106,17 @@ prg_next_src:
             bne prg_load_block
 
 start_prg:
-            jsr $a663          //; RESET BASIC
+            jsr $a663          // RESET BASIC
             cli
-            jmp $a7ae          //; RUN!
+            jmp $a7ae          // RUN!
             rts
 
-//; PRG Data
-            .encoding "screencode_upper"
-tag:        .text "CITYXEN!"
-            .byte $0
-            .var data = LoadBinary("wad.prg")   //; program must be exomized and less than 8000 bytes
+// TAG & PRG Data
+tag:        .encoding "screencode_upper"
+            .text @"CITYXEN!\$00"
 prg_size:
-            .word data.getSize()-2              //; program size (minus start address)
+            .var data = LoadBinary("wad.prg")   // program must be exomized and less than 8000 bytes
+            .word data.getSize()-2              // program size (minus start address)
 prg_data:
-            .fill data.getSize(), data.get(i)   //; and PRG data
+            .fill data.getSize(), data.get(i)   // and PRG data
 
