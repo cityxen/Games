@@ -80,6 +80,7 @@ main_loop:
 
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
+	
 	sta whack_mode
 	jsr game_setup_doodle
 	jmp game_start
