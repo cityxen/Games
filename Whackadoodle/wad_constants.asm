@@ -10,8 +10,6 @@
 .const MODE_EASY     = $00 // 10 Lives, Only Bad Doodles, no speed up
 .const MODE_NORMAL   = $01 // 6 Lives, Speed up normal
 .const MODE_HARD     = $02 // 3 Lives, Max Speed from start
-//.const MODE_KIDS     = $03 // 6 Lives, Ramp speed divide by 2
-//.const MODE_WUT     = $04 // Same as KIDS mode (for now)
 
 // Buttons Light / Action
 .const BUTTON_LIGHT_GREEN   = %11111110
