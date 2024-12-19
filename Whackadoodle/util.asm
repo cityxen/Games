@@ -25,6 +25,7 @@ lda_random_kern:
 
 randomly_flash_buttons:
 	jsr lda_random_kern
+	ora #BUTTON_ACTIONS
 	sta random_num
 	sta USER_PORT_DATA
 	rts

@@ -36,11 +36,11 @@ game_setup_doodle:
 easy_speed:
 	lda #doodle_speed_easy
 	sta irq_timer_jitter_cmp
-	jmp outfaster
+	jmp over_mode_speeds
 hard_speed:
 	lda #doodle_speed_hard
 	sta irq_timer_jitter_cmp
-	jmp outfaster
+	jmp faster_3
 
 over_mode_speeds:
 	lda irq_timer_jitter_cmp

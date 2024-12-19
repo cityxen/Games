@@ -64,7 +64,7 @@ game_loop:
 
 	// show message (if exist)
 	lda message
-	beq !gl++
+	beq gl22
 	lda #$00
 	sta SPRITE_ENABLE
 	ClearScreen(BLACK)
@@ -82,6 +82,7 @@ game_loop:
 	lda #$09
 	sta button_actually_hit
 	jsr game_setup_doodle	
+gl22:
 !gl:
 	
 	jsr draw_countdown

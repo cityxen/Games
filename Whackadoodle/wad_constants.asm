@@ -22,6 +22,8 @@
 .const BUTTON_ACTION_G_OVER = %01111111
 .const BUTTON_LIGHT_ALL     = %00000000
 .const BUTTON_LIGHT_NONE    = %11111111
+.const BUTTON_ACTIONS       = %10110000
+.const BUTTON_LIGHTS        = %01001111
 
 .const doodle_speed_initial = $AF
 .const doodle_speed_easy    = $AF
