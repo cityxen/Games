@@ -25,7 +25,7 @@ game_start:
 	sta play_music
 	jsr draw_play_screen
 	
-	lda BUTTON_LIGHT_ALL
+	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
 
 	jsr play_sound_get_ready
