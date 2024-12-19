@@ -10,31 +10,32 @@ show_message:
 
 	jsr init_sprites_msg
 
-	lda #BUTTON_LIGHT_NONE
-	sta USER_PORT_DATA
-
 	PrintString(msg_init)
 	lda message
 	cmp #$01
 	bne !sm+
-	PrintString(msg1)
+	PrintString(msg_getready)
 	jmp smo
 !sm:
 	cmp #$02
 	bne !sm+
-	PrintString(msg2)
+	PrintString(msg_miss)
+	lda #BUTTON_ACTION_MISS
+	sta USER_PORT_DATA
 	jmp smo
 !sm:
 	cmp #$03
 	bne !sm+
-	// pow sprites here
-	PrintString(msg3)
+	PrintString(msg_pow)
+	lda #BUTTON_ACTION_POW
+	sta USER_PORT_DATA
 	jmp smo
 !sm:
 	cmp #$04
 	bne smo
-	// wrong
-	PrintString(msg4)
+	PrintString(msg_wrong)
+	lda #BUTTON_ACTION_MISS
+	sta USER_PORT_DATA
 smo:
 	lda trig_4
 	beq !smo+

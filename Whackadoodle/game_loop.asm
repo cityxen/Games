@@ -8,7 +8,7 @@ game_start:
 	sta whack_life
 
 	lda whack_mode
-	cmp #MODE_WIN // 10 lives
+	cmp #MODE_EASY // 10 lives
 	bne !+
 	lda initial_life_win
 	sta whack_life
@@ -44,7 +44,7 @@ game_start:
 	jsr reset_input_timer
 	jsr init_sprites_play
 
-	lda #initial_doodle_speed // initial doodle time 
+	lda #doodle_speed_initial // initial doodle time 
 	sta irq_timer_jitter_cmp
 
 	jsr reset_jitter_timer
@@ -68,8 +68,11 @@ game_loop:
 	lda #$00
 	sta SPRITE_ENABLE
 	ClearScreen(BLACK)
+
 !gl:
-	jsr init_sprites_msg
+	lda #BUTTON_LIGHT_NONE
+	sta USER_PORT_DATA
+!gl:
 	jsr show_message
 	jsr reset_jitter_timer
 	lda message

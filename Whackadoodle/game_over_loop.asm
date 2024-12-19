@@ -19,12 +19,17 @@ game_over:
 	jsr reset_timer2
 	jsr reset_timer3
 
+	lda #BUTTON_ACTION_G_OVER
+	sta USER_PORT_DATA
+
 game_over_loop:
 
 	lda trig_3 
-	cmp #20 // time out
+	cmp #03 // time out
 	bne !+
-	jmp restart // and go back to attract mode
+	lda #BUTTON_LIGHT_NONE
+	sta USER_PORT_DATA
+	// jmp restart // and go back to attract mode
 !:
 
 	jsr get_key

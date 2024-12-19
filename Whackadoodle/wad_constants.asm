@@ -7,11 +7,11 @@
 .const BUTTON_BLUE   = $F7
 .const BUTTON_WHITE  = $EF
 
-.const MODE_WIN      = $00 // 10 Lives, Only Bad Doodles, no speed up
-.const MODE_BAR      = $01 // 6 Lives, Speed up normal
+.const MODE_EASY     = $00 // 10 Lives, Only Bad Doodles, no speed up
+.const MODE_NORMAL   = $01 // 6 Lives, Speed up normal
 .const MODE_HARD     = $02 // 3 Lives, Max Speed from start
-.const MODE_KIDS     = $03 // 6 Lives, Ramp speed divide by 2
-.const MODE_EASY     = $04 // Same as KIDS mode (for now)
+//.const MODE_KIDS     = $03 // 6 Lives, Ramp speed divide by 2
+//.const MODE_WUT     = $04 // Same as KIDS mode (for now)
 
 // Buttons Light / Action
 .const BUTTON_LIGHT_GREEN   = %11111110
@@ -25,7 +25,9 @@
 .const BUTTON_LIGHT_ALL     = %00000000
 .const BUTTON_LIGHT_NONE    = %11111111
 
-.const initial_doodle_speed = $AF
+.const doodle_speed_initial = $AF
+.const doodle_speed_easy    = $AF
+.const doodle_speed_hard    = $20
 
 // Sprite stuff
 .const butt1_sprite_x = 70

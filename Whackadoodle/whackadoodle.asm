@@ -31,7 +31,7 @@
 
 .segment Screens [allowOverlap]
 *=$4800 "SCREENS"
-#import "petmate/screen3.asm"
+#import "petmate/screen4.asm"
 
 *=$0801
 CityXenUpstart(start)

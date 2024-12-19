@@ -76,16 +76,16 @@ msg_init:
 .byte 5,KEY_HOME,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
 .byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
 .byte 0
-msg1:
+msg_getready:
 .text "GET READY"
 .byte 0
-msg2:
+msg_miss:
 .text "   MISS"
 .byte 0
-msg3:
+msg_pow:
 .text "   POW"
 .byte 0
-msg4:
+msg_wrong:
 .text "  WRONG!"
 .byte 0
 msg_clr:
@@ -93,20 +93,14 @@ msg_clr:
 .byte 0
 
 
-msg_mode_win:
-.text "win!"
+msg_mode_easy:
+.text "easy"
 .byte 0
-msg_mode_bar:
-.text "bar"
+msg_mode_normal:
+.text "normal"
 .byte 0
 msg_mode_hard:
 .text "hard"
-.byte 0
-msg_mode_kids:
-.text "kids"
-.byte 0
-msg_mode_easy:
-.text "easy"
 .byte 0
 msg_mode_mode:
 .text "mode:"

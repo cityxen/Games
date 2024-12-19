@@ -34,14 +34,14 @@ randomly_flash_buttons:
 draw_mode:
 
 	lda whack_mode
-	cmp #MODE_WIN
+	cmp #MODE_EASY
 	bne !+
-	zp_str(msg_mode_win)
+	zp_str(msg_mode_easy)
 	jmp dmo
 !:
-	cmp #MODE_BAR
+	cmp #MODE_NORMAL
 	bne !+
-	zp_str(msg_mode_bar)
+	zp_str(msg_mode_normal)
 	jmp dmo
 !:
 	cmp #MODE_HARD
@@ -49,14 +49,6 @@ draw_mode:
 	zp_str(msg_mode_hard)
 	jmp dmo
 !:
-	cmp #MODE_KIDS
-	bne !+
-	zp_str(msg_mode_kids)
-	jmp dmo
-!:
-	cmp #MODE_EASY
-	bne !+
-	zp_str(msg_mode_easy)
 		
 dmo:
 
@@ -64,9 +56,9 @@ dmo:
 !:
 	lda (zp_tmp),y
 	beq !+
-	sta SCREEN_RAM+195,y
+	sta SCREEN_RAM+193,y
 	lda #$01
-	sta COLOR_RAM+195,y
+	sta COLOR_RAM+193,y
 	iny
 	jmp !-
 !:
@@ -75,9 +67,9 @@ dmo:
 !:
 	lda (zp_tmp),y
 	beq !+
-	sta SCREEN_RAM+190,y
+	sta SCREEN_RAM+188,y
 	lda #$01
-	sta COLOR_RAM+190,y
+	sta COLOR_RAM+188,y
 	iny
 	jmp !-
 !:

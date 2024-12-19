@@ -43,37 +43,36 @@ main_loop:
 	beq !ml+
 	jsr reset_timer1
 	jsr randomly_flash_buttons
+
+	jsr get_key
+
+	cmp #KEY_M
+	bne !gl+
+	inc play_music
+	lda play_music
+	and #%00000001
+	sta play_music
+
+!gl:	
 	
 !ml:
 	jsr get_button
 
 	cmp #BUTTON_RED
 	bne !nbc+
-	lda #MODE_WIN
+	lda #MODE_EASY
 	sta whack_mode
-	jmp !ml+
-!nbc:
-	cmp #BUTTON_GREEN 
-	bne !nbc+
-	lda #MODE_BAR
-	sta whack_mode	
 	jmp !ml+
 !nbc:
 	cmp #BUTTON_YELLOW
 	bne !nbc+
-	lda #MODE_HARD
-	sta whack_mode	
-	jmp !ml+
-!nbc:
- 	cmp #BUTTON_BLUE
-	bne !nbc+
-	lda #MODE_KIDS
+	lda #MODE_NORMAL
 	sta whack_mode	
 	jmp !ml+
 !nbc:
 	cmp #BUTTON_WHITE
 	bne !ml++
-	lda #MODE_EASY
+	lda #MODE_HARD
 	sta whack_mode	
 	jmp !ml+
 

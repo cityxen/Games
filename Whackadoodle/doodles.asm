@@ -18,14 +18,12 @@ game_setup_doodle:
 
 	// TODO: Determine speed based on mode
 	lda whack_mode
-	cmp #MODE_WIN
-	beq win_speed
-    // MODE_WIN      = $01 // 10 Lives, Only Bad Doodles, no speed up
-    // MODE_BAR      = $02 // 6 Lives, Speed up normal
-    // MODE_HARD     = $03 // 3 Lives, Max Speed from start
-    // MODE_KIDS     = $04 // 6 Lives, Ramp speed divide by 2
-    // MODE_EASY     = $05 // Same as KIDS mode (for now)
-	
+	cmp #MODE_EASY
+	beq easy_speed
+
+	cmp #MODE_HARD
+	beq hard_speed
+
 	lda whack_score_lo // check score adjust speed
 	cmp #100
 	bcs faster_3
@@ -35,9 +33,15 @@ game_setup_doodle:
 	bcs faster
 	jmp over_mode_speeds
 
-win_speed:
-	lda #initial_doodle_speed
+easy_speed:
+	lda #doodle_speed_easy
 	sta irq_timer_jitter_cmp
+	jmp outfaster
+hard_speed:
+	lda #doodle_speed_hard
+	sta irq_timer_jitter_cmp
+	jmp outfaster
+
 over_mode_speeds:
 	lda irq_timer_jitter_cmp
 	clc
@@ -137,7 +141,7 @@ outfaster:
 
 	// TODO: Check mode parameters here
 	lda whack_mode
-	cmp #MODE_WIN
+	cmp #MODE_EASY
 	bne !+
 	jsr lda_random_kern
 	and #%00000011
