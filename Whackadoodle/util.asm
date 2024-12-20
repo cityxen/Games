@@ -30,55 +30,56 @@ randomly_flash_buttons:
 	sta USER_PORT_DATA
 	rts
 
-
 /////////////////////////////////////////////////////
+// Draw mode
+
 draw_mode:
-
-	lda whack_mode
-	cmp #MODE_EASY
-	bne !+
-	zp_str(msg_mode_easy)
-	jmp dmo
-!:
-	cmp #MODE_NORMAL
-	bne !+
-	zp_str(msg_mode_normal)
-	jmp dmo
-!:
-	cmp #MODE_HARD
-	bne !+
-	zp_str(msg_mode_hard)
-	jmp dmo
-!:
-		
-dmo:
-
-	ldy #$00
-!:
-	lda (zp_tmp),y
-	beq !+
-	sta SCREEN_RAM+193,y
-	lda #$01
-	sta COLOR_RAM+193,y
-	iny
-	jmp !-
-!:
 	zp_str(msg_mode_mode)
 	ldy #$00
 !:
 	lda (zp_tmp),y
 	beq !+
-	sta SCREEN_RAM+188,y
+	sta SCREEN_RAM+1000-40-20,y
 	lda #$01
-	sta COLOR_RAM+188,y
+	sta COLOR_RAM+1000-40-20,y
 	iny
 	jmp !-
 !:
 
+	lda whack_mode
+	cmp #MODE_EASY
+	bne !+
+	zp_str(msg_mode_easy)
+	jmp draw_mode_2
+!:
+	cmp #MODE_NORMAL
+	bne !+
+	zp_str(msg_mode_normal)
+	jmp draw_mode_2
+!:
+	cmp #MODE_HARD
+	bne !+
+	zp_str(msg_mode_hard)
+	jmp draw_mode_2
+!:
+
+draw_mode_2:
+
+	ldy #$00
+!:
+	lda (zp_tmp),y
+	beq !+
+	sta SCREEN_RAM+1000-40-20+5,y
+	lda #YELLOW
+	sta COLOR_RAM+1000-40-20+5,y
+	iny
+	jmp !-
+!:
 	rts
 
 
 /////////////////////////////////////////////////////
+// Get Button Press
 
 get_button:
 	lda trig_joystick
@@ -88,6 +89,9 @@ get_button:
 !gb:
 	lda #$ff
 	rts
+
+/////////////////////////////////////////////////////
+// Get Key Press
 
 get_key:
 	lda trig_input
@@ -101,12 +105,18 @@ get_key:
 	lda #$00
 	rts
 
+////////////////////////////////////////////////////
+// Increment Score
+
 increment_score:
 	inc whack_score_lo
 	bne !is+
 	inc whack_score_hi
 !is:
-	jmp update_score
+	rts
+
+////////////////////////////////////////////////////
+// Decrement Score
 
 decrement_score:
 	lda whack_score_lo
@@ -121,146 +131,39 @@ decrement_score:
 	dec whack_score_hi
 	dec whack_score_lo
 !is:
-
-update_score:
-	jsr reset_whacks
-	ldy whack_score_hi
-	ldx whack_score_lo
-
-	cpx #$00
-	bne !us++
-!us:
-	cpy #$00
-	bne !us+
-	jsr reset_whacks
-	jmp !us++
-
-!us:
-	dex
-	jsr update_score_to_dec
-	cpx #$00
-	bne !us-
-	
-	cpy #$00
-	beq !us+
-	dey
-	jmp !us-
-!us:
 	rts
 
-update_score_to_dec:
-   
-	inc whack_score_1
-	lda whack_score_1
-	cmp #$3a
-	bne isout
-	lda #$30
-	sta whack_score_1
+////////////////////////////////////////////////////
+// Draw Score
 
-	inc whack_score_2
-	lda whack_score_2
-	cmp #$3a
-	bne isout
-	lda #$30
-    sta whack_score_2
-
-	inc whack_score_3
-	lda whack_score_3
-	cmp #$3a
-	bne isout
-	lda #$30
-	sta whack_score_3
-
-	inc whack_score_4
-	lda whack_score_4
-	cmp #$3a
-	bne isout
-	lda #$30
-	sta whack_score_4
-
-	inc whack_score_5
-	lda whack_score_5
-	cmp #$3a
-	bne isout
-	lda #$30
-	sta whack_score_5
-
-	inc whack_score_6
-	lda whack_score_6
-	cmp #$3a
-	bne isout
-	lda #$30
-	sta whack_score_6
-
-isout:
+.macro DrawScore(x,y) {
+	clc    // Set cursor position
+	ldy #x // X coordinate (column)
+	ldx #y // Y coordinate (line)
+	jsr draw_score_func_b
+}
+draw_score_func:
+	clc					// Set cursor position
+	ldy #$20         	// X coordinate (column)
+	ldx #$02        	// Y coordinate (line)
+draw_score_func_b:
+	jsr $fff0		    // Kernal Plot
+	lda whack_score_hi // Score High byte
+	ldx whack_score_lo // Score Low byte
+	jsr $bdcd
 	rts
-
-/*
-lda score,x
-and #$f0
-lsr a
-lsr a
-lsr a
-lsr a
-clc
-adc //#decimal to char offset 48 for you
-sta ScreenLocation,y
-iny
-lda score,x
-and #$0f
-clc
-adc //#decimal to char offset 48 for you
-sta ScreenLocation,y
-iny
-inx
-cpx // #number of digits / 2 + 1
-bne loop
-*/
-
-
 draw_score_game_on:
-	lda whack_score_1
-	sta GAME_ON_SCORE_LOC+5
-	lda whack_score_2
-	sta GAME_ON_SCORE_LOC+4
-	lda whack_score_3
-	sta GAME_ON_SCORE_LOC+3
-	lda whack_score_4
-	sta GAME_ON_SCORE_LOC+2
-	lda whack_score_5
-	sta GAME_ON_SCORE_LOC+1
-	lda whack_score_6
-	sta GAME_ON_SCORE_LOC
+	DrawScore(GAME_ON_SCORE_LOC_X,GAME_ON_SCORE_LOC_Y)
 	rts
-
 draw_score_game_over:
-	lda whack_score_1
-	sta GAME_OVER_SCORE_LOC+5
-	lda whack_score_2
-	sta GAME_OVER_SCORE_LOC+4
-	lda whack_score_3
-	sta GAME_OVER_SCORE_LOC+3
-	lda whack_score_4
-	sta GAME_OVER_SCORE_LOC+2
-	lda whack_score_5
-	sta GAME_OVER_SCORE_LOC+1
-	lda whack_score_6
-	sta GAME_OVER_SCORE_LOC
-	rts	
-
-reset_whacks:
-	lda #$30
-	sta whack_score_1
-	sta whack_score_2
-	sta whack_score_3
-	sta whack_score_4
-	sta whack_score_5
-	sta whack_score_6
+	DrawScore(GAME_OVER_SCORE_LOC_X,GAME_OVER_SCORE_LOC_Y)
 	rts
+
+////////////////////////////////////////////////////
+// Reset Score
 
 reset_score:
 	lda #$00
 	sta whack_score_lo
 	sta whack_score_hi
-	jsr reset_whacks
 	rts

@@ -38,8 +38,6 @@ CityXenUpstart(start)
 
 .segment PRG [allowOverlap]
 * = $34c0 "PRG"
-dev_play_music: .byte 0
-debug_mode:     .byte 0
 start:
 #import "start.asm"
 #import "main_loop.asm"

@@ -10,7 +10,7 @@ game_start:
 	lda whack_mode
 	cmp #MODE_EASY // 10 lives
 	bne !+
-	lda initial_life_win
+	lda initial_life_easy
 	sta whack_life
 !:
 	cmp #MODE_HARD // 3 lives

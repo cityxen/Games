@@ -26,6 +26,7 @@ restart:
 	sta USER_PORT_DATA
 
 	jsr draw_main_screen
+
 	jsr pause
 
 	jsr reset_timer2
@@ -81,7 +82,6 @@ main_loop:
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
 	
-	sta whack_mode
 	jsr game_setup_doodle
 	jmp game_start
 	
@@ -115,15 +115,9 @@ main_loop:
 !sdl:
 	cmp #$02
 	bne !sdl+
-	// jsr draw_qr
-	jmp main_loop
-!sdl:
-	cmp #$03
-	bne !sdl+
 	lda meatloaf_hiscore_support
 	beq !+
-	jsr draw_hiscores
-
+	jsr draw_meatloaf_hiscores
 	jmp main_loop
 !:
 	jsr draw_instruct

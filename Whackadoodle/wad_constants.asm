@@ -27,7 +27,7 @@
 
 .const doodle_speed_initial = $AF
 .const doodle_speed_easy    = $AF
-.const doodle_speed_hard    = $20
+.const doodle_speed_hard    = $30
 
 // Sprite stuff
 .const butt1_sprite_x = 70
@@ -71,5 +71,7 @@
 .const sp_plus      = $d2
 .const FLASH_TIMER_SPEED_CONST = $40
 
-.const GAME_ON_SCORE_LOC = $046C
-.const GAME_OVER_SCORE_LOC = $0580
+.const GAME_ON_SCORE_LOC_X   = 28
+.const GAME_ON_SCORE_LOC_Y   = 02
+.const GAME_OVER_SCORE_LOC_X = 25
+.const GAME_OVER_SCORE_LOC_Y = 9

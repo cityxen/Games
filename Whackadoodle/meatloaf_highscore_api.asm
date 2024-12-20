@@ -2,9 +2,26 @@
 // Kickassembler plugin for
 // using Meatloaf HiScore API
 // By Deadline / CityXen
+// And Jaime / Idolpx / Meatloaf
 // 2024
 
-#import "meatloaf_highscore_config.asm"
+MLHS_API_HISCORE_MSG:
+.encoding "screencode_mixed"
+.text "   TOP 10 WHACKADOODLE HI SCORES"
+.byte $ff
+
+MLHS_API_HISCORE_NL_MSG:
+.byte $0D,$11,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D
+.byte $ff
+
+MLHS_API_SCORE: // 4 Bytes
+.byte 0
+.byte 0
+.byte whack_score_lo
+.byte whack_score_hi
+
+MLHS_API_DRIVE_NUMBER:
+.byte 8
 
 MLHS_API_USER_CONTACT:
 .text "NNNNNNNNNNNNNNNN"
@@ -17,31 +34,33 @@ MLHS_API_USER_SCORE:
 
 ///////////////////////////////////////
 // DATA AREA FOR TOP 10 SCORES
-MLHS_API_TOP_10_TABLE:
-.encoding "ascii"
-.byte 1,0,0,0 // lo byte, hi byte score
-.text "IUNRANKED SCORE!"
+.const zp_MLT    = $02
+.const zp_MLT_lo = $02
+.const zp_MLT_hi = $03
 //     012345678901234567890123456789012
 //               1         2         3 
-.byte 0,2,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 1,1,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 128,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-.byte 0,0,0,0 // lo byte, hi byte score
-.text "UNRANKED SCORE! "
-
+MLHS_API_TOP_10_TABLE:
+.encoding "screencode_mixed"
+.byte 0,0,10,0 // lo byte, hi byte score
+.text "UNRANKED SCORE1 "
+.byte 0,0,9,0 // lo byte, hi byte score
+.text "UNRANKED SCORE2 "
+.byte 0,0,8,0 // lo byte, hi byte score
+.text "UNRANKED SCORE3 "
+.byte 0,0,7,0 // lo byte, hi byte score
+.text "UNRANKED SCORE4 "
+.byte 0,0,6,0 // lo byte, hi byte score
+.text "UNRANKED SCORE5 "
+.byte 0,0,5,0 // lo byte, hi byte score
+.text "UNRANKED SCORE6 "
+.byte 0,0,4,0 // lo byte, hi byte score
+.text "UNRANKED SCORE7 "
+.byte 0,0,3,0 // lo byte, hi byte score
+.text "UNRANKED SCORE8 "
+.byte 0,0,2,0 // lo byte, hi byte score
+.text "UNRANKED SCORE9 "
+.byte 0,0,1,0 // lo byte, hi byte score
+.text "UNRANKED SCORE10"
 .byte $ff
 
 MLHS_API_URL_RETURN_CODE:
@@ -83,9 +102,9 @@ MLHS_API_URL_GET_SCORE:  // get all scores unless n=NUM, then it will return NUM
 MLHS_API_URL_GS_NUM: // top 10 designation
 .text "10" // 35
 .text "&x=" // set game identifier // 38
-MLHS_API_URL_GS_TOKEN: // 16 byte security token (this is not the name of the game)
-.text "XXXXXXXXXXXXXXXXX" // 54
-.text "&end" // 4 byte end header // 58
+//MLHS_API_URL_GS_TOKEN: // 16 byte security token (this is not the name of the game)
+//.text "XXXXXXXXXXXXXXXXX" // 54
+//.text "&end" // 4 byte end header // 58
 MLHS_API_URL_GET_SCORE_LENGTH:
 .byte 7
 
@@ -103,14 +122,6 @@ MLHS_API_URL_CLEAR: // clear user datas in url
     sta MLHS_API_URL_AS_CONTACT,x // (add score url)
     inx
     cpx #33
-    bne !-
-    ldx #$00
-!:
-    lda MLHS_API_TOKEN,x
-    sta MLHS_API_URL_AS_TOKEN,x
-    sta MLHS_API_URL_GS_TOKEN,x
-    inx
-    cpx #17
     bne !-
     rts
 
@@ -171,3 +182,105 @@ MLHS_API_LOAD_GET: // Load routine for Meatloaf URLS
     jsr KERNAL_LOAD
     rts
     
+
+
+//////////////////////////////////////////////////////////////////
+// Draw Hi Scores Screen (Meatloaf)
+
+draw_meatloaf_hiscores:
+	jsr wait_vbl
+
+	lda #$00 // clear sprites
+	sta SPRITE_ENABLE
+
+	lda #$05
+	sta $d020
+	sta $d021
+	lda #$05
+	jsr $ffd2
+	lda #$93	
+	jsr $ffd2
+
+	ldx #$00
+!:
+	lda MLHS_API_HISCORE_MSG,x
+	cmp #$ff
+	beq !+
+	jsr $ffd2
+	inx
+	jmp !-
+!:
+
+	NL()
+
+	lda #<MLHS_API_TOP_10_TABLE
+	sta zp_MLT_lo
+	lda #>MLHS_API_TOP_10_TABLE
+	sta zp_MLT_hi
+
+	lda #$00
+	sta mlhs_cursor
+	sta mlhs_count
+
+dmhs_start:
+
+	inc mlhs_cursor
+	inc mlhs_cursor
+	ldy mlhs_cursor
+	lda (zp_MLT),y
+	sta zp_tmp_lo
+	inc mlhs_cursor
+	ldy mlhs_cursor
+	lda (zp_MLT),y
+	sta zp_tmp_hi
+
+	DrawScoreML()
+	
+	lda #$20
+	jsr $ffd2
+
+	lda #$00
+	sta mlhs_cursor2	
+!:
+	inc mlhs_cursor
+	ldy mlhs_cursor
+	lda (zp_MLT),y
+	jsr $ffd2
+	inc mlhs_cursor2
+	lda mlhs_cursor2
+	cmp #16
+	bne !-
+	NL()
+
+	inc mlhs_cursor
+	inc mlhs_count
+	lda mlhs_count
+	cmp #10
+	beq !+
+	jmp dmhs_start
+!:
+	rts
+
+mlhs_cursor:  .byte 0
+mlhs_cursor2: .byte 0
+mlhs_count: .byte 0
+
+.macro NL() {
+	ldx #$00
+!:
+	lda MLHS_API_HISCORE_NL_MSG,x
+	cmp #$ff
+	beq !+
+	jsr $ffd2
+	inx
+	jmp !-
+!:
+}
+
+.macro DrawScoreML() {
+	sty mlhs_cursor
+	lda zp_tmp_hi
+	ldx zp_tmp_lo
+	jsr $bdcd
+	ldy mlhs_cursor
+}

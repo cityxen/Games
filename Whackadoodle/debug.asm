@@ -10,6 +10,7 @@ debug_stuff:
 	lda #$01
 	sta print_hex_color
 
+/*
 	lda JOYSTICK_PORT_1
 	PrintHex(0,0)
 
@@ -46,6 +47,8 @@ debug_stuff:
 	lda random_num
 	PrintHex(33,0)
 
+	
+*/
 	lda whack_mode
 	PrintHex(36,0)
 

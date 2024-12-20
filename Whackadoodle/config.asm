@@ -7,37 +7,24 @@
 //////////////////////////////////////////////////////////////////
 // some vars
 
-whack_mode:             .byte 0 // BAR
-                                // KIDS
-                                // WIN
-                                // HARD
-                                // EASY
-
+meatloaf_hiscore_support: .byte 1
+dev_play_music:         .byte 1
+debug_mode:             .byte 0
+whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
 whack_hit: 				.byte 0 // which button has been hit (if any)
 whack_score_lo:         .byte 0
 whack_score_hi:         .byte 0
-whack_score_1:			.byte $30 // 6 bytes simple score for now, maybe highscores later
-whack_score_2:          .byte $30
-whack_score_3:			.byte $30
-whack_score_4:          .byte $30
-whack_score_5:			.byte $30
-whack_score_6:			.byte $30
-
 whack_life:             .byte 0
-
 whack_key:              .byte 0
 initial_life:           .byte 6
 initial_life_hard:      .byte 3
-initial_life_easy:
-initial_life_win:
-initial_life_kids:      .byte 10
+initial_life_easy:      .byte 10
 up:                     .byte 0
 down:                   .byte 0
 left:                   .byte 0
 right:                  .byte 0
 button:                 .byte 0
-
 irq_timer_jitter_cmp:   .byte 20
 irq_timer_jitter:       .byte 0
 irq_timer1:             .byte 0
@@ -91,8 +78,6 @@ msg_wrong:
 msg_clr:
 .text "             "
 .byte 0
-
-
 msg_mode_easy:
 .text "easy"
 .byte 0
@@ -106,11 +91,4 @@ msg_mode_mode:
 .text "mode:"
 .byte 0
 
-hiscore_msg:
-
-.text "   TOP 10 WHACKADOODLE HI SCORES"
-.byte $ff
-
-meatloaf_hiscore_support:
-.byte 0
 
