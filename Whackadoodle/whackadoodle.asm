@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////
 // WHACKADOODLE for C64 by Deadline / CityXen 2024
 //
-// Cartridge code & Meatloaf support by Jaime Idolpx (Meatloaf guy)
+// Cartridge code & Meatloaf support by Jaime Idolpx
 //
 // Fairground tune by Saul Cross
 //
