@@ -5,7 +5,8 @@
 //
 // Fairground tune by Saul Cross
 //
-// Thanks to Logg & the AHCS for support and play testing
+// Thanks to Logg & the Atlanta Historical Computing Society 
+// (AHCS) for support and play testing
 //
 //////////////////////////////////////////////////////////////
 // You will need the following repo in order to compile this
@@ -17,7 +18,6 @@
 #import "../../Commodore64_Programming/include/Macros.asm"
 #import "../../Commodore64_Programming/include/PrintMacros.asm"
 #import "../../Commodore64_Programming/include/DrawPetMateScreen.asm"
-#import "wad_constants.asm"
 
 .file [name="wad-cxn-w.prg", segments="Main,PRG,Sprites,Screens,Music,SFX"]
 
@@ -49,6 +49,13 @@ CityXenUpstart(start)
 .segment PRG [allowOverlap]
 * = $34c0 "PRG"
 start:
+
+lda #$93
+jsr $ffd2
+lda #$05
+jsr $ffd2
+
+#import "wad_constants.asm"
 #import "start.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"

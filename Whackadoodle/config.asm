@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////
 // some inline subroutines
 
+#import "../../Commodore64_Programming/include/input.il.asm"
 #import "../../Commodore64_Programming/include/sys.il.asm"
 #import "../../Commodore64_Programming/include/print.il.asm"
 
 //////////////////////////////////////////////////////////////////
 // some vars
 
-meatloaf_hiscore_support: .byte 1
 dev_play_music:         .byte 1
 debug_mode:             .byte 0
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
@@ -90,5 +90,9 @@ msg_mode_hard:
 msg_mode_mode:
 .text "mode:"
 .byte 0
-
-
+whack_your_name_txt:
+.encoding "petscii_mixed"
+.text "welcome to whackadoodle! "
+.byte $0d
+.text "login: "
+.byte 0

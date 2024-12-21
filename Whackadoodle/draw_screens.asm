@@ -10,6 +10,25 @@ draw_main_screen:
 	rts
 
 //////////////////////////////////////////////////////////////////
+// Draw LOGIN screen
+
+draw_login_screen:
+	jsr wait_vbl
+	lda #$06
+	sta BACKGROUND_COLOR
+	lda #$0e
+	sta BORDER_COLOR
+	lda #$05
+	jsr $ffd2
+	lda #$93
+	jsr $ffd2
+	jsr debug_stuff
+	jsr init_sprites_ms
+	zPrint(whack_your_name_txt)
+	InputText(2,2)
+	rts
+
+//////////////////////////////////////////////////////////////////
 // Draw Instruct Screen
 
 draw_instruct:

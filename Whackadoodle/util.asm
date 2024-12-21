@@ -81,7 +81,7 @@ draw_mode_2:
 /////////////////////////////////////////////////////
 // Get Button Press
 
-get_button:
+wad_get_button:
 	lda trig_joystick
 	beq !gb+
 	lda JOYSTICK_PORT_1
@@ -93,7 +93,7 @@ get_button:
 /////////////////////////////////////////////////////
 // Get Key Press
 
-get_key:
+wad_get_key:
 	lda trig_input
 	beq !gb+
 	jsr KERNAL_GETIN

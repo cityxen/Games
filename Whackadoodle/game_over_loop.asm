@@ -32,7 +32,7 @@ game_over_loop:
 	// jmp restart // and go back to attract mode
 !:
 
-	jsr get_key
+	jsr wad_get_key
 	cmp #KEY_R
 	bne !+
 	jmp restart
@@ -40,7 +40,7 @@ game_over_loop:
 
 !gol:
 	// lda JOYSTICK_PORT_1
-	jsr get_button
+	jsr wad_get_button
 	cmp #BUTTON_RED
 	beq !gol+
 	cmp #BUTTON_GREEN 

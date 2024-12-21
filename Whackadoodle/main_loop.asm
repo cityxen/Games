@@ -3,6 +3,8 @@
 
 restart:
 
+	jsr draw_login_screen
+
 	lda meatloaf_hiscore_support
 	beq !+
 	jsr MLHS_API_GET_SCORE
@@ -45,7 +47,7 @@ main_loop:
 	jsr reset_timer1
 	jsr randomly_flash_buttons
 
-	jsr get_key
+	jsr wad_get_key
 
 	cmp #KEY_M
 	bne !gl+
@@ -57,7 +59,7 @@ main_loop:
 !gl:	
 	
 !ml:
-	jsr get_button
+	jsr wad_get_button
 
 	cmp #BUTTON_RED
 	bne !nbc+

@@ -87,7 +87,7 @@ gl22:
 	
 	jsr draw_countdown
 	
-	jsr get_key
+	jsr wad_get_key
 
 	cmp #KEY_Q
 	bne !gl+
@@ -106,7 +106,7 @@ gl22:
 	jsr debug_stuff
 
 	// check joystick port 1 values
-	jsr get_button
+	jsr wad_get_button
 	cmp #$ff
 	beq exit_select_button
 

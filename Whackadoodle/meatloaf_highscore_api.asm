@@ -5,6 +5,8 @@
 // And Jaime / Idolpx / Meatloaf
 // 2024
 
+meatloaf_hiscore_support: .byte 1
+
 MLHS_API_HISCORE_MSG:
 .encoding "screencode_mixed"
 .text "   TOP 10 WHACKADOODLE HI SCORES"
