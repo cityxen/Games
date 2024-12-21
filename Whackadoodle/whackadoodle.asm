@@ -20,7 +20,6 @@
 #import "wad_constants.asm"
 
 .file [name="wad-cxn-w.prg", segments="Main,PRG,Sprites,Screens,Music,SFX"]
-// .file [name="wad.prg", segments=""]
 
 .segment SFX [allowOverlap]
 *=$c000 "SFX KIT"
