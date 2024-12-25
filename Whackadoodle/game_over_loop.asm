@@ -1,11 +1,13 @@
 
 game_over:
 
-	lda #$01
+	lda #$00
 	sta screen_draw
 	jsr draw_gameover
 	jsr play_sound_gameover
 	jsr pause
+
+	jsr game_entry
 
 	ldx #0
 	ldy #0
@@ -32,29 +34,23 @@ game_over_loop:
 	// jmp restart // and go back to attract mode
 !:
 
-	jsr wad_get_key
-	cmp #KEY_R
-	bne !+
-	jmp restart
 !:
-
-!gol:
 	// lda JOYSTICK_PORT_1
 	jsr wad_get_button
 	cmp #BUTTON_RED
-	beq !gol+
+	beq !+
 	cmp #BUTTON_GREEN 
-	beq !gol+
+	beq !+
 	cmp #BUTTON_YELLOW
-	beq !gol+
+	beq !+
  	cmp #BUTTON_BLUE
-	beq !gol+
+	beq !+
 	cmp #BUTTON_WHITE
-	beq !gol+
-	jmp !gol++
-!gol:
+	beq !+
+	jmp !++
+!:
 	jmp restart
-!gol:
+!:
 	clc
 	lda trig_1
 	cmp #02
@@ -71,31 +67,23 @@ game_over_loop:
 	// toggle screen to draw
 	inc screen_draw
 	lda screen_draw
-	cmp #$01
-	bne !gol+
-	lda #$00
-	sta screen_draw
-!gol:
-	lda screen_draw
-	cmp #$00 
-	bne !gol+
+	bne !+
 	jsr draw_gameover
 	jmp game_over_loop
-!gol:
-	cmp #$01
-	bne !gol+
-	//jsr draw_qr
-!gol:
+!:
+	lda #$ff
+	sta screen_draw
+	jsr draw_meatloaf_hiscores
 	jmp game_over_loop
 
-
 game_entry:
-
 	lda #$02
 	sta $d020
 	sta $d021
-
 	lda #$93
 	jsr $ffd2
-!:
-	jmp !-
+	StrCpy(user_name_empty,user_name,15)
+	zPrint(whack_your_name_txt)
+	InputText2(user_name,15,10,10,1)
+	ConvertA2P(user_name,15)
+	rts

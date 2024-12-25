@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////
 // some vars
 
-dev_play_music:         .byte 1
+dev_play_music:         .byte 0
 debug_mode:             .byte 0
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
@@ -20,6 +20,13 @@ whack_key:              .byte 0
 initial_life:           .byte 6
 initial_life_hard:      .byte 3
 initial_life_easy:      .byte 10
+user_name_empty:
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte 0
+user_name:
+.text "                "
+.byte 0
 up:                     .byte 0
 down:                   .byte 0
 left:                   .byte 0
@@ -92,7 +99,15 @@ msg_mode_mode:
 .byte 0
 whack_your_name_txt:
 .encoding "petscii_mixed"
-.text "welcome to whackadoodle! "
+.byte $93,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,05
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.text "submit your score "
 .byte $0d
-.text "login: "
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.text "name: "
+.byte 0
+whack_logged_in:
+.text "name: "
 .byte 0

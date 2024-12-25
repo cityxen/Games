@@ -52,7 +52,7 @@ game_start:
 	
 game_loop:
 
-	jsr draw_mode
+	// jsr draw_mode
 
 	lda whack_life
 	bne !gl+

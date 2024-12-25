@@ -3,8 +3,6 @@
 
 restart:
 
-	jsr draw_login_screen
-
 	lda meatloaf_hiscore_support
 	beq !+
 	jsr MLHS_API_GET_SCORE
@@ -38,9 +36,15 @@ restart:
 	sta screen_draw
 
 main_loop:
-	
+
+	// check if "logged in"
+	// lda user_name
+	// cmp #$ff
+	// bne !+
+	// jsr draw_login_screen
+// !:
+		
 	jsr debug_stuff
-	
 
 	lda trig_1
 	beq !ml+
@@ -55,12 +59,20 @@ main_loop:
 	lda play_music
 	and #%00000001
 	sta play_music
-
 !gl:	
+	cmp #KEY_L
+	bne !gl+
+	StrCpy(user_name_empty,user_name,16)
+!gl:
 	
 !ml:
 	jsr wad_get_button
 
+	cmp #BUTTON_BLUE
+	bne !nbc+
+	StrCpy(user_name_empty,user_name,16)
+	jmp !ml+
+!nbc:
 	cmp #BUTTON_RED
 	bne !nbc+
 	lda #MODE_EASY
@@ -90,7 +102,9 @@ main_loop:
 !ml:
 	lda trig_2
 	cmp #$02
-	bcc main_loop
+	bcs !ml+
+	jmp main_loop
+!ml:
 	lda #$00
 	sta trig_2 // reset timer
 
@@ -125,3 +139,5 @@ main_loop:
 	jsr draw_instruct
 !sdl:
 	jmp main_loop
+
+

@@ -40,7 +40,7 @@
 #import "sprites/was-sprites-2.0 - Sprites.asm"
 
 .segment Screens [allowOverlap]
-*=$4800 "SCREENS"
+*=$4900 "SCREENS"
 #import "petmate/screen4.asm"
 
 *=$0801
@@ -49,11 +49,6 @@ CityXenUpstart(start)
 .segment PRG [allowOverlap]
 * = $34c0 "PRG"
 start:
-
-lda #$93
-jsr $ffd2
-lda #$05
-jsr $ffd2
 
 #import "wad_constants.asm"
 #import "start.asm"
