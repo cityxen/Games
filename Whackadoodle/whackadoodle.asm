@@ -13,11 +13,10 @@
 // https://github.com/cityxen/Commodore64_Programming
 //////////////////////////////////////////////////////////////
 
-
-#import "../../Commodore64_Programming/include/Constants.asm"
-#import "../../Commodore64_Programming/include/Macros.asm"
-#import "../../Commodore64_Programming/include/PrintMacros.asm"
-#import "../../Commodore64_Programming/include/DrawPetMateScreen.asm"
+#import "Constants.asm"
+#import "Macros.asm"
+#import "PrintMacros.asm"
+#import "DrawPetMateScreen.asm"
 
 .file [name="wad-cxn-w.prg", segments="Main,PRG,Sprites,Screens,Music,SFX"]
 

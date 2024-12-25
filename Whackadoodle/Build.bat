@@ -3,7 +3,7 @@
 @rem petcat -w2 -o wadbasic.prg whackbasic.bas
 
 echo Build Script: Building %1
-call genkickass-script.bat -t C64 -o prg_files -m true -s true -l "RETRO_DEV_LIB"
+call genkickass-script.bat -t C64 -o prg_files -m true -s true -l "E:\dev\github\cityxen\Commodore64_Programming\include"
 call KickAss.bat whackadoodle.asm
 
 @rem xcopy prg_files\\wad-cxn.prg prg_files\\wad-cxn-w.prg /Y
