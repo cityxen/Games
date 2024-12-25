@@ -1,0 +1,7 @@
+open 10.1.10.4 21
+guest
+anonymous
+cd Usb2
+binary
+put prg_files/cxn-age.prg
+quit
