@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////
 // some vars
 
-dev_play_music:         .byte 0
+dev_play_music:         .byte 1
 debug_mode:             .byte 0
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
