@@ -11,6 +11,7 @@
 //////////////////////////////////////////////////////////////
 // You will need the following repo in order to compile this
 // https://github.com/cityxen/Commodore64_Programming
+// use -l "path-to-lib" in KickAss command line 
 //////////////////////////////////////////////////////////////
 
 #import "Constants.asm"

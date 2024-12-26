@@ -1,5 +1,20 @@
+//////////////////////////////////////////////////////////////
+// WHACKADOODLE for C64 by Deadline / CityXen 2024
+//
+// Cartridge code & Meatloaf support by Jaime Idolpx
+//
+// Fairground tune by Saul Cross
+//
+// Thanks to Logg & the Atlanta Historical Computing Society 
+// (AHCS) for support and play testing
+//
+//////////////////////////////////////////////////////////////
+// You will need the following repo in order to compile this
+// https://github.com/cityxen/Commodore64_Programming
+// use -l "path-to-lib" in KickAss command line 
+//////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 // Game start
 
 game_start:
@@ -34,8 +49,7 @@ game_start:
 
 	jsr draw_mode
 
-	jsr pause1
-	jsr pause1
+	jsr pause3
 
 	jsr play_sound_get_ready
 
