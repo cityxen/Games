@@ -23,7 +23,7 @@ lda_random_kern:
 // Draw mode
 
 draw_mode:
-	zp_str(msg_mode_mode)
+	// zp_str(msg_mode_mode)
 	ldy #$00
 !:
 	lda (zp_tmp),y
@@ -35,20 +35,20 @@ draw_mode:
 	jmp !-
 !:
 
-	lda whack_mode
+	lda GAME_MODE
 	cmp #MODE_EASY
 	bne !+
-	zp_str(msg_mode_easy)
+	// zp_str(msg_mode_easy)
 	jmp draw_mode_2
 !:
 	cmp #MODE_NORMAL
 	bne !+
-	zp_str(msg_mode_normal)
+	// zp_str(msg_mode_normal)
 	jmp draw_mode_2
 !:
 	cmp #MODE_HARD
 	bne !+
-	zp_str(msg_mode_hard)
+	// zp_str(msg_mode_hard)
 	jmp draw_mode_2
 !:
 
@@ -71,7 +71,7 @@ draw_mode_2:
 // Get Button Press
 
 get_button:
-	lda trig_joystick
+	lda TRIG_JOYSTICK
 	beq !gb+
 	lda JOYSTICK_PORT_1
 	rts
@@ -83,12 +83,14 @@ get_button:
 // Get Key Press
 
 get_key:
-	lda trig_input
+	lda TRIG_INPUT
 	beq !gb+
 	jsr KERNAL_GETIN
-	sta whack_key
+
+
 	jsr reset_input_timer
-	lda whack_key
+
+
 	rts
 !gb:
 	lda #$00
@@ -98,28 +100,16 @@ get_key:
 // Increment Score
 
 increment_score:
-	inc whack_score_lo
-	bne !is+
-	inc whack_score_hi
-!is:
+	
+	
 	rts
 
 ////////////////////////////////////////////////////
 // Decrement Score
 
 decrement_score:
-	lda whack_score_lo
-	cmp #$00
-	beq !is+
-	dec whack_score_lo
-	jmp !is++
-!is:
-	lda whack_score_hi
-	cmp #$00
-	beq !is+
-	dec whack_score_hi
-	dec whack_score_lo
-!is:
+	
+
 	rts
 
 ////////////////////////////////////////////////////
@@ -132,27 +122,22 @@ decrement_score:
 	jsr draw_score_func_b
 }
 draw_score_func:
-	clc					// Set cursor position
-	ldy #$20         	// X coordinate (column)
-	ldx #$02        	// Y coordinate (line)
+
 draw_score_func_b:
-	jsr $fff0		    // Kernal Plot
-	lda whack_score_hi // Score High byte
-	ldx whack_score_lo // Score Low byte
-	jsr $bdcd
+
 	rts
+
 draw_score_game_on:
-	DrawScore(GAME_ON_SCORE_LOC_X,GAME_ON_SCORE_LOC_Y)
+
 	rts
+
 draw_score_game_over:
-	DrawScore(GAME_OVER_SCORE_LOC_X,GAME_OVER_SCORE_LOC_Y)
+
 	rts
 
 ////////////////////////////////////////////////////
 // Reset Score
 
 reset_score:
-	lda #$00
-	sta whack_score_lo
-	sta whack_score_hi
+
 	rts

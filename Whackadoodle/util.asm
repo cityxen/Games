@@ -82,7 +82,7 @@ draw_mode_2:
 // Get Button Press
 
 wad_get_button:
-	lda trig_joystick
+	lda irq_timer_joystick_tr
 	beq !gb+
 	lda JOYSTICK_PORT_1
 	rts
@@ -94,7 +94,7 @@ wad_get_button:
 // Get Key Press
 
 wad_get_key:
-	lda trig_input
+	lda irq_timer_input_tr
 	beq !gb+
 	jsr KERNAL_GETIN
 	sta whack_key

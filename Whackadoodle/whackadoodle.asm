@@ -22,17 +22,12 @@
 
 .segment SFX [allowOverlap]
 *=$c000 "SFX KIT"
-.import binary "sound/sfxwdp.prg", 2
-
-// FX PLAYER ON    : sys 49152 : jsr $c000 // sound_on sr
-// FX PLAYER OFF   : sys 49168 : jsr $c010 // sound_off sr
-// CLEAR REGISTERS : sys 49657 : jsr $c1f9 // clear sr
-// IRQ CONTROL     :           : jsr $c028 // add into irq
+.import binary "sound/sfxkit.prg", 2
 
 .segment Music [allowOverlap]
-.var music = LoadSid("whackadoodle.sid")		//<- Here we load the sid file
+.var music = LoadSid("whackadoodle.sid") // <- Here we load the sid file
 *=music.location "Music"
-.fill music.size, music.getData(i) // <- Here we put the music in memory
+.fill music.size, music.getData(i)       // <- Here we put the music in memory
 
 .segment Sprites [allowOverlap]
 *=$3000 "SPRITES"
@@ -46,21 +41,22 @@
 CityXenUpstart(start)
 
 .segment PRG [allowOverlap]
-* = $34c0 "PRG"
+* = $1800 "PRG"
 start:
+    jmp initialize
 
-#import "wad_constants.asm"
-#import "start.asm"
+#import "constants.asm"
+#import "config.asm"
+#import "initialize.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"
 #import "game_over_loop.asm"
-#import "doodles.asm"
-#import "messages.asm"
+#import "debug.asm"
 #import "draw_screens.asm"
 #import "init_sprites.asm"
-#import "debug.asm"
-#import "sound.asm"
-#import "timers.asm"
 #import "util.asm"
 #import "meatloaf_highscore_api.asm"
-#import "config.asm"
+// Whackadoodle specific stuff
+#import "doodles.asm"
+#import "messages.asm"
+

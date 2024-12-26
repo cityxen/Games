@@ -1,0 +1,12 @@
+.label screen_loader=$8066
+.label prg_next_block=$8074
+.label init=$802b
+.label break=$8058
+.label prg_size=$80a3
+.label prg_next_dest=$8080
+.label start_prg=$8092
+.label prg_data=$80a5
+.label loader_start=$8009
+.label prg_load_block=$8069
+.label tag=$809a
+.label prg_next_src=$8086

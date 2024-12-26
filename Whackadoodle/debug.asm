@@ -19,7 +19,7 @@ debug_stuff:
 	lda doodle
 	PrintHex(6,0)
 
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	PrintHex(9,0)
 
 	lda irq_timer_jitter
@@ -31,7 +31,7 @@ debug_stuff:
 	lda irq_timer1
 	PrintHex(18,0)
 
-	lda trig_1
+	lda irq_timer1_tr
 	PrintHex(21,0)
 
 	lda message
@@ -40,7 +40,7 @@ debug_stuff:
 	lda irq_timer_jitter 
 	PrintHex(27,0)
 
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	PrintHex(30,0)
 
 	lda random_num

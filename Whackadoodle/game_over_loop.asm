@@ -5,7 +5,7 @@ game_over:
 	sta screen_draw
 	jsr draw_gameover
 	jsr play_sound_gameover
-	jsr pause
+	jsr pause1
 
 	jsr game_entry
 
@@ -26,7 +26,7 @@ game_over:
 
 game_over_loop:
 
-	lda trig_3 
+	lda irq_timer3_tr
 	cmp #03 // time out
 	bne !+
 	lda #BUTTON_LIGHT_NONE
@@ -52,18 +52,18 @@ game_over_loop:
 	jmp restart
 !:
 	clc
-	lda trig_1
+	lda irq_timer1_tr
 	cmp #02
 	bcc game_over_loop
 	lda #$00
-	sta trig_1 // reset timer
+	sta irq_timer1_tr // reset timer
 	// jsr randomly_flash_buttons
 	clc
-	lda trig_2
+	lda irq_timer2_tr
 	cmp #$02
 	bcc game_over_loop
 	lda #$00
-	sta trig_2 // reset timer
+	sta irq_timer2_tr // reset timer
 	// toggle screen to draw
 	inc screen_draw
 	lda screen_draw

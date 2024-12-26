@@ -2,7 +2,7 @@
 set_message:
 	sta message
 	lda #$00
-	sta trig_4
+	sta irq_timer4_tr
 	sta irq_timer4
 	rts
 
@@ -37,7 +37,7 @@ show_message:
 	lda #BUTTON_ACTION_MISS
 	sta USER_PORT_DATA
 smo:
-	lda trig_4
+	lda irq_timer4_tr
 	beq !smo+
 	jsr init_sprites_play
 	lda #$00

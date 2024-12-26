@@ -2,7 +2,7 @@
 last_button:
 .byte 0
 check_jitter_doodle:
-	lda trig_jitter
+	lda irq_timer_jitter_tr
 	bne !cj+
 	rts	
 !cj:
@@ -35,61 +35,61 @@ game_setup_doodle:
 
 easy_speed:
 	lda #doodle_speed_easy
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 	jmp over_mode_speeds
 hard_speed:
 	lda #doodle_speed_hard
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 	jmp faster_3
 
 over_mode_speeds:
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	clc
 	sbc #$05
-	sta irq_timer_jitter_cmp
-	lda irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
+	lda irq_timer_jitter_to
 	cmp #50
 	bcs !+
 	lda #50
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 !:
 	jmp outfaster
 faster:
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	clc
 	sbc #$01
-	sta irq_timer_jitter_cmp	
+	sta irq_timer_jitter_to	
 
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	cmp #40
 	bcs !+
 	lda #40
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 !:
 	jmp outfaster
 faster_2:
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	clc
 	sbc #$01
-	sta irq_timer_jitter_cmp	
-	lda irq_timer_jitter_cmp
+	sta irq_timer_jitter_to	
+	lda irq_timer_jitter_to
 	cmp #30
 	bcs !+
 	lda #30
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 !:
 	jmp outfaster
 faster_3:
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	clc
 	sbc #$01
-	sta irq_timer_jitter_cmp	
+	sta irq_timer_jitter_to	
 
-	lda irq_timer_jitter_cmp
+	lda irq_timer_jitter_to
 	cmp #20
 	bcs !+
 	lda #20
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 !:
 
 

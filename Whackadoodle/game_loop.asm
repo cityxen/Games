@@ -34,8 +34,8 @@ game_start:
 
 	jsr draw_mode
 
-	jsr pause
-	jsr pause
+	jsr pause1
+	jsr pause1
 
 	jsr play_sound_get_ready
 
@@ -45,7 +45,7 @@ game_start:
 	jsr init_sprites_play
 
 	lda #doodle_speed_initial // initial doodle time 
-	sta irq_timer_jitter_cmp
+	sta irq_timer_jitter_to
 
 	jsr reset_jitter_timer
 

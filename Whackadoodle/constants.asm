@@ -1,7 +1,24 @@
+//////////////////////////////////////////////////////////////
+// WHACKADOODLE for C64 by Deadline / CityXen 2024
+// 
+// CONSTANTS
+//
+// Cartridge code & Meatloaf support by Jaime Idolpx
+//
+// Fairground tune by Saul Cross
+//
+// Thanks to Logg & the Atlanta Historical Computing Society 
+// (AHCS) for support and play testing
+//
+//////////////////////////////////////////////////////////////
+// You will need the following repo in order to compile this
+// https://github.com/cityxen/Commodore64_Programming
+//////////////////////////////////////////////////////////////
+#importonce
+//////////////////////////////////////////////////////////////
 // Local Constants
 
-// Buttons Stuff
-.const BUTTON_RED    = $FB
+.const BUTTON_RED    = $FB // Buttons Stuff
 .const BUTTON_GREEN  = $FE
 .const BUTTON_YELLOW = $FD
 .const BUTTON_BLUE   = $F7
@@ -11,8 +28,7 @@
 .const MODE_NORMAL   = $01 // 6 Lives, Speed up normal
 .const MODE_HARD     = $02 // 3 Lives, Max Speed from start
 
-// Buttons Light / Action
-.const BUTTON_LIGHT_GREEN   = %11111110
+.const BUTTON_LIGHT_GREEN   = %11111110 // Buttons Light / Action
 .const BUTTON_LIGHT_YELLOW  = %11111101
 .const BUTTON_LIGHT_BLUE    = %11111011
 .const BUTTON_LIGHT_RED     = %11110111
@@ -29,8 +45,7 @@
 .const doodle_speed_easy    = $AF
 .const doodle_speed_hard    = $30
 
-// Sprite stuff
-.const butt1_sprite_x = 70
+.const butt1_sprite_x = 70 // Sprite stuff
 .const butt1_sprite_y = 165
 .const butt1_sprite_m = 0
 .const butt2_sprite_x = 120
@@ -48,8 +63,7 @@
 .const comic_sprite_x = 165
 .const comic_sprite_y = 100
 
-// Sprite Pointers
-.const sp_pointers  = $c0
+.const sp_pointers  = $c0 // Sprite Pointers
 .const sp_happyface = $c0
 .const sp_yinyang   = $c1
 .const sp_heart     = $c2

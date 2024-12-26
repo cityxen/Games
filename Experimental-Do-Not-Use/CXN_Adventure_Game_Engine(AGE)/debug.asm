@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////
 // DEBUG STUFF
 debug_stuff:
-	lda debug_mode
+	lda DEBUG_MODE
 	and #$01
 	bne !+
 	rts
@@ -48,8 +48,9 @@ debug_stuff:
 	PrintHex(33,0)
 
 	
-*/
+
 	lda whack_mode
 	PrintHex(36,0)
+	*/
 
 	rts

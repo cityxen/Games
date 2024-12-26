@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////
 // Main loop
 
+main_loop_start:
 restart:
 
 	lda meatloaf_hiscore_support
@@ -27,7 +28,7 @@ restart:
 
 	jsr draw_main_screen
 
-	jsr pause
+	jsr pause3
 
 	jsr reset_timer2
 	jsr reset_timer1
@@ -46,7 +47,7 @@ main_loop:
 		
 	jsr debug_stuff
 
-	lda trig_1
+	lda irq_timer1_tr
 	beq !ml+
 	jsr reset_timer1
 	jsr randomly_flash_buttons
@@ -100,13 +101,13 @@ main_loop:
 	jmp game_start
 	
 !ml:
-	lda trig_2
+	lda irq_timer2_tr
 	cmp #$02
 	bcs !ml+
 	jmp main_loop
 !ml:
 	lda #$00
-	sta trig_2 // reset timer
+	sta irq_timer2_tr // reset timer
 
 	// toggle screen to draw
 	inc screen_draw

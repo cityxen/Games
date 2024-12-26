@@ -115,7 +115,7 @@ start_prg:
 tag:        .encoding "screencode_upper"
             .text @"CITYXEN!\$00"
 prg_size:
-            .var data = LoadBinary("wad.prg")   // program must be exomized and less than 8000 bytes
+            .var data = LoadBinary("prg_files/wad-cxn-e.prg")   // program must be exomized and less than 8000 bytes
             .word data.getSize()-2              // program size (minus start address)
 prg_data:
             .fill data.getSize(), data.get(i)   // and PRG data

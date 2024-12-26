@@ -1,14 +1,35 @@
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// WHACKADOODLE for C64 by Deadline / CityXen 2024
+// 
+// CONFIG
+//
+// Cartridge code & Meatloaf support by Jaime Idolpx
+//
+// Fairground tune by Saul Cross
+//
+// Thanks to Logg & the Atlanta Historical Computing Society 
+// (AHCS) for support and play testing
+//
+//////////////////////////////////////////////////////////////
+// You will need the following repo in order to compile this
+// https://github.com/cityxen/Commodore64_Programming
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
 // some inline subroutines
 
-#import "../../Commodore64_Programming/include/input.il.asm"
-#import "../../Commodore64_Programming/include/sys.il.asm"
-#import "../../Commodore64_Programming/include/print.il.asm"
+#import "input.il.asm"
+#import "sys.il.asm"
+#import "print.il.asm"
+#import "music.il.asm"
+#import "sfxkit.il.asm"
+#import "timers.il.asm"
 
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 // some vars
 
 dev_play_music:         .byte 1
+play_music:             .byte 0
 debug_mode:             .byte 0
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
@@ -32,29 +53,7 @@ down:                   .byte 0
 left:                   .byte 0
 right:                  .byte 0
 button:                 .byte 0
-irq_timer_jitter_cmp:   .byte 20
-irq_timer_jitter:       .byte 0
-irq_timer1:             .byte 0
-irq_timer2:             .byte 0
-irq_timer3:             .byte 0
-irq_timer4:             .byte 0
-irq_timer5:             .byte 0
-irq_timer_sound:        .byte 0
 sound_playing:          .byte 0
-irq_timer_joystick:     .byte 0
-irq_timer_allow_input:  .byte 0
-trig_1:                 .byte 0
-trig_2:                 .byte 0
-trig_3:                 .byte 0
-trig_4:                 .byte 0
-trig_sound:             .byte 0
-trig_joystick:          .byte 0
-trig_jitter:            .byte 0
-trig_input:             .byte 0
-play_music:             .byte 0
-timer_instruct:         .byte 0
-timer_instruct2:        .byte 0
-timer_instruct3:        .byte 0
 screen_draw:            .byte 0
 button_flash_state:     .byte 0
 button_to_hit:          .byte 0
