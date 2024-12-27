@@ -32,11 +32,11 @@
 
 .segment Sprites [allowOverlap]
 *=$3000 "SPRITES"
-#import "sprites/was-sprites-2.0 - Sprites.asm"
+#import "sprites/sprites.asm"
 
 .segment Screens [allowOverlap]
 *=$4900 "SCREENS"
-#import "petmate/screen4.asm"
+#import "petmate/screen.asm"
 
 *=$0801
 CityXenUpstart(start)
