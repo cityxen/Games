@@ -19,6 +19,9 @@
 
 game_start:
 
+	lda #$01 // score increment count subtract or add
+	sta score_math_o
+
 	lda initial_life
 	sta whack_life
 
@@ -34,7 +37,6 @@ game_start:
 	sta whack_life
 !:
 
-	// jsr reset_score
 	jsr score_reset
 
 	lda #$00
@@ -179,10 +181,12 @@ exit_select_button:
 	beq !gl+
 	cmp #$09
 	beq !gl++
+
 	// buttons don't match (miss automatic / life -1)
 	jsr play_sound_miss
 	lda #$02
 	jsr set_message
+
 	// life -1
 	dec whack_life
 	lda #$03
@@ -195,17 +199,16 @@ exit_select_button:
 	lda doodle
 	cmp #$04
 	bcs !cph+
+
 	// good doodle = WRONG (score -1 / life -1)
 	jsr play_sound_wrong
 	lda #$04
 	jsr set_message
+
 	// life -1
 	dec whack_life
-	// score -1
 
-	// jsr decrement_score
-	lda #$01
-	sta score_math_o
+	// score -1
 	jsr score_sub
 
 	lda #$02
@@ -216,8 +219,6 @@ exit_select_button:
 	// bad doodle = POW (score +1)
 	jsr play_sound_pow
 
-	// jsr increment_score
-	lda #$01
 	jsr score_add
 
 	lda #$03

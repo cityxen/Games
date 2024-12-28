@@ -121,52 +121,8 @@ wad_get_key:
 	lda #$00
 	rts
 
-
-
-/*
-////////////////////////////////////////////////////
-// Increment Score
-
-increment_score:
-	inc whack_score_lo
-	bne !is+
-	inc whack_score_hi
-!is:
-	rts
-
-////////////////////////////////////////////////////
-// Decrement Score
-
-decrement_score:
-	lda whack_score_lo
-	cmp #$00
-	beq !is+
-	dec whack_score_lo
-	jmp !is++
-!is:
-	lda whack_score_hi
-	cmp #$00
-	beq !is+
-	dec whack_score_hi
-	dec whack_score_lo
-!is:
-	rts
-
-////////////////////////////////////////////////////
+///////////////////////////////////////////////////
 // Draw Score
-
-
-draw_score_func:
-	clc					// Set cursor position
-	ldy #$20         	// X coordinate (column)
-	ldx #$02        	// Y coordinate (line)
-draw_score_func_b:
-	jsr $fff0		    // Kernal Plot
-	lda whack_score_hi // Score High byte
-	ldx whack_score_lo // Score Low byte
-	jsr $bdcd
-	rts
-*/
 
 .macro DrawScore(x,y) {
 	clc    // Set cursor position
@@ -182,14 +138,3 @@ draw_score_game_on:
 draw_score_game_over:
 	DrawScore(GAME_OVER_SCORE_LOC_X,GAME_OVER_SCORE_LOC_Y)
 	rts
-
-/*
-////////////////////////////////////////////////////
-// Reset Score
-// reset_score:
-//	lda #$00
-//	sta whack_score_lo
-//	sta whack_score_hi
-//	rts
-
-*/
