@@ -22,7 +22,7 @@ restart:
 
 	lda meatloaf_hiscore_support
 	beq !+
-	jsr MLHS_API_GET_SCORE
+	// jsr MLHS_API_GET_SCORE
 !:
 
 	lda #00
@@ -138,12 +138,14 @@ main_loop:
 	lda screen_draw
 	cmp #$00 
 	bne !sdl+
-	jsr draw_main_screen
+	// jsr draw_main_screen
+	jsr draw_meatloaf_hiscores
 	jmp main_loop
 !sdl:
 	cmp #$01
 	bne !sdl+
-	jsr draw_instruct
+	// jsr draw_instruct
+	jsr draw_meatloaf_hiscores
 	jmp main_loop
 !sdl:
 	cmp #$02

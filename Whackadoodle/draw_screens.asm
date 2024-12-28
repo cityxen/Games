@@ -20,8 +20,6 @@
 draw_main_screen:
 	jsr wait_vbl
 	DrawPetMateScreen(was1)
-	// zPrintXY(whack_logged_in,0,0)
-	// zPrintXY(user_name,6,0)
 	jsr debug_stuff
 	jsr init_sprites_ms
 	rts
@@ -73,7 +71,9 @@ draw_gameover:
 	DrawPetMateScreen(scr_gameover)
 	jsr debug_stuff
 	jsr init_sprites_ms
+	
 	jsr draw_score_game_over
+
 	rts
 
 //////////////////////////////////////////////////////////////////

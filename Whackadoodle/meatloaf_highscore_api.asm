@@ -9,21 +9,15 @@ meatloaf_hiscore_support: .byte 1
 
 MLHS_API_HISCORE_MSG:
 .encoding "screencode_mixed"
-.text "   TOP 10 WHACKADOODLE HI SCORES"
-.byte $ff
+.text "           TOP 10 HIGH SCORES"
+.byte $00
 
-MLHS_API_HISCORE_NL_MSG:
-.byte $0D,$11,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D
-.byte $ff
-
-MLHS_API_SCORE: // 4 Bytes
-.byte 0
-.byte 0
-.byte whack_score_lo
-.byte whack_score_hi
+MLHS_NL:
+.byte $0D,$11,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D
+.byte $00
 
 MLHS_API_DRIVE_NUMBER:
-.byte 8
+.byte 11
 
 MLHS_API_USER_CONTACT:
 .text "NNNNNNNNNNNNNNNN"
@@ -31,39 +25,73 @@ MLHS_API_USER_CONTACT:
 MLHS_API_USER_NAME:
 .text "NNNNNNNNNNNNNNNN"
 .byte 0
-MLHS_API_USER_SCORE:
-.byte 0,0,0,0
 
 ///////////////////////////////////////
 // DATA AREA FOR TOP 10 SCORES
-.const zp_MLT    = $02
-.const zp_MLT_lo = $02
-.const zp_MLT_hi = $03
-//     012345678901234567890123456789012
-//               1         2         3 
+
 MLHS_API_TOP_10_TABLE:
+.byte 0
 .encoding "screencode_mixed"
-.byte 0,0,10,0 // lo byte, hi byte score
-.text "UNRANKED SCORE1 "
-.byte 0,0,9,0 // lo byte, hi byte score
-.text "UNRANKED SCORE2 "
-.byte 0,0,8,0 // lo byte, hi byte score
-.text "UNRANKED SCORE3 "
-.byte 0,0,7,0 // lo byte, hi byte score
-.text "UNRANKED SCORE4 "
-.byte 0,0,6,0 // lo byte, hi byte score
-.text "UNRANKED SCORE5 "
-.byte 0,0,5,0 // lo byte, hi byte score
-.text "UNRANKED SCORE6 "
-.byte 0,0,4,0 // lo byte, hi byte score
-.text "UNRANKED SCORE7 "
-.byte 0,0,3,0 // lo byte, hi byte score
-.text "UNRANKED SCORE8 "
-.byte 0,0,2,0 // lo byte, hi byte score
-.text "UNRANKED SCORE9 "
-.byte 0,0,1,0 // lo byte, hi byte score
-.text "UNRANKED SCORE10"
-.byte $ff
+MLHS1a:
+.text "0000000010"
+.byte 0
+MLHS1b:
+.text "UNRANKED SCORE 1"
+.byte 0
+MLHS2a:
+.text "0000000009"
+.byte 0
+MLHS2b:
+.text "UNRANKED SCORE 2"
+.byte 0
+MLHS3a:
+.text "0000000008"
+.byte 0
+MLHS3b:
+.text "UNRANKED SCORE 3"
+.byte 0
+MLHS4a:
+.text "0000000007"
+.byte 0
+MLHS4b:
+.text "UNRANKED SCORE 4"
+.byte 0
+MLHS5a:
+.text "0000000006"
+.byte 0
+MLHS5b:
+.text "UNRANKED SCORE 5"
+.byte 0
+MLHS6a:
+.text "0000000005"
+.byte 0
+MLHS6b:
+.text "UNRANKED SCORE 6"
+.byte 0
+MLHS7a:
+.text "0000000004"
+.byte 0
+MLHS7b:
+.text "UNRANKED SCORE 7"
+.byte 0
+MLHS8a:
+.text "0000000003"
+.byte 0
+MLHS8b:
+.text "UNRANKED SCORE 8"
+.byte 0
+MLHS9a:
+.text "0000000002"
+.byte 0
+MLHS9b:
+.text "UNRANKED SCORE 9"
+.byte 0
+MLHS10a:
+.text "0000000001"
+.byte 0
+MLHS10b:
+.text "UNRANKED SCORE A"
+.byte 0
 
 MLHS_API_URL_RETURN_CODE:
 .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -73,42 +101,29 @@ MLHS_API_URL_RETURN_CODE:
 MLHS_API_URL_ADD_SCORE: // text table used for meatloaf file name
 .encoding "screencode_mixed"
 .text "ML:%WAD" // add real URL here
-///////0123456789012345678901234567890
-///////          1         2         3
-// parameters
-.text "?s="  // 9
+.text "?s="  	// 9
 MLHS_API_URL_AS_SCORE:
-.text "SSSS" // 4 byte score // 13
-.text "&c=" // 16
+.text "SSSS" 	// 4 byte score // 13
+.text "&c=" 	// 16
 MLHS_API_URL_AS_CONTACT:
 .text "NNNNNNNNNNNNNNNNN" // 32
-.text "&n=" // 35
+.text "&n=" 	// 35
 MLHS_API_URL_AS_NAME:
-.text "NNNNNNNNNNNNNNNNN" // 48
-//     012345678901234567890123456789012
-.text "&x=" // 51
-MLHS_API_URL_AS_TOKEN: // 16 byte security token (this is not the name of the game)
-.text "XXXXXXXXXXXXXXXXX" // 67
-.text "&end" // 4 byte end header // 71
-.byte 0
+.text "NNNNNNNNNNNNNNNNN"
+.byte 0			// 52
 MLHS_API_URL_ADD_SCORE_LENGTH:
-.byte 71
+.byte 52
 ///////////////////////////////////////
 ///////////////////////////////////////
 MLHS_API_URL_GET_SCORE:  // get all scores unless n=NUM, then it will return NUM results
                 // in our case we want 10
 .encoding "screencode_mixed"
 .text "ML:%WAD" // add real URL here
-.byte 0
-.text "?a=" // 33
+.text "?a="
 MLHS_API_URL_GS_NUM: // top 10 designation
-.text "10" // 35
-.text "&x=" // set game identifier // 38
-//MLHS_API_URL_GS_TOKEN: // 16 byte security token (this is not the name of the game)
-//.text "XXXXXXXXXXXXXXXXX" // 54
-//.text "&end" // 4 byte end header // 58
+.text "10"
 MLHS_API_URL_GET_SCORE_LENGTH:
-.byte 7
+.byte 13
 
 // add another url to check if current score is the new high score
 
@@ -144,10 +159,12 @@ MLHS_API_SET_SCORE:
     sta MLHS_API_URL_AS_SCORE
     lda #$00
     sta MLHS_API_URL_AS_SCORE+1
-    lda MLHS_API_SCORE+2
+
+    // lda MLHS_API_SCORE+2
     sta MLHS_API_URL_AS_SCORE+2
-    lda MLHS_API_SCORE+3
+    // lda MLHS_API_SCORE+3
     sta MLHS_API_URL_AS_SCORE+3
+
 MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
     lda #$0f
     ldx MLHS_API_DRIVE_NUMBER
@@ -157,9 +174,13 @@ MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
     ldx #<MLHS_API_URL_ADD_SCORE
     ldy #>MLHS_API_URL_ADD_SCORE
     jsr KERNAL_SETNAM
-    ldx #01 // Set Load Address
-    ldy #<MLHS_API_URL_RETURN_CODE
-    lda #>MLHS_API_URL_RETURN_CODE
+    lda #00 // Set Load Address
+    ldx #<MLHS_API_TOP_10_TABLE
+    ldy #>MLHS_API_TOP_10_TABLE
+
+    //ldx #01 // Set Load Address
+    //ldy #<MLHS_API_URL_RETURN_CODE
+    //lda #>MLHS_API_URL_RETURN_CODE
     jsr KERNAL_LOAD
     rts
 
@@ -183,8 +204,6 @@ MLHS_API_LOAD_GET: // Load routine for Meatloaf URLS
     ldy #>MLHS_API_TOP_10_TABLE
     jsr KERNAL_LOAD
     rts
-    
-
 
 //////////////////////////////////////////////////////////////////
 // Draw Hi Scores Screen (Meatloaf)
@@ -203,86 +222,57 @@ draw_meatloaf_hiscores:
 	lda #$93	
 	jsr $ffd2
 
-	ldx #$00
-!:
-	lda MLHS_API_HISCORE_MSG,x
-	cmp #$ff
-	beq !+
-	jsr $ffd2
-	inx
-	jmp !-
-!:
+	PrintSTZ(MLHS_API_HISCORE_MSG)
+    PrintSTZ(MLHS_NL)
+    
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS1a)
+    PrintSPC()    
+	PrintSTZ(MLHS1b)
 
-	NL()
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS2a)
+    PrintSPC()
+	PrintSTZ(MLHS2b)
 
-	lda #<MLHS_API_TOP_10_TABLE
-	sta zp_MLT_lo
-	lda #>MLHS_API_TOP_10_TABLE
-	sta zp_MLT_hi
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS3a)
+    PrintSPC()
+	PrintSTZ(MLHS3b)
 
-	lda #$00
-	sta mlhs_cursor
-	sta mlhs_count
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS4a)
+    PrintSPC()
+	PrintSTZ(MLHS4b)
 
-dmhs_start:
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS5a)
+    PrintSPC()
+	PrintSTZ(MLHS5b)
 
-	inc mlhs_cursor
-	inc mlhs_cursor
-	ldy mlhs_cursor
-	lda (zp_MLT),y
-	sta zp_tmp_lo
-	inc mlhs_cursor
-	ldy mlhs_cursor
-	lda (zp_MLT),y
-	sta zp_tmp_hi
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS6a)
+    PrintSPC()
+	PrintSTZ(MLHS6b)
 
-	DrawScoreML()
-	
-	lda #$20
-	jsr $ffd2
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS7a)
+    PrintSPC()
+	PrintSTZ(MLHS7b)
 
-	lda #$00
-	sta mlhs_cursor2	
-!:
-	inc mlhs_cursor
-	ldy mlhs_cursor
-	lda (zp_MLT),y
-	jsr $ffd2
-	inc mlhs_cursor2
-	lda mlhs_cursor2
-	cmp #16
-	bne !-
-	NL()
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS8a)
+    PrintSPC()
+	PrintSTZ(MLHS8b)
 
-	inc mlhs_cursor
-	inc mlhs_count
-	lda mlhs_count
-	cmp #10
-	beq !+
-	jmp dmhs_start
-!:
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS9a)
+    PrintSPC()
+	PrintSTZ(MLHS9b)
+
+	PrintSTZ(MLHS_NL)
+	PrintNZ(MLHS10a)
+    PrintSPC()
+	PrintSTZ(MLHS10b)
+
 	rts
-
-mlhs_cursor:  .byte 0
-mlhs_cursor2: .byte 0
-mlhs_count: .byte 0
-
-.macro NL() {
-	ldx #$00
-!:
-	lda MLHS_API_HISCORE_NL_MSG,x
-	cmp #$ff
-	beq !+
-	jsr $ffd2
-	inx
-	jmp !-
-!:
-}
-
-.macro DrawScoreML() {
-	sty mlhs_cursor
-	lda zp_tmp_hi
-	ldx zp_tmp_lo
-	jsr $bdcd
-	ldy mlhs_cursor
-}

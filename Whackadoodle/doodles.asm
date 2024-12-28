@@ -31,7 +31,6 @@ game_setup_doodle:
 	lda button_to_hit
 	sta last_button
 
-	// TODO: Determine speed based on mode
 	lda whack_mode
 	cmp #MODE_EASY
 	beq easy_speed
@@ -39,8 +38,9 @@ game_setup_doodle:
 	cmp #MODE_HARD
 	beq hard_speed
 
-	lda whack_score_lo // check score adjust speed
-	cmp #100
+	// lda whack_score_lo // check score adjust speed
+	lda score
+	cmp #99
 	bcs faster_3
 	cmp #80
 	bcs faster_2		

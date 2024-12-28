@@ -121,6 +121,9 @@ wad_get_key:
 	lda #$00
 	rts
 
+
+
+/*
 ////////////////////////////////////////////////////
 // Increment Score
 
@@ -152,12 +155,7 @@ decrement_score:
 ////////////////////////////////////////////////////
 // Draw Score
 
-.macro DrawScore(x,y) {
-	clc    // Set cursor position
-	ldy #x // X coordinate (column)
-	ldx #y // Y coordinate (line)
-	jsr draw_score_func_b
-}
+
 draw_score_func:
 	clc					// Set cursor position
 	ldy #$20         	// X coordinate (column)
@@ -168,6 +166,16 @@ draw_score_func_b:
 	ldx whack_score_lo // Score Low byte
 	jsr $bdcd
 	rts
+*/
+
+.macro DrawScore(x,y) {
+	clc    // Set cursor position
+	ldy #x // X coordinate (column)
+	ldx #y // Y coordinate (line)
+	jsr $fff0
+	PrintNZ(score_str)
+}
+
 draw_score_game_on:
 	DrawScore(GAME_ON_SCORE_LOC_X,GAME_ON_SCORE_LOC_Y)
 	rts
@@ -175,11 +183,13 @@ draw_score_game_over:
 	DrawScore(GAME_OVER_SCORE_LOC_X,GAME_OVER_SCORE_LOC_Y)
 	rts
 
+/*
 ////////////////////////////////////////////////////
 // Reset Score
+// reset_score:
+//	lda #$00
+//	sta whack_score_lo
+//	sta whack_score_hi
+//	rts
 
-reset_score:
-	lda #$00
-	sta whack_score_lo
-	sta whack_score_hi
-	rts
+*/

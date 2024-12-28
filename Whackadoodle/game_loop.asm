@@ -34,7 +34,8 @@ game_start:
 	sta whack_life
 !:
 
-	jsr reset_score
+	// jsr reset_score
+	jsr score_reset
 
 	lda #$00
 	sta play_music
@@ -201,7 +202,12 @@ exit_select_button:
 	// life -1
 	dec whack_life
 	// score -1
-	jsr decrement_score
+
+	// jsr decrement_score
+	lda #$01
+	sta score_math_o
+	jsr score_sub
+
 	lda #$02
 	sta did_hit
 	jmp !gl+
@@ -209,7 +215,11 @@ exit_select_button:
 !cph:
 	// bad doodle = POW (score +1)
 	jsr play_sound_pow
-	jsr increment_score
+
+	// jsr increment_score
+	lda #$01
+	jsr score_add
+
 	lda #$03
 	jsr set_message
 	lda #$01

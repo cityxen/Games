@@ -19,7 +19,7 @@
 #import "PrintMacros.asm"
 #import "DrawPetMateScreen.asm"
 
-.file [name="wad-cxn-w.prg", segments="Main,PRG,Sprites,Screens,Music,SFX"]
+.file [name="wad-cxn-w.prg", segments="PRG,Sprites,Screens,Music,SFX"]
 
 .segment SFX [allowOverlap]
 *=$c000 "SFX KIT"
@@ -46,6 +46,8 @@ CityXenUpstart(start)
 start:
     jmp initialize
 
+#import "meatloaf_highscore_api.asm"    
+
 #import "constants.asm"
 #import "config.asm"
 #import "initialize.asm"
@@ -56,7 +58,8 @@ start:
 #import "draw_screens.asm"
 #import "init_sprites.asm"
 #import "util.asm"
-#import "meatloaf_highscore_api.asm"
+
+
 // Whackadoodle specific stuff
 #import "doodles.asm"
 #import "messages.asm"

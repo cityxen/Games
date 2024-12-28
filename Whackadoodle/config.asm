@@ -18,6 +18,7 @@
 // some inline subroutines
 
 #import "input.il.asm"
+#import "score.il.asm"
 #import "sys.il.asm"
 #import "print.il.asm"
 #import "music.il.asm"
@@ -27,14 +28,12 @@
 //////////////////////////////////////////////////////////////
 // some vars
 
-dev_play_music:         .byte 1
+dev_play_music:         .byte 0
 play_music:             .byte 0
 debug_mode:             .byte 0
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte
 whack_hit: 				.byte 0 // which button has been hit (if any)
-whack_score_lo:         .byte 0
-whack_score_hi:         .byte 0
 whack_life:             .byte 0
 whack_key:              .byte 0
 initial_life:           .byte 6
