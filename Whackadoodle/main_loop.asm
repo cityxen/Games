@@ -138,14 +138,12 @@ main_loop:
 	lda screen_draw
 	cmp #$00 
 	bne !sdl+
-	// jsr draw_main_screen
-	jsr draw_meatloaf_hiscores
+	jsr draw_main_screen
 	jmp main_loop
 !sdl:
 	cmp #$01
 	bne !sdl+
-	// jsr draw_instruct
-	jsr draw_meatloaf_hiscores
+	jsr draw_instruct
 	jmp main_loop
 !sdl:
 	cmp #$02
