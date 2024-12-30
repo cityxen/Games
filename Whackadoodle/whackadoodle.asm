@@ -16,7 +16,6 @@
 
 #import "Constants.asm"
 #import "Macros.asm"
-#import "PrintMacros.asm"
 #import "DrawPetMateScreen.asm"
 
 .file [name="wad-cxn-w.prg", segments="PRG,Sprites,Screens,Music,SFX"]
@@ -44,7 +43,10 @@ CityXenUpstart(start)
 .segment PRG [allowOverlap]
 * = $1800 "PRG"
 start:
+    
     jmp initialize
+
+    
 
 #import "meatloaf_highscore_api.asm"    
 

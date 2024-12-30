@@ -124,14 +124,6 @@ wad_get_key:
 ///////////////////////////////////////////////////
 // Draw Score
 
-.macro DrawScore(x,y) {
-	clc    // Set cursor position
-	ldy #x // X coordinate (column)
-	ldx #y // Y coordinate (line)
-	jsr $fff0
-	PrintNZ(score_str)
-}
-
 draw_score_game_on:
 	DrawScore(GAME_ON_SCORE_LOC_X,GAME_ON_SCORE_LOC_Y)
 	rts

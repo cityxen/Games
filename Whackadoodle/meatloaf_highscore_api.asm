@@ -4,20 +4,72 @@
 // By Deadline / CityXen
 // And Jaime / Idolpx / Meatloaf
 // 2024
+//
+// Uses CityXen C64 lib:
+// Constants.asm
+// score.il.asm
+// print.il.asm
+// input.il.asm
+// https://github.com/cityxen/Commodore64_Programming
 
-meatloaf_hiscore_support: .byte 1
+MLHS_ENABLE: .byte 1
+
+MLHS_INIT: // initialize some things
+    jsr MLHS_CALC_GET_URL_LEN
+    rts
+
+MLHS_API_SCORE_MSG:
+.encoding "petscii_mixed"
+.byte $93,05
+.text "             last score:"
+.byte 0
+
+MLHS_API_ENTER_MSG:
+.encoding "petscii_mixed"
+.byte $93,05
+.byte KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN
+.byte KEY_CURSOR_DOWN,KEY_CURSOR_DOWN
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.text "game over!"
+.byte $0d,$0d
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.text "submit your score: "
+.byte $0d,$0d
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+.text "name: "
+.byte $0d,$0d
+.byte $0d,$0d
+.text "web enabled hiscore powered by meatloaf"
+.byte $0d,$0d
+.text "          https://meatloaf.cc/"
+.byte 0
 
 MLHS_API_HISCORE_MSG:
 .encoding "screencode_mixed"
-.text "           TOP 10 HIGH SCORES"
+.byte $0d
+.byte $0d
+.text "          TOP 10 HIGH SCORES"
 .byte $00
 
 MLHS_NL:
-.byte $0D,$11,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D
+.byte $0D,$11,$1D,$1D,$1D,$1D,$1D,$1D,$1D
+.byte $00
+
+MLHS_NAME_NL:
+.byte $0D,KEY_CURSOR_UP
+.byte $1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D,$1D
+.byte $1D,$1D,$1D,$1D,$1D,$1D,$1D
 .byte $00
 
 MLHS_API_DRIVE_NUMBER:
-.byte 11
+.byte 8
 
 MLHS_API_USER_CONTACT:
 .text "NNNNNNNNNNNNNNNN"
@@ -30,10 +82,9 @@ MLHS_API_USER_NAME:
 // DATA AREA FOR TOP 10 SCORES
 
 MLHS_API_TOP_10_TABLE:
-.byte 0
 .encoding "screencode_mixed"
 MLHS1a:
-.text "0000000010"
+.text "1100000010"
 .byte 0
 MLHS1b:
 .text "UNRANKED SCORE 1"
@@ -98,34 +149,39 @@ MLHS_API_URL_RETURN_CODE:
 
 ///////////////////////////////////////
 // URL TABLES
+
 MLHS_API_URL_ADD_SCORE: // text table used for meatloaf file name
 .encoding "screencode_mixed"
 .text "ML:%WAD" // add real URL here
 .text "?s="  	// 9
 MLHS_API_URL_AS_SCORE:
-.text "SSSS" 	// 4 byte score // 13
-.text "&c=" 	// 16
-MLHS_API_URL_AS_CONTACT:
-.text "NNNNNNNNNNNNNNNNN" // 32
+.text "SSSSSSSSSS" // fill with score_str
 .text "&n=" 	// 35
 MLHS_API_URL_AS_NAME:
 .text "NNNNNNNNNNNNNNNNN"
 .byte 0			// 52
 MLHS_API_URL_ADD_SCORE_LENGTH:
-.byte 52
+.byte 0
+
 ///////////////////////////////////////
-///////////////////////////////////////
-MLHS_API_URL_GET_SCORE:  // get all scores unless n=NUM, then it will return NUM results
-                // in our case we want 10
+
+MLHS_API_URL_GET_SCORE:
 .encoding "screencode_mixed"
-.text "ML:%WAD" // add real URL here
+.text "ML:%WAD" // change your URL here
 .text "?a="
 MLHS_API_URL_GS_NUM: // top 10 designation
 .text "10"
 MLHS_API_URL_GET_SCORE_LENGTH:
-.byte 13
+.byte 0
 
-// add another url to check if current score is the new high score
+///////////////////////////////////////
+
+MLHS_CALC_GET_URL_LEN: // calculate URL lengths and put in the proper place
+    lda #(MLHS_API_URL_GET_SCORE_LENGTH-MLHS_API_URL_GET_SCORE)
+    sta MLHS_API_URL_GET_SCORE_LENGTH
+    lda #(MLHS_API_URL_ADD_SCORE_LENGTH-MLHS_API_URL_ADD_SCORE)
+    sta MLHS_API_URL_ADD_SCORE_LENGTH
+    rts
 
 ///////////////////////////////////////
 // END URL TABLES
@@ -136,34 +192,24 @@ MLHS_API_URL_CLEAR: // clear user datas in url
     ldx #$00
 !:
     sta MLHS_API_URL_AS_NAME,x // fill name and contact with spaces
-    sta MLHS_API_URL_AS_CONTACT,x // (add score url)
     inx
-    cpx #33
+    cpx #16
     bne !-
+    ldx #$00
+!:
+    sta MLHS_API_URL_AS_SCORE,x // fill name and contact with spaces
+    inx
+    cpx #10
+    bne !-
+
     rts
 
 MLHS_API_SET_SCORE:
+
     jsr MLHS_API_URL_CLEAR // reset url
     // fill in user name and contact in the url
-    ldx #$00
-!:
-    lda MLHS_API_USER_NAME,x
-    sta MLHS_API_URL_AS_NAME,x
-    lda MLHS_API_USER_CONTACT,x
-    sta MLHS_API_URL_AS_CONTACT,x
-    inx
-    cpx #33
-    bne !-
-    // fill in the score into the url
-    lda #$00
-    sta MLHS_API_URL_AS_SCORE
-    lda #$00
-    sta MLHS_API_URL_AS_SCORE+1
-
-    // lda MLHS_API_SCORE+2
-    sta MLHS_API_URL_AS_SCORE+2
-    // lda MLHS_API_SCORE+3
-    sta MLHS_API_URL_AS_SCORE+3
+    StrCpy(score_str,MLHS_API_URL_AS_SCORE,10)
+    StrCpy(user_name,MLHS_API_URL_AS_NAME,16)
 
 MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
     lda #$0f
@@ -177,10 +223,6 @@ MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
     lda #00 // Set Load Address
     ldx #<MLHS_API_TOP_10_TABLE
     ldy #>MLHS_API_TOP_10_TABLE
-
-    //ldx #01 // Set Load Address
-    //ldy #<MLHS_API_URL_RETURN_CODE
-    //lda #>MLHS_API_URL_RETURN_CODE
     jsr KERNAL_LOAD
     rts
 
@@ -208,7 +250,7 @@ MLHS_API_LOAD_GET: // Load routine for Meatloaf URLS
 //////////////////////////////////////////////////////////////////
 // Draw Hi Scores Screen (Meatloaf)
 
-draw_meatloaf_hiscores:
+MLHS_DRAW:
 	jsr wait_vbl
 
 	lda #$00 // clear sprites
@@ -222,57 +264,82 @@ draw_meatloaf_hiscores:
 	lda #$93	
 	jsr $ffd2
 
-	PrintSTZ(MLHS_API_HISCORE_MSG)
-    PrintSTZ(MLHS_NL)
+    Print(MLHS_API_SCORE_MSG)
+    DrawScore(24,0)
+
+	Print(MLHS_API_HISCORE_MSG)
     
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS1a)
-    PrintSPC()    
-	PrintSTZ(MLHS1b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS1a)
+    
+    Print(MLHS_NAME_NL)
+	Print(MLHS1b)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS2a)
-    PrintSPC()
-	PrintSTZ(MLHS2b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS2a)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS3a)
-    PrintSPC()
-	PrintSTZ(MLHS3b)
+    Print(MLHS_NAME_NL)
+	Print(MLHS2b)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS4a)
-    PrintSPC()
-	PrintSTZ(MLHS4b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS3a)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS5a)
-    PrintSPC()
-	PrintSTZ(MLHS5b)
+    Print(MLHS_NAME_NL)
+	Print(MLHS3b)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS6a)
-    PrintSPC()
-	PrintSTZ(MLHS6b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS4a)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS7a)
-    PrintSPC()
-	PrintSTZ(MLHS7b)
+    Print(MLHS_NAME_NL)
+	Print(MLHS4b)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS8a)
-    PrintSPC()
-	PrintSTZ(MLHS8b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS5a)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS9a)
-    PrintSPC()
-	PrintSTZ(MLHS9b)
+    Print(MLHS_NAME_NL)
+	Print(MLHS5b)
 
-	PrintSTZ(MLHS_NL)
-	PrintNZ(MLHS10a)
-    PrintSPC()
-	PrintSTZ(MLHS10b)
+	Print(MLHS_NL)
+	PrintNSZ(MLHS6a)
 
+    Print(MLHS_NAME_NL)
+	Print(MLHS6b)
+
+	Print(MLHS_NL)
+	PrintNSZ(MLHS7a)
+
+    Print(MLHS_NAME_NL)
+	Print(MLHS7b)
+
+	Print(MLHS_NL)
+	PrintNSZ(MLHS8a)
+
+    Print(MLHS_NAME_NL)
+	Print(MLHS8b)
+
+	Print(MLHS_NL)
+	PrintNSZ(MLHS9a)
+
+    Print(MLHS_NAME_NL)
+	Print(MLHS9b)
+
+	Print(MLHS_NL)
+	PrintNSZ(MLHS10a)
+
+    Print(MLHS_NAME_NL)
+	Print(MLHS10b)
+
+	rts
+
+
+MLHS_NAME_ENTRY:
+	lda #$02
+	sta $d020
+	sta $d021
+	lda #$93
+	jsr $ffd2
+	StrCpy(user_name_empty,user_name,15)
+	Print(MLHS_API_ENTER_MSG)
+    DrawScore(28,7)
+	InputText2(user_name,15,15,9,1)
 	rts

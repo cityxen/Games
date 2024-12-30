@@ -20,9 +20,12 @@
 main_loop_start:
 restart:
 
-	lda meatloaf_hiscore_support
+	lda MLHS_ENABLE
 	beq !+
-	// jsr MLHS_API_GET_SCORE
+
+	jsr MLHS_INIT
+
+	jsr MLHS_API_GET_SCORE
 !:
 
 	lda #00
@@ -53,14 +56,7 @@ restart:
 	sta screen_draw
 
 main_loop:
-
-	// check if "logged in"
-	// lda user_name
-	// cmp #$ff
-	// bne !+
-	// jsr draw_login_screen
-// !:
-		
+	
 	jsr debug_stuff
 
 	lda irq_timer1_tr
@@ -148,9 +144,9 @@ main_loop:
 !sdl:
 	cmp #$02
 	bne !sdl+
-	lda meatloaf_hiscore_support
+	lda MLHS_ENABLE
 	beq !+
-	jsr draw_meatloaf_hiscores
+	jsr MLHS_DRAW
 	jmp main_loop
 !:
 	jsr draw_instruct

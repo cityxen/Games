@@ -16,13 +16,13 @@
 
 game_over:
 
+	jsr MLHS_NAME_ENTRY
+
 	lda #$00
 	sta screen_draw
 	jsr draw_gameover
 	jsr play_sound_gameover
 	jsr pause1
-
-	jsr game_entry
 
 	ldx #0
 	ldy #0
@@ -84,21 +84,19 @@ game_over_loop:
 	lda screen_draw
 	bne !+
 	jsr draw_gameover
+
+	PrintSC2PXY(user_name,25,9)
+	
+
 	jmp game_over_loop
 !:
 	lda #$ff
 	sta screen_draw
-	jsr draw_meatloaf_hiscores
+
+	lda MLHS_ENABLE
+	beq !+
+	jsr MLHS_DRAW
+!:
+	
 	jmp game_over_loop
 
-game_entry:
-	lda #$02
-	sta $d020
-	sta $d021
-	lda #$93
-	jsr $ffd2
-	StrCpy(user_name_empty,user_name,15)
-	zPrint(whack_your_name_txt)
-	InputText2(user_name,15,10,10,1)
-	ConvertA2P(user_name,15)
-	rts
