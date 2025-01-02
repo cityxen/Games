@@ -16,52 +16,48 @@
 
 //////////////////////////////////////////////////////////////
 // DEBUG STUFF
+
 debug_stuff:
 	lda debug_mode
 	and #$01
 	bne !+
 	rts
 !:
-	lda #$01
-	sta print_hex_color
+	lda #$00
+	sta print_hex_inline_d
+	PrintColor(RED)
 
 	lda JOYSTICK_PORT_1
-	PrintHex(0,0)
+	PrintHexXY(1,1)
 
 	lda button_to_hit
-	PrintHex(3,0)
+	PrintHexXY(4,1)
 
 	lda doodle
-	PrintHex(6,0)
+	PrintHexXY(7,1)
 
 	lda irq_timer_jitter_to
-	PrintHex(9,0)
+	PrintHexXY(10,1)
 
 	lda irq_timer_jitter
-	PrintHex(12,0)
+	PrintHexXY(13,1)
 
 	lda play_music
-	PrintHex(15,0)
+	PrintHexXY(16,1)
 
 	lda irq_timer1
-	PrintHex(18,0)
+	PrintHexXY(19,1)
 
 	lda irq_timer1_tr
-	PrintHex(21,0)
+	PrintHexXY(22,1)
 
 	lda message
-	PrintHex(24,0)
-
-	lda irq_timer_jitter 
-	PrintHex(27,0)
-
-	lda irq_timer_jitter_to
-	PrintHex(30,0)
+	PrintHexXY(25,1)
 
 	lda random_num
-	PrintHex(33,0)
+	PrintHexXY(28,1)
 
 	lda whack_mode
-	PrintHex(36,0)
+	PrintHexXY(31,1)
 
 	rts

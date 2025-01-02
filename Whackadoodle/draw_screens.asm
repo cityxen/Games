@@ -76,10 +76,37 @@ draw_gameover:
 
 	rts
 
-//////////////////////////////////////////////////////////////////
-// Update Play Screen
+/////////////////////////////////////////////////////
+// Draw mode
 
-update_play_screen:
-	jsr wait_vbl
- 	rts 
+draw_mode:
+	
+	PrintXYColor(msg_mode_mode,15,23,WHITE)
+	PrintColor(YELLOW)
 
+	lda whack_mode
+	cmp #MODE_EASY
+	bne !+
+	Print(msg_mode_easy)	
+!:
+	cmp #MODE_NORMAL
+	bne !+
+	Print(msg_mode_normal)	
+!:
+	cmp #MODE_HARD
+	bne !+
+	Print(msg_mode_hard)
+!:
+	rts
+
+
+///////////////////////////////////////////////////
+// Draw Score
+
+draw_score_game_on:
+	DrawScore(GAME_ON_SCORE_LOC_X,GAME_ON_SCORE_LOC_Y)
+	rts
+
+draw_score_game_over:
+	DrawScore(GAME_OVER_SCORE_LOC_X,GAME_OVER_SCORE_LOC_Y)
+	rts

@@ -71,9 +71,9 @@
 .const sp_skull     = $c5
 .const sp_poo       = $c6
 .const sp_frown     = $c7
-.const sp_up        = $c8
-.const sp_right     = $c9
-.const sp_down      = $ca
+.const sp_commodore = $c8
+.const sp_msdos     = $c9
+.const sp_dollar    = $ca
 .const sp_left      = $cb
 .const sp_fire      = $cc
 .const sp_miss_l    = $cd
@@ -88,3 +88,11 @@
 .const GAME_ON_SCORE_LOC_Y   = 02
 .const GAME_OVER_SCORE_LOC_X = 27
 .const GAME_OVER_SCORE_LOC_Y = 10
+
+.const SFX_GET_READY = $01
+.const SFX_DING      = $02
+.const SFX_WRONG     = $04
+.const SFX_POW       = $05
+.const SFX_MISS      = $06
+.const SFX_GAME_OVER = $07
+

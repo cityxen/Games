@@ -55,6 +55,17 @@ init_sprites_iiy:
 	lda #sp_frown
 	sta SPRITE_7_POINTER
 
+	lda eeu_act
+	beq !+
+    lda #sp_commodore
+	sta SPRITE_0_POINTER
+	lda #sp_msdos
+	sta SPRITE_6_POINTER
+	lda #sp_dollar
+	sta SPRITE_7_POINTER
+
+!:
+
 	lda #%01000000
 	sta SPRITE_MSB_X
 	

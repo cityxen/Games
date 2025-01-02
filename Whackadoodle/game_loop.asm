@@ -46,7 +46,7 @@ game_start:
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
 
-	jsr play_sound_get_ready
+	sfx_v2_play(SFX_GET_READY)
 
 	jsr draw_instruct
 
@@ -54,7 +54,7 @@ game_start:
 
 	jsr pause3
 
-	jsr play_sound_get_ready
+	sfx_v2_play(SFX_GET_READY)
 
 	lda #$01
 	jsr set_message
@@ -183,7 +183,9 @@ exit_select_button:
 	beq !gl++
 
 	// buttons don't match (miss automatic / life -1)
-	jsr play_sound_miss
+
+	sfx_v2_play(SFX_MISS)
+	
 	lda #$02
 	jsr set_message
 
@@ -201,7 +203,9 @@ exit_select_button:
 	bcs !cph+
 
 	// good doodle = WRONG (score -1 / life -1)
-	jsr play_sound_wrong
+
+	sfx_v3_play(SFX_WRONG)
+
 	lda #$04
 	jsr set_message
 
@@ -217,7 +221,8 @@ exit_select_button:
 
 !cph:
 	// bad doodle = POW (score +1)
-	jsr play_sound_pow
+
+	sfx_v1_play(SFX_POW)
 
 	jsr score_add
 

@@ -21,7 +21,10 @@ game_over:
 	lda #$00
 	sta screen_draw
 	jsr draw_gameover
-	jsr play_sound_gameover
+	PrintXY(user_name,23,9)
+
+	sfx_v1_play(SFX_GAME_OVER)
+	
 	jsr pause1
 
 	ldx #0
@@ -29,7 +32,13 @@ game_over:
 	lda #music.startSong-1						//<- Here we get the startsong and init address from the sid file
 	jsr music.init
 
-	lda dev_play_music
+	lda dev_mode
+	beq !+
+	lda #$00
+	jmp !++
+!:
+	lda #$01
+!:
 	sta play_music
 
 	jsr reset_timer1
@@ -85,8 +94,7 @@ game_over_loop:
 	bne !+
 	jsr draw_gameover
 
-	PrintSC2PXY(user_name,25,9)
-	
+	PrintXY(user_name,23,9)
 
 	jmp game_over_loop
 !:

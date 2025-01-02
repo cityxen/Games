@@ -124,7 +124,8 @@ outfaster:
 	cmp #$04
 	bcc !gsd+
 
-	jsr play_sound_miss
+	sfx_v2_play(SFX_MISS)
+
 	lda #$02
 	jsr set_message
 	dec whack_life // life -1
@@ -133,7 +134,8 @@ outfaster:
 
 !gsd:
 
-	jsr play_sound_ding
+	sfx_v1_play(SFX_DING)
+
 	lda #$09
 	sta button_actually_hit
 
@@ -167,6 +169,12 @@ outfaster:
 	lda doodle
 	cmp #$00
 	bne !gsd+
+	lda eeu_act
+	beq !+
+	lda #sp_commodore
+	sta SPRITE_0_POINTER
+	jmp gsdso
+!:
 	lda #sp_happyface
 	sta SPRITE_0_POINTER
 	jmp gsdso
@@ -203,12 +211,24 @@ outfaster:
 !gsd:
 	cmp #$06
 	bne !gsd+
+	lda eeu_act
+	beq !+
+	lda #sp_msdos
+	sta SPRITE_0_POINTER
+	jmp gsdso
+!:
 	lda #sp_poo
 	sta SPRITE_0_POINTER
 	jmp gsdso
 !gsd:
 	cmp #$07
 	bne !gsd+
+	lda eeu_act
+	beq !+
+	lda #sp_dollar
+	sta SPRITE_0_POINTER
+	jmp gsdso
+!:
 	lda #sp_frown
 	sta SPRITE_0_POINTER
 

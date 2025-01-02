@@ -44,9 +44,7 @@ CityXenUpstart(start)
 * = $1800 "PRG"
 start:
     
-    jmp initialize
-
-    
+    jmp initialize  
 
 #import "meatloaf_highscore_api.asm"    
 
