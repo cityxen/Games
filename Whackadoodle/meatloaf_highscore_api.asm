@@ -23,7 +23,7 @@
 MLHS_ENABLE: .byte 1
 
 MLHS_INIT: // initialize some things
-    jsr MLHS_CALC_GET_URL_LEN
+    jsr MLHS_CALC_URL_LENS
     StrCpyL(user_name_empty,user_name,15)
     StrScreenCodeToPetscii(user_name,15)
     rts
@@ -152,22 +152,20 @@ MLHS10b:
 .text "CITYXEN"
 .byte 0,0,0,0,0,0,0,0,0,0
 
-MLHS_API_URL_RETURN_CODE:
-.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-
 ///////////////////////////////////////
 // URL TABLES
 
 MLHS_API_URL_ADD_SCORE: // text table used for meatloaf file name
 .encoding "screencode_mixed"
-.text "ML:%WAD" // add real URL here
-.text "?S="  	// 9
+.text "ML:%WAD"
+.text "?S="
 MLHS_API_URL_AS_SCORE:
-.text "SSSSSSSSSS" // fill with score_str
-.text "&N=" 	// 35
+.text "SSSSSSSSSS"
+.text "&N="
 MLHS_API_URL_AS_NAME:
 .text "NNNNNNNNNNNNNNNNN"
-.byte 0			// 52
+.text "&X=10" 
+.byte 0
 MLHS_API_URL_ADD_SCORE_LENGTH:
 .byte 0
 
@@ -176,7 +174,7 @@ MLHS_API_URL_ADD_SCORE_LENGTH:
 MLHS_API_URL_GET_SCORE:
 .encoding "screencode_mixed"
 .text "ML:%WAD" // change your URL here
-.text "?a="
+.text "?X="
 MLHS_API_URL_GS_NUM: // top 10 designation
 .text "10"
 MLHS_API_URL_GET_SCORE_LENGTH:
@@ -184,7 +182,7 @@ MLHS_API_URL_GET_SCORE_LENGTH:
 
 ///////////////////////////////////////
 
-MLHS_CALC_GET_URL_LEN: // calculate URL lengths and put in the proper place
+MLHS_CALC_URL_LENS: // calculate URL lengths and put in the proper place
     lda #(MLHS_API_URL_GET_SCORE_LENGTH-MLHS_API_URL_GET_SCORE)
     sta MLHS_API_URL_GET_SCORE_LENGTH
     lda #(MLHS_API_URL_ADD_SCORE_LENGTH-MLHS_API_URL_ADD_SCORE)
@@ -196,7 +194,7 @@ MLHS_CALC_GET_URL_LEN: // calculate URL lengths and put in the proper place
 ///////////////////////////////////////
 
 MLHS_API_URL_CLEAR: // clear user datas in url
-    
+
     lda #$20
     ldx #$00
 !:    
@@ -208,7 +206,7 @@ MLHS_API_URL_CLEAR: // clear user datas in url
     lda #$30
     ldx #$00
 !:
-    sta MLHS_API_URL_AS_SCORE,x // fill name and contact with spaces
+    sta MLHS_API_URL_AS_SCORE,x // fill score with zeros
     inx
     cpx #10
     bne !-
@@ -217,8 +215,14 @@ MLHS_API_URL_CLEAR: // clear user datas in url
 
 MLHS_API_SET_SCORE:
 
+    lda MLHS_ENABLE
+    bne !+
+    rts
+!:
+
     jsr MLHS_API_URL_CLEAR // reset url
-    StrCpyL(score_str,MLHS_API_URL_AS_SCORE,10) // fill in user name and contact in the url
+    // fill in user name and contact in the url
+    StrCpyL(score_str,MLHS_API_URL_AS_SCORE,10)
     StrCpyL(user_name,MLHS_API_URL_AS_NAME,15)
 
 MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
@@ -247,6 +251,11 @@ MLHS_API_LOAD_ADD: // Load routine for Meatloaf URLS
     rts
 
 MLHS_API_GET_SCORE:
+
+    lda MLHS_ENABLE
+    bne !+
+    rts
+!:
     // reset url
     jsr MLHS_API_URL_CLEAR
 

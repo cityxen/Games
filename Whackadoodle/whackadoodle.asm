@@ -43,14 +43,13 @@ CityXenUpstart(start)
 .segment PRG [allowOverlap]
 * = $1800 "PRG"
 start:
-    
+
     jmp initialize  
 
-#import "meatloaf_highscore_api.asm"    
-
-#import "constants.asm"
 #import "config.asm"
 #import "initialize.asm"
+#import "constants.asm"
+#import "meatloaf_highscore_api.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"
 #import "game_over_loop.asm"
@@ -58,6 +57,7 @@ start:
 #import "draw_screens.asm"
 #import "init_sprites.asm"
 #import "util.asm"
+#import "version.asm"
 
 
 // Whackadoodle specific stuff

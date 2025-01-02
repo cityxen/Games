@@ -30,7 +30,17 @@
 //////////////////////////////////////////////////////////////
 // some vars
 
-dev_mode:               .byte 1
+GAME_NAME:
+.encoding "petscii_mixed"
+.text "whackadoodle!"
+.byte 0
+
+GAME_ML_SHORTCODE:
+.encoding "screencode_mixed"
+.text "WAD"
+.byte 0
+
+dev_mode:               .byte 0
 play_music:             .byte 0
 sound_playing:          .byte 0
 screen_draw:            .byte 0

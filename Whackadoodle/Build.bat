@@ -1,6 +1,7 @@
 @echo off
 call E:\dev\github\cityxen\retro-dev-tools\build.bat
 echo Build Script: Building %1
+php update_revision.php
 call genkickass-script.bat -t C64 -o prg_files -m true -s true -l "E:\dev\github\cityxen\Commodore64_Programming\include"
 call KickAss.bat whackadoodle.asm
 
