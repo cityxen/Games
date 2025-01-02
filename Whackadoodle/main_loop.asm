@@ -247,7 +247,7 @@ eeu_act:
 
 eeu_txt:
 .encoding "petscii_upper"
-.text "----LROC8DBMC^ #M@OVD8E4 SGN8D-R4MNA-D3V1-!----"
+.text "-A-5LROC8DBMC^ #M@OVD8E4 SGN8D-R4MNA-D3V1-!-2--"
 .byte 0,0
 
 eeu_print:
