@@ -19,9 +19,6 @@
 
 game_start:
 
-	lda #$01 // score increment count subtract or add
-	sta score_math_o
-
 	lda initial_life
 	sta whack_life
 
@@ -41,6 +38,9 @@ game_start:
 
 	lda #$00
 	sta play_music
+
+	jsr sfx_clear
+	
 	jsr draw_play_screen
 	
 	lda #BUTTON_LIGHT_NONE

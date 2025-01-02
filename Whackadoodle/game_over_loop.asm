@@ -16,7 +16,14 @@
 
 game_over:
 
+	lda whack_mode
+	beq !+
+	jsr get_key
+	jsr pause2
+	jsr get_key
+	jsr KERNAL_GETIN
 	jsr MLHS_NAME_ENTRY
+!:
 
 	lda #$00
 	sta screen_draw

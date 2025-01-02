@@ -28,11 +28,12 @@ restart:
 
 	lda dev_mode
 	beq !+
-	jsr MLHS_API_SET_SCORE // Always set CityXen 99 to get started
+	jsr MLHS_NAME_ENTRY// jsr MLHS_API_SET_SCORE // Always set CityXen 99 to get started
 	jmp !+
 !:
 	jsr MLHS_API_GET_SCORE
 !:
+
 
 	lda #00
 	sta sound_playing

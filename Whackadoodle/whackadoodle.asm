@@ -18,7 +18,7 @@
 #import "Macros.asm"
 #import "DrawPetMateScreen.asm"
 
-.file [name="wad-cxn-w.prg", segments="PRG,Sprites,Screens,Music,SFX"]
+.file [name="wad-cxn.prg", segments="PRG,Sprites,Screens,Music,SFX"]
 
 .segment SFX [allowOverlap]
 *=$c000 "SFX KIT"
@@ -41,7 +41,7 @@
 CityXenUpstart(start)
 
 .segment PRG [allowOverlap]
-* = $1800 "PRG"
+* = $1726 "PRG"
 start:
 
     jmp initialize  

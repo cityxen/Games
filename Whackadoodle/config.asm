@@ -54,10 +54,13 @@ whack_key:              .byte 0
 initial_life:           .byte 6
 initial_life_hard:      .byte 3
 initial_life_easy:      .byte 10
-user_name_empty:
+user_name_start:
 .encoding "screencode_mixed"
 .text "cityxen"
-.byte 0,0,0,0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+user_name_empty:
+.encoding "screencode_mixed"
+.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 user_name:
 .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 

@@ -19,6 +19,8 @@
 // Initialize
 
 initialize:
+	lda #$01 // score increment count subtract or add
+	sta score_math_o
     FixSFXKit($c000)
     InitTimers(60,120,240,80,30)
     jmp main_loop_start

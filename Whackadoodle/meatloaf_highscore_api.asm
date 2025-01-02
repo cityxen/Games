@@ -24,7 +24,7 @@ MLHS_ENABLE: .byte 1
 
 MLHS_INIT: // initialize some things
     jsr MLHS_CALC_URL_LENS
-    StrCpyL(user_name_empty,user_name,15)
+    StrCpyL(user_name_start,user_name,15)
     StrScreenCodeToPetscii(user_name,15)
     rts
 
@@ -158,14 +158,16 @@ MLHS10b:
 MLHS_API_URL_ADD_SCORE: // text table used for meatloaf file name
 .encoding "screencode_mixed"
 .text "ML:%WAD"
-.text "?S="
+MLHS_API_URL_AS_RETS:
+.text "?X="
+MLHS_API_URL_AS_NUM:
+.text "10"
+.text "&S="
 MLHS_API_URL_AS_SCORE:
 .text "SSSSSSSSSS"
 .text "&N="
 MLHS_API_URL_AS_NAME:
-.text "NNNNNNNNNNNNNNNNN"
-.text "&X=10" 
-.byte 0
+.text "NNNNNNNNNNNNNNNN"
 MLHS_API_URL_ADD_SCORE_LENGTH:
 .byte 0
 
@@ -363,6 +365,11 @@ MLHS_DRAW:
 
 
 MLHS_NAME_ENTRY:
+
+    jsr is_score_zero
+    bne !+
+    rts
+!:
     lda #$00
     sta SPRITE_ENABLE
 	lda #$02

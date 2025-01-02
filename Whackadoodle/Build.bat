@@ -4,5 +4,4 @@ echo Build Script: Building %1
 php update_revision.php
 call genkickass-script.bat -t C64 -o prg_files -m true -s true -l "E:\dev\github\cityxen\Commodore64_Programming\include"
 call KickAss.bat whackadoodle.asm
-
 sort prg_files/whackadoodle.sym > prg_files/wut.sym
