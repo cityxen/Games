@@ -1,0 +1,9 @@
+open 192.168.1.6
+guest
+anonymous
+dir
+cd Usb0
+binary
+put prg_files/trivia-fighters-64.prg
+put prg_files/jread.prg
+quit

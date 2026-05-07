@@ -1,0 +1,14 @@
+Check it... Trivia Fighter (trivia but with street fighter style intermissions/breaks)
+
+I already have the base code for that from the spinchooser wheel, and from whackadoodle core
+
+I just need to cook with it
+
+You'll choose your player kinda like street fighter, but it will be our content characters
+
+(primitive but doable) then when you're doing the game it will show player 1 ready... go and then you answer a trivia question. if you get it right it will do a little animation where you're stomping player 2 on screen, and vice versa
+
+at the end of the round it will tally up score and do a "finish him" anim based on the characters playing (all this primitive, but a standard finish him with head sprites that change)
+
+Also it will be meatloaf enabled so it can grab questions from a db online (which we can edit)
+

@@ -1,0 +1,8 @@
+open 192.168.1.15
+guest
+anonymous
+dir
+cd Usb2
+binary
+put prg_files/trivia-fighters-64.prg
+quit
