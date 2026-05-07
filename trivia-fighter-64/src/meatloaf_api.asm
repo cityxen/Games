@@ -32,6 +32,11 @@ MLHL_HOTLOAD_MSG:
 .text "meatloaf.cc > cityxen.biz/hotload"
 .byte 0
 
+MLHL_HOTLOAD_LOADING_TEXT:
+.encoding "petscii_mixed"
+.text "Meatloaf >>> Hotloading..."
+.byte 0
+
 ///////////////////////////////////////
 // Load routine
 
@@ -118,15 +123,15 @@ MLHL_DATA_QUESTION:
 MLHL_DATA_CORRECT:
 .byte 0
 MLHL_DATA_ANS1:
-.text "012345678901234"
+.text "0123456789012345"
 .byte 0
 MLHL_DATA_ANS2:
-.text "012345678901234"
+.text "0123456789012345"
 .byte 0
 MLHL_DATA_ANS3:
-.text "012345678901234"
+.text "0123456789012345"
 .byte 0
 MLHL_DATA_ANS4:
-.text "012345678901234"
+.text "0123456789012345"
 .byte 0
 

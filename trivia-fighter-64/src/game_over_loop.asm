@@ -12,14 +12,6 @@ game_over:
 	
 	sfx_v1_play(SFX_GAME_OVER)
 	
-	ldx #0
-	ldy #0
-	lda #music.startSong-1						//<- Here we get the startsong and init address from the sid file
-	jsr music.init
-
-	lda #$01
-	sta play_music
-
 	ResetTimer(1)
 	ResetTimer(2)
 	ResetTimer(3)	

@@ -172,38 +172,121 @@ next_scr:
 	rts
 
 load_trivia_stress_test:
+
+	jsr draw_loading_screen
 	jsr MLHL_LOAD // load random trivia question
-	PrintClear()
-	Print(MLHL_HOTLOAD_MSG)
+	jsr draw_play_screen
+	sfx_v2_play(SFX_POW)
+
 	PrintHome()
 	PrintLowerCase()
-	Print(MLHL_DATA_QUESTION)
+	PrintRight(16)
+	Print(trivia_round_text)
+	lda game_round_current
+	PrintHex()
 	PrintLF()
+	PrintLF()
+	PrintLF()
+	PrintRight(4)
+	PrintChr(5)
+
+    lda #< MLHL_DATA_QUESTION
+    sta zp_tmp_lo
+    lda #> MLHL_DATA_QUESTION
+    sta zp_tmp_hi 
+
+	ldy #$00
+	sty gsr_lf_check
+!:
+	lda (zp_tmp),y
+	beq st_lf_out
+    jsr KERNAL_CHROUT
+	lda (zp_tmp),y
+
+	iny
+	inc gsr_lf_check
+	cmp #' '
+	bne !-
+	
+	clc
+	lda gsr_lf_check
+	cmp #25
+	bcc !-
+	lda #$00
+	sta gsr_lf_check
+	PrintLF()
+	PrintRight(4)
+	jmp !-
+
+st_lf_out:
+
+	PrintChr('?')
+
+	PrintLF()
+	PrintUp(1)
 	lda MLHL_DATA_CORRECT
 	sbc #47
-	PrintHex() 
-	PrintLF()
+	PrintHexXY(2,1)
+
+	PrintHome()
+	PrintDown(13)
+	PrintRight(3)
+
 	Print(MLHL_DATA_ANS1)
+
 	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+
 	Print(MLHL_DATA_ANS2)
+
 	PrintLF()
+	PrintDown(7)
+	PrintRight(3)
+
 	Print(MLHL_DATA_ANS3)
+
 	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+
 	Print(MLHL_DATA_ANS4)
+	
 	PrintLF()
 
-	ResetTimer(3)
-	lda #$00
-	SetTimerTr(3)
+	/*GetTimerTr(1)
+	sta tmp_1
+	sec
+	lda #$20
+	sbc tmp_1
+	tax
+	lda #$20
+	sta 1068,x*/
+
 !:
-	GetTimer(3)
-	PrintHexXY(0,15)
-	GetTimerTr(3)
-	PrintHexXY(0,16)
+	jsr input_get_key
+	cmp #KEY_Q
+	bne !+
+	lda #$00
+	sta screen_draw
+	SetTimerTr(2)
+	SetTimerTr(1)
+	ResetTimer(2)	
+	ResetTimer(1)
+	jsr ml_screens
+	jmp main_loop
+!:
+	//GetTimer(3) 	PrintHexXY(18,2) 	GetTimerTr(3) 	PrintHexXY(21,2)
+
 	GetTimerTr(3) // input timers
 	cmp #$03
-	bne !-
+	bne !--
 	ResetTimer(3)
 	lda #$00
 	SetTimerTr(3)
 	jmp load_trivia_stress_test
+
+
+	print_answer:
+
+		rts

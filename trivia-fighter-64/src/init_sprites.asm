@@ -69,23 +69,48 @@ init_sprites_play:
 
 init_sprites_msg:
 
-	lda #%00000010
+	lda #%00000001
 	sta SPRITE_ENABLE
-	lda #%00000010
+	lda #%00000001
 	sta SPRITE_EXPAND_X
-	lda #%00000000
+	lda #%00000001
 	sta SPRITE_EXPAND_Y
 	lda #$ff
 	sta SPRITE_PRIORITY
-	lda #$00
+	lda #$01
 	sta SPRITE_MULTICOLOR
-	lda #sp_comic_m
+	//lda #sp_comic_m
 	sta SPRITE_1_POINTER
-	lda #comic_sprite_x
+	//lda #comic_sprite_x
 	sta SPRITE_1_X
-	lda #comic_sprite_y
+	//lda #comic_sprite_y
 	sta SPRITE_1_Y
 	lda #RED
 	sta SPRITE_1_COLOR
 
+	rts
+
+init_sprites_load_screen:
+	lda #%00000011
+	sta SPRITE_ENABLE
+	lda #%00000011
+	sta SPRITE_EXPAND_X
+	lda #%00000011
+	sta SPRITE_EXPAND_Y
+	lda #$ff
+	sta SPRITE_PRIORITY
+	lda #$03
+	sta SPRITE_MULTICOLOR
+	lda #sprite_mc1
+	sta SPRITE_MULTICOLOR_0
+	lda #sprite_mc2
+	sta SPRITE_MULTICOLOR_1
+	lda #sp_disk_load
+	sta SPRITE_1_POINTER
+	lda #sp_disk_load_x
+	sta SPRITE_1_X
+	lda #sp_disk_load_y
+	sta SPRITE_1_Y
+	lda #RED
+	sta SPRITE_1_COLOR
 	rts

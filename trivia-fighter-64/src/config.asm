@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////
 // Sprite stuff
 
-.const sprite_mc1 = 0
+.const sprite_mc1 = 11
 .const sprite_mc2 = 12
 
 
@@ -59,8 +59,8 @@
 .const select_sprite_7_y = 180
 .const select_sprite_7_m = 0
 
-.const comic_sprite_x = 165
-.const comic_sprite_y = 100
+.const sp_disk_load_x = 165
+.const sp_disk_load_y = 100
 
 .const sp_pointers  = $c0 // Sprite Pointers
 .const sp_happyface = $c0
@@ -75,7 +75,7 @@
 .const sp_pokey     = $c7
 .const sp_amy       = $c8
 .const sp_victoria  = $c9
-.const sp_comic_m   = $ca
+.const sp_disk_load = $ca
 
 
 //////////////////////////////////////////////////////////////
@@ -127,9 +127,15 @@ game_step_t:
 .const GAME_STEP_ANIM_FINISH_= 22
 .const GAME_STEP_ANIM_FINISH = 23
 
+anim_text:
+.encoding "petscii_mixed"
+.text "Insert visually stunning anim here!"
+.byte 0
+
 // CityXen Avatars
 .const CXN_AVATAR_CLICKY   = 0
 cxn_avatar_clicky_t:
+.encoding "petscii_upper"
 .text "CLICKY    "
 .byte 0
 .const CXN_AVATAR_EAGULL   = 1
@@ -222,6 +228,9 @@ offline_trivia_q:       .byte 0  // there will be 2 questions in the block this 
 ml_total_trivia:        .byte 0
                         .byte 0
 ml_total_trivia_text: .text "triva count:"
+.byte 0
+
+trivia_round_text: .text "Round:"
 .byte 0
 
 number_of_players:      .byte 0

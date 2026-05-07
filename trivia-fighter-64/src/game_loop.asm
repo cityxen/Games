@@ -47,6 +47,11 @@ game_loop:
 	lda game_step
 	cmp #GAME_STEP_SELECT_
 	bne !+
+	///// temporary jump over selection (remove after testing)
+	lda #GAME_STEP_ANIM_INTRO_
+	sta game_step
+	jmp !++
+	/////
 	jmp game_step_select_init
 !:
 	cmp #GAME_STEP_SELECT
@@ -54,66 +59,134 @@ game_loop:
 	jmp game_step_select
 !:
 	cmp #GAME_STEP_ANIM_INTRO_
+	bne !+
 	lda #0
 	sta game_anim
 	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_INTRO
+	bne !+
+	jmp game_step_anim
+!:
+
+	cmp #GAME_STEP_ROUND_1_
+	bne !+
+	lda #$01
+	sta game_round_current
+	jmp game_step_round_init
+!:
+
+	cmp #GAME_STEP_ROUND_1
+	bne !+
+	jmp game_step_round
+!:
+
+	cmp #GAME_STEP_ANIM_1_
+	bne !+
+	lda #0
+	sta game_anim
+	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_1
+	bne !+
+	jmp game_step_anim
+!:
+
+	cmp #GAME_STEP_ROUND_2_
+	bne !+
+	lda #$02
+	sta game_round_current
+	jmp game_step_round_init
+!:
+
+	cmp #GAME_STEP_ROUND_2
+	bne !+
+	jmp game_step_round
+!:
+
+	cmp #GAME_STEP_ANIM_2_
+	bne !+
+	lda #0
+	sta game_anim
+	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_2
+	bne !+
+	jmp game_step_anim
+!:
+
+	cmp #GAME_STEP_ROUND_3_
+	bne !+
+	lda #$03
+	sta game_round_current
+	jmp game_step_round_init
+!:
+
+	cmp #GAME_STEP_ROUND_3
+	bne !+
+	jmp game_step_round
+!:
+
+
+	cmp #GAME_STEP_ANIM_3_
+	bne !+
+	lda #0
+	sta game_anim
+	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_3
+	bne !+
+	jmp game_step_anim
+!:
+
+	cmp #GAME_STEP_ROUND_4_
+	bne !+
+	lda #$04
+	sta game_round_current
+	jmp game_step_round_init
+!:
+
+	cmp #GAME_STEP_ROUND_4
+	bne !+
+	jmp game_step_round
+!:
+
+	cmp #GAME_STEP_ANIM_4_
+	bne !+
+	lda #0
+	sta game_anim
+	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_4
+	bne !+
+	jmp game_step_anim
+!:
+
+	cmp #GAME_STEP_ROUND_5_
+	bne !+
+	lda #$05
+	sta game_round_current
+	jmp game_step_round_init
+!:
+
+	cmp #GAME_STEP_ROUND_5
+	bne !+
+	jmp game_step_round
+!:
+
+	cmp #GAME_STEP_ANIM_FINISH_
+	bne !+
+	lda #0
+	sta game_anim
+	jmp game_step_anim_init
+!:
+	cmp #GAME_STEP_ANIM_FINISH
+	bne !+
+	jmp game_step_anim
+!:
 
 	// determine game over condition here
-
-	lda player_1_healthbar
-	bne !gl+
 	jmp game_over
-!gl:
-	lda player_2_healthbar
-	bne !gl+
-	jmp game_over
-!gl:
-
-	lda #$00
-	sta button_did_hit
-
-	// show message (if exist)
-	lda message
-	beq gl22
-	lda #$00
-	sta SPRITE_ENABLE
-	ClearScreen(BLACK)
-
-!gl:
-	lda #BUTTON_LIGHT_NONE
-	sta USER_PORT_DATA
-!gl:
-	jsr show_message
-	// jsr reset_jitter_timer
-	lda message
-	bne !gl-
-	lda #$05
-	sta button_did_hit
-	lda #$09
-	sta button_actually_hit
-	
-
-
-gl22:
-!gl:
-	jsr draw_countdown	
-	jsr input_get_key
-
-	cmp #KEY_Q
-	bne !gl+
-	jmp game_over
-!gl:
-	cmp #KEY_D
-	bne !gl+
-	inc debug_mode
-	jsr draw_play_screen
-	
-!gl:
-
-	jsr wait_vbl
-	inc SPRITE_0_COLOR
-	
-	jsr debug_stuff
 
 	// check joystick port 1 values
 	jsr input_get_button
@@ -261,13 +334,184 @@ pselectout:
 	jmp game_loop
 
 game_step_anim_init:
-	jsr draw_main_screen
-	sfx_v2_play(SFX_GET_READY)
+	PrintClear()
+	lda #$00
+	SetTimerTr(2)
+	ResetTimer(2)
 	inc game_step
 
-game_step_anim:
+game_step_anim: // all anims for now
+	lda #$00
+	sta SPRITE_ENABLE
+	inc game_step
+	jmp game_loop
+
+	PrintHome()
+	PrintLowerCase()
+	
+	Print(anim_text)
+	PrintLF()
+	PrintDown(5)
+	GetTimer(2)
+	PrintHex()
+	PrintLF()
+	GetTimerTr(2)
+	PrintHex()
+	PrintLF()
+
+	GetTimerTr(2)
+	cmp #$01
+	bne !+
+	inc game_step
+!:
+	jmp game_loop
 
 
+game_step_round_init:
+	
+	jsr draw_loading_screen
+	jsr MLHL_LOAD // load random trivia question
+	jsr draw_play_screen
+	lda #$00
+	SetTimerTr(1)
+	ResetTimer(1)
+	inc game_step
+	sfx_v2_play(SFX_GET_READY)
+	jmp game_loop
 
+gsr_lf_check: .byte 0
+game_step_round:
+
+	PrintHome()
+	PrintLowerCase()
+	PrintRight(16)
+	Print(trivia_round_text)
+	lda game_round_current
+	PrintHex()
+	PrintLF()
+	PrintLF()
+	PrintLF()
+	PrintRight(4)
+	PrintChr(5)
+
+    lda #< MLHL_DATA_QUESTION
+    sta zp_tmp_lo
+    lda #> MLHL_DATA_QUESTION
+    sta zp_tmp_hi 
+
+	ldy #$00
+	sty gsr_lf_check
+!:
+	lda (zp_tmp),y
+	beq gst_lf_out
+    jsr KERNAL_CHROUT
+	lda (zp_tmp),y
+
+	iny
+	inc gsr_lf_check
+	cmp #' '
+	bne !-
+	
+	clc
+	lda gsr_lf_check
+	cmp #25
+	bcc !-
+	lda #$00
+	sta gsr_lf_check
+	PrintLF()
+	PrintRight(4)
+	jmp !-
+
+gst_lf_out:
+
+	PrintChr('?')
+
+	//PrintLF()
+	//PrintUp(1)
+	//lda MLHL_DATA_CORRECT
+	//sbc #47
+	//PrintHexXY(2,1)
+
+	PrintHome()
+	PrintDown(13)
+	PrintRight(3)
+
+	Print(MLHL_DATA_ANS1)
+
+	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+
+	Print(MLHL_DATA_ANS2)
+
+	PrintLF()
+	PrintDown(7)
+	PrintRight(3)
+
+	Print(MLHL_DATA_ANS3)
+
+	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+
+	Print(MLHL_DATA_ANS4)
+	
+	PrintLF()
+	//Print(MLHL_DATA_QUESTION)
+
+
+	PrintLF()
+	//lda MLHL_DATA_CORRECT
+	//sbc #47
+	//PrintHex()
+	PrintHome()
+	PrintDown(13)
+	PrintRight(3)
+	Print(MLHL_DATA_ANS1)
+	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+	Print(MLHL_DATA_ANS2)
+	PrintLF()
+	PrintDown(7)
+	PrintRight(3)
+	Print(MLHL_DATA_ANS3)
+	PrintLF()
+	PrintUp(1)
+	PrintRight(21)
+	Print(MLHL_DATA_ANS4)
+	PrintLF()
+
+	// do input checks here
+
+/*
+	PrintHome()
+	PrintLF()
+	PrintLF()
+	PrintRight(18)
+	GetTimer(1)
+	PrintHex()
+	PrintRight(1)
+	GetTimerTr(1)
+	PrintHex()
+*/
+
+
+	GetTimerTr(1)
+	sta tmp_1
+	sec
+	lda #$20
+	sbc tmp_1
+	tax
+	lda #$20
+	sta 1068,x
+
+	GetTimerTr(1)
+	cmp #32
+	bne !+
+	inc game_step
+!:
+
+	
 	jmp game_loop
 

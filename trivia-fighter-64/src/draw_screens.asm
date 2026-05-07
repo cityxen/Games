@@ -43,9 +43,11 @@ draw_instruct:
 // Draw Play Screen
 
 draw_play_screen:
-	PrintUpperCase()
+	PrintLowerCase()
 	jsr wait_vbl
 	jsr init_sprites_play
+	lda #$00
+	sta $d020
 	DrawPetMateScreen(play_screen)
  	rts
 
@@ -70,6 +72,19 @@ draw_title:
 	Print(VERSION)
 	PrintReverseOff()
 	rts
+
+draw_loading_screen:
+	jsr init_sprites_load_screen
+	PrintClear()
+	PrintLowerCase()
+	PrintChr(5)
+	PrintDown(12)
+	PrintRight(7)
+	Print(MLHL_HOTLOAD_LOADING_TEXT)
+	lda #$05
+	sta $d020
+	rts
+
 /////////////////////////////////////////////////////
 // Draw mode
 // draw_mode: rts

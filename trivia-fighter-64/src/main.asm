@@ -56,7 +56,7 @@ start:
 .import binary "data/sfxkit.prg", 2
 
 .segment Program [allowOverlap]
-*=$2000
+*=$3d00
 
 #import "initialize.asm"
 #import "meatloaf_api.asm"
