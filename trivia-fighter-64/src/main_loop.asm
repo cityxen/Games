@@ -93,6 +93,8 @@ ml_keys:
 	bne !ml+
 	lda #$00
 	sta play_music
+	lda #$30
+	SetTimerTo(0)
 	jmp load_trivia_stress_test
 !ml:
 	jsr input_get_button
@@ -172,6 +174,10 @@ next_scr:
 	rts
 
 load_trivia_stress_test:
+
+	lda #$00
+	SetTimerTr(0)
+	ResetTimer(0)
 
 	jsr draw_loading_screen
 	jsr MLHL_LOAD // load random trivia question
@@ -254,15 +260,6 @@ st_lf_out:
 	
 	PrintLF()
 
-	/*GetTimerTr(1)
-	sta tmp_1
-	sec
-	lda #$20
-	sbc tmp_1
-	tax
-	lda #$20
-	sta 1068,x*/
-
 !:
 	jsr input_get_key
 	cmp #KEY_Q
@@ -270,20 +267,30 @@ st_lf_out:
 	lda #$00
 	sta screen_draw
 	SetTimerTr(2)
-	SetTimerTr(1)
+	SetTimerTr(0)
 	ResetTimer(2)	
-	ResetTimer(1)
+	ResetTimer(0)
 	jsr ml_screens
 	jmp main_loop
 !:
-	//GetTimer(3) 	PrintHexXY(18,2) 	GetTimerTr(3) 	PrintHexXY(21,2)
+	GetTimer(0)
+	PrintHexXY(18,2)
+	GetTimerTr(0)
+	PrintHexXY(21,2)
 
-	GetTimerTr(3) // input timers
-	cmp #$03
+	GetTimerTr(0)
+	sta tmp_1
+	sec
+	lda #$20
+	sbc tmp_1
+	tax
+	lda #$20
+	sta 1068,x
+
+	GetTimerTr(0)
+	cmp #32
 	bne !--
-	ResetTimer(3)
-	lda #$00
-	SetTimerTr(3)
+
 	jmp load_trivia_stress_test
 
 

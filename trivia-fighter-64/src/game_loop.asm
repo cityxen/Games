@@ -484,17 +484,8 @@ gst_lf_out:
 
 	// do input checks here
 
-/*
-	PrintHome()
-	PrintLF()
-	PrintLF()
-	PrintRight(18)
-	GetTimer(1)
-	PrintHex()
-	PrintRight(1)
-	GetTimerTr(1)
-	PrintHex()
-*/
+
+
 
 
 	GetTimerTr(1)

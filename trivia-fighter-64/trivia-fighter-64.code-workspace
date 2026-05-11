@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../Commodore64_Programming/include"
+		},
+		{
+			"path": "../../retro-dev-tools"
 		}
 	],
 	"settings": {}

@@ -4,5 +4,5 @@ anonymous
 dir
 cd Usb2
 binary
-put prg_files/trivia-fighters-64.prg
+put prg_files/tf64.prg
 quit
