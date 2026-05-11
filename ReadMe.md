@@ -12,10 +12,6 @@ CityXen Games Repository
 
     Text adventure written in the 80's in BASIC.
 
-# Spin Chooser 7000
-
-    We made a spinning trivia wheel, and honkin' heckin' buttons (tm). This was written for our show at VCFSE 2023.
-
 # Whackadoodle
 
     We use the honkin' heckin' buttons and created a whack-a-mole type of game with a twist. This was written for our show at VCFSE 2024.
