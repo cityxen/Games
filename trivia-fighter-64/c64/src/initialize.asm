@@ -30,7 +30,7 @@ initialize:
                  
                          // 10 load timer
                             // 10 input timer timer 5 for input
-    InitTimers(10,20,240,240,10,5)
+    InitTimers(10,20,240,240,10,5,5)
     
 
     jmp main_loop_start
