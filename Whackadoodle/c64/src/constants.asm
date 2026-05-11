@@ -89,10 +89,3 @@
 .const GAME_OVER_SCORE_LOC_X = 27
 .const GAME_OVER_SCORE_LOC_Y = 10
 
-.const SFX_GET_READY = $01
-.const SFX_DING      = $02
-.const SFX_WRONG     = $04
-.const SFX_POW       = $05
-.const SFX_MISS      = $06
-.const SFX_GAME_OVER = $07
-

@@ -17,7 +17,7 @@
 last_button:
 .byte 0
 check_jitter_doodle:
-	lda irq_timer_jitter_tr
+	GetTimerTr(6)
 	bne !cj+
 	rts	
 !cj:
@@ -50,63 +50,62 @@ game_setup_doodle:
 
 easy_speed:
 	lda #doodle_speed_easy
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 	jmp over_mode_speeds
 hard_speed:
 	lda #doodle_speed_hard
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 	jmp faster_3
 
 over_mode_speeds:
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	clc
 	sbc #$05
-	sta irq_timer_jitter_to
-	lda irq_timer_jitter_to
+	SetTimerTo(6)
+	GetTimerTo(6)
 	cmp #50
 	bcs !+
 	lda #50
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 !:
 	jmp outfaster
 faster:
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	clc
 	sbc #$01
-	sta irq_timer_jitter_to	
+	SetTimerTo(6)
 
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	cmp #40
 	bcs !+
 	lda #40
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 !:
 	jmp outfaster
 faster_2:
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	clc
 	sbc #$01
-	sta irq_timer_jitter_to	
-	lda irq_timer_jitter_to
+	SetTimerTo(6)
+	GetTimerTo(6)
 	cmp #30
 	bcs !+
 	lda #30
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 !:
 	jmp outfaster
 faster_3:
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	clc
 	sbc #$01
-	sta irq_timer_jitter_to	
+	SetTimerTo(6)
 
-	lda irq_timer_jitter_to
+	GetTimerTo(6)
 	cmp #20
 	bcs !+
 	lda #20
-	sta irq_timer_jitter_to
+	SetTimerTo(6)
 !:
-
 
 outfaster:
 

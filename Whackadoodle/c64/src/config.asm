@@ -44,7 +44,7 @@ dev_mode:               .byte 0
 play_music:             .byte 0
 sound_playing:          .byte 0
 screen_draw:            .byte 0
-debug_mode:             .byte 0
+debug_mode:             .byte 1
 
 whack_mode:             .byte 0 // EASY, NORMAL, HARD
 whack_slot: 			.byte 0 // 5 positions for a thing to show up, represented by a byte

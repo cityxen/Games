@@ -20,6 +20,15 @@
 draw_main_screen:
 	jsr wait_vbl
 	DrawPetMateScreen(was1)
+
+	PrintHome()
+	PrintChr(5)
+	PrintDown(4)	
+	PrintRight(9)
+	PrintReverseOn()
+	Print(VERSION)
+	PrintReverseOff()
+
 	jsr debug_stuff
 	jsr init_sprites_ms
 	rts
@@ -61,6 +70,7 @@ draw_instruct:
 draw_play_screen:
 	jsr wait_vbl
 	DrawPetMateScreen(play)
+	jsr debug_stuff
  	rts
 
 //////////////////////////////////////////////////////////////////
@@ -71,7 +81,6 @@ draw_gameover:
 	DrawPetMateScreen(scr_gameover)
 	jsr debug_stuff
 	jsr init_sprites_ms
-	
 	jsr draw_score_game_over
 
 	rts

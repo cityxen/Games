@@ -48,16 +48,20 @@ game_over:
 !:
 	sta play_music
 
-	jsr reset_timer1
-	jsr reset_timer2
-	jsr reset_timer3
+	ResetTimer(0)
+	ResetTimerTr(0)
+	ResetTimer(1)
+	ResetTimerTr(1)
+	ResetTimer(2)
+	ResetTimerTr(2)
 
 	lda #BUTTON_ACTION_G_OVER
 	sta USER_PORT_DATA
 
 game_over_loop:
+	jsr debug_stuff
 
-	lda irq_timer3_tr
+	GetTimerTr(2)
 	cmp #03 // time out
 	bne !+
 	lda #BUTTON_LIGHT_NONE
@@ -83,18 +87,18 @@ game_over_loop:
 	jmp restart
 !:
 	clc
-	lda irq_timer1_tr
+	GetTimerTr(0)
 	cmp #02
 	bcc game_over_loop
 	lda #$00
-	sta irq_timer1_tr // reset timer
+	SetTimerTr(0) // reset timer
 	// jsr randomly_flash_buttons
 	clc
-	lda irq_timer2_tr
+	GetTimerTr(1)
 	cmp #$02
 	bcc game_over_loop
 	lda #$00
-	sta irq_timer2_tr // reset timer
+	SetTimerTr(1) // reset timer
 	// toggle screen to draw
 	inc screen_draw
 	lda screen_draw

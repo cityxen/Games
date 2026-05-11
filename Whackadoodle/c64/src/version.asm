@@ -1,4 +1,4 @@
 VERSION:
 .encoding "petscii_mixed"
-.text "VERSION:26.05.11.12.04"
+.text "version:26.05.11.13.30"
 .byte 0

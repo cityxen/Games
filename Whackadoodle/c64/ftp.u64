@@ -1,8 +1,7 @@
-open 10.1.10.4 21
+open 192.168.1.15
 guest
 anonymous
 cd Usb2
 binary
-put prg_files/wad-cxn.prg
-put prg_files/wad-cxn-e.prg
+put prg_files/wad.prg
 quit

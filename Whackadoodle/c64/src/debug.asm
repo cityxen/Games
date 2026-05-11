@@ -25,8 +25,11 @@ debug_stuff:
 !:
 	lda #$00
 	sta print_hex_inline_d
-	PrintColor(RED)
+	PrintHome()
+	PrintColor(WHITE)
+	PrintReverseOn()
 
+/*
 	lda JOYSTICK_PORT_1
 	PrintHexXY(1,1)
 
@@ -36,21 +39,76 @@ debug_stuff:
 	lda doodle
 	PrintHexXY(7,1)
 
-	lda irq_timer_jitter_to
-	PrintHexXY(10,1)
-
-	lda irq_timer_jitter
-	PrintHexXY(13,1)
+	
 
 	lda play_music
 	PrintHexXY(16,1)
+*/
 
-	lda irq_timer1
-	PrintHexXY(19,1)
+	GetTimer(0)
+	PrintHex()
+	PrintChr(32)
 
-	lda irq_timer1_tr
-	PrintHexXY(22,1)
+	GetTimerTr(0)
+	PrintHex()
+	PrintChr(32)
+		
+	GetTimer(1)
+	PrintHex()
+	PrintChr(32)
 
+	GetTimerTr(1)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimer(2)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimerTr(2)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimer(3)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimerTr(3)
+	PrintHex()
+	PrintChr(32)
+
+	PrintLF()
+	PrintReverseOn()
+
+	GetTimer(4)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimerTr(4)
+	PrintHex()
+	PrintChr(32)
+
+	
+
+	GetTimer(5)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimerTr(5)
+	PrintHex()
+	PrintChr(32)
+
+	GetTimer(6)
+	PrintHex()
+	PrintChr(32)
+	GetTimerTr(6)
+	PrintHex()
+	PrintChr(32)
+
+	
+
+
+/*
 	lda message
 	PrintHexXY(25,1)
 
@@ -59,5 +117,7 @@ debug_stuff:
 
 	lda whack_mode
 	PrintHexXY(31,1)
+	*/
 
+	PrintReverseOff()
 	rts

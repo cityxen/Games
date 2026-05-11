@@ -18,11 +18,7 @@
 #import "Macros.asm"
 #import "DrawPetMateScreen.asm"
 
-.file [name="wad-cxn.prg", segments="PRG,Sprites,Screens,Music,SFX"]
-
-.segment SFX [allowOverlap]
-*=$c000 "SFX KIT"
-.import binary "sound/sfxkit.prg", 2
+.file [name="wad.prg", segments="PRG,Program,Sprites,Screens,Music,SFX"]
 
 .segment Music [allowOverlap]
 .var music = LoadSid("whackadoodle.sid") // <- Here we load the sid file
@@ -47,6 +43,15 @@ start:
     jmp initialize  
 
 #import "config.asm"
+
+.segment SFX [allowOverlap]
+*=SFX_LOC "SFX KIT"
+.import binary "sound/sfxkit.prg", 2
+
+.segment Program [allowOverlap]
+*=$7000 "PROGRAM"
+
+
 #import "initialize.asm"
 #import "constants.asm"
 #import "meatloaf_highscore_api.asm"

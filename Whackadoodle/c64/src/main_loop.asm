@@ -64,8 +64,10 @@ restart:
 
 	jsr pause5
 
-	jsr reset_timer2
-	jsr reset_timer1
+	ResetTimer(0)
+	ResetTimerTr(0)
+	ResetTimer(1)
+	ResetTimerTr(1)
 
 	lda #$02
 	sta screen_draw
@@ -87,9 +89,10 @@ main_loop:
 	PrintPlot(8,0)
 	jsr eeu_print
 !:
-	lda irq_timer1_tr
+	GetTimerTr(0)
 	beq !ml+
-	jsr reset_timer1
+	ResetTimer(0)
+	ResetTimerTr(0)
 	jsr randomly_flash_buttons
 !ml:
 	jsr wad_get_key
@@ -201,13 +204,13 @@ main_loop:
 	jmp game_start
 	
 !ml:
-	lda irq_timer2_tr
+	GetTimerTr(1)
 	cmp #$02
 	bcs !ml+
 	jmp main_loop
 !ml:
 	lda #$00
-	sta irq_timer2_tr // reset timer
+	SetTimerTr(1) // reset timer
 
 	// toggle screen to draw
 	inc screen_draw

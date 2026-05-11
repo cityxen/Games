@@ -16,9 +16,8 @@
 
 set_message:
 	sta message
-	lda #$00
-	sta irq_timer4_tr
-	sta irq_timer4
+	ResetTimer(3)
+	ResetTimerTr(3)
 	rts
 
 show_message:
@@ -52,7 +51,7 @@ show_message:
 	lda #BUTTON_ACTION_MISS
 	sta USER_PORT_DATA
 smo:
-	lda irq_timer4_tr
+	GetTimerTr(3)
 	beq !smo+
 	jsr init_sprites_play
 	lda #$00

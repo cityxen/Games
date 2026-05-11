@@ -1,4 +1,4 @@
 VERSION:
 .encoding "petscii_mixed"
-.text "VERSION:<VERSION>"
+.text "version:<VERSION>"
 .byte 0

@@ -28,8 +28,10 @@ randomly_flash_buttons:
 // Get Button Press
 
 wad_get_button:
-	lda irq_timer_joystick_tr
+	GetTimerTr(5)
 	beq !gb+
+	ResetTimer(5)
+	ResetTimerTr(5)
 	lda JOYSTICK_PORT_1
 	rts
 !gb:

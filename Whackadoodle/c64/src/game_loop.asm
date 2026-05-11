@@ -61,13 +61,14 @@ game_start:
 	jsr reset_input_timer
 	jsr init_sprites_play
 
-	lda #doodle_speed_initial // initial doodle time 
-	sta irq_timer_jitter_to
-
-	jsr reset_jitter_timer
-
+	lda #doodle_speed_initial // initial doodle time
+	SetTimerTo(6)
+	ResetTimer(6)
+	ResetTimerTr(6)
 	
 game_loop:
+
+	jsr debug_stuff
 
 	// jsr draw_mode
 

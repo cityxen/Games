@@ -1,11 +1,10 @@
-open 10.1.10.5 21
+open 192.168.1.4 21
 guest
 anonymous
 dir
 cd Usb1
 cd cityxen
 binary
-put prg_files/wad-cxn.prg
-put prg_files/wad-cxn-e.prg
+put prg_files/wad.prg
 quit
 
