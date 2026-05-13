@@ -45,20 +45,20 @@ restart:
 main_loop:
 
 	jsr debug_stuff
-	GetTimerTr(1)
+	GetTimerTr(TIMER_2)
 	cmp #$02
 	bne !ml+
 	lda #$00
-	SetTimerTr(1)
-	ResetTimer(1)
+	SetTimerTr(TIMER_2)
+	ResetTimer(TIMER_2)
 	jsr randomly_flash_buttons
 !ml:	
-	GetTimerTr(2)
+	GetTimerTr(TIMER_SCREEN_CHANGE)
 	cmp #$01
 	bne ml_keys
 	lda #$00
-	SetTimerTr(2)
-	ResetTimer(2)
+	SetTimerTr(TIMER_SCREEN_CHANGE)
+	ResetTimer(TIMER_SCREEN_CHANGE)
 	inc screen_draw // toggle screen to draw
 	lda screen_draw
 	cmp #$02
@@ -176,8 +176,8 @@ next_scr:
 load_trivia_stress_test:
 
 	lda #$00
-	SetTimerTr(0)
-	ResetTimer(0)
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_1)
 
 	jsr draw_loading_screen
 	jsr MLHL_LOAD // load random trivia question
@@ -266,19 +266,17 @@ st_lf_out:
 	bne !+
 	lda #$00
 	sta screen_draw
-	SetTimerTr(2)
-	SetTimerTr(0)
-	ResetTimer(2)	
-	ResetTimer(0)
+	SetTimerTr(TIMER_3)
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_3)	
+	ResetTimer(TIMER_1)
 	jsr ml_screens
 	jmp main_loop
 !:
-	GetTimer(0)
-	PrintHexXY(18,2)
-	GetTimerTr(0)
-	PrintHexXY(21,2)
+	//GetTimer(TIMER_1)	PrintHexXY(18,2)
+	//GetTimerTr(TIMER_1) PrintHexXY(21,2)
 
-	GetTimerTr(0)
+	GetTimerTr(TIMER_1)
 	sta tmp_1
 	sec
 	lda #$20
@@ -287,7 +285,7 @@ st_lf_out:
 	lda #$20
 	sta 1068,x
 
-	GetTimerTr(0)
+	GetTimerTr(TIMER_1)
 	cmp #32
 	bne !--
 

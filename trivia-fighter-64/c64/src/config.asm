@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////
 // some inline subroutines
 
-#import "constants.asm"
+#import "constants.asm" 
 #import "sys.il.asm"
 #import "print.il.asm"
 #import "input.il.asm"
@@ -22,15 +22,70 @@
 #import "random.il.asm"
 #import "meatloaf.il.asm"
 #import "honkheckbutt.il.asm"
+#import "drawpetmatescreen.il.asm"
+
+//////////////////////////////////////////////////////////////
+// some vars
+
+debug_mode:             .byte 0
+dev_mode:               .byte 0
+
+GAME_NAME:
+.encoding "petscii_mixed"
+.text "trivia fighters 64!"
+.byte 0
+
+offline_trivia_file:    .byte 0  // load from disk (from random)
+offline_trivia_q:       .byte 0  // there will be 2 questions in the block this will determine which (from 2nd random)
+
+ml_total_trivia:        .byte 0
+                        .byte 0
+ml_total_trivia_text: .text "triva count:"
+.byte 0
+
+trivia_round_text: .text "Round:"
+.byte 0
+
+number_of_players:      .byte 0
+
+play_music:             .byte 0
+sound_playing:          .byte 0
+screen_draw:            .byte 0
+
+player_1_avatar:        .byte 0
+player_1_healthbar:     .byte 0
+
+player_2_avatar:        .byte 0
+player_2_healthbar:     .byte 0
+
+.const BUZZER_PLAYER_1 = 1
+.const BUZZER_PLAYER_2 = 2
+
+game_round_first_buzzer: .byte 0
+
+player_1_buzzed_in:      .byte 0 // BUTTON_RED
+player_2_buzzed_in:      .byte 0 // BUTTON_GREEN
+
+game_round_total:       .byte 7
+game_round_current:     .byte 0
+
+trivia_category_total:  .byte 5
+
+trivia_question_current:.byte 0
+
+trivia_current_question:.byte 0 // current question 0-250 (255 if it is a meatloaf question)
+trivia_current_category:.byte 0 // 
+
+button_did_hit: .byte 0
+button_actually_hit: .byte 0
+message: .byte 0
+
         
-
-
 //////////////////////////////////////////////////////////////
 // Sprite stuff
 
-.const sprite_mc1 = 11
-.const sprite_mc2 = 12
-
+.const sprite_multi_color_1 = 11
+.const sprite_multi_color_2 = 12
 
 // sprite locations for select char screen
 
@@ -211,55 +266,38 @@ cxn_avatar_selected: .byte 0
 //////////////////////////////////////////////////////////////
 // Button stuff
 
-
 .const FLASH_TIMER_SPEED_CONST = $40
 
-//////////////////////////////////////////////////////////////
-// some vars
-
-GAME_NAME:
+button_red_msg:
 .encoding "petscii_mixed"
-.text "trivia fighters 64!"
+.byte KEY_RED
+.text "RED   "
 .byte 0
-
-offline_trivia_file:    .byte 0  // load from disk (from random)
-offline_trivia_q:       .byte 0  // there will be 2 questions in the block this will determine which (from 2nd random)
-
-ml_total_trivia:        .byte 0
-                        .byte 0
-ml_total_trivia_text: .text "triva count:"
+button_green_msg:
+.encoding "petscii_mixed"
+.byte KEY_GREEN
+.text "GREEN "
 .byte 0
-
-trivia_round_text: .text "Round:"
+button_yellow_msg:
+.encoding "petscii_mixed"
+.byte KEY_YELLOW
+.text "YELLOW"
 .byte 0
-
-number_of_players:      .byte 0
-
-dev_mode:               .byte 0
-play_music:             .byte 0
-sound_playing:          .byte 0
-screen_draw:            .byte 0
-debug_mode:             .byte 0
-
-player_1_avatar:        .byte 0
-player_1_healthbar:     .byte 0
-
-player_2_avatar:        .byte 0
-player_2_healthbar:     .byte 0
-
-game_round_total:       .byte 5
-game_round_current:     .byte 0
-
-trivia_category_total:  .byte 5
-
-trivia_question_current:.byte 0
-
-trivia_current_question:.byte 0 // current question 0-250 (255 if it is a meatloaf question)
-trivia_current_category:.byte 0 // 
-
-button_did_hit: .byte 0
-button_actually_hit: .byte 0
-message: .byte 0
+button_blue_msg:
+.encoding "petscii_mixed"
+.byte KEY_BLUE
+.text "BLUE  "
+.byte 0
+button_white_msg:
+.encoding "petscii_mixed"
+.byte KEY_WHITE
+.text "WHITE "
+.byte 0
+player_msg:
+.encoding "petscii_mixed"
+.byte KEY_WHITE
+.text "PLAYER "
+.byte 0
 
 countdown_text: 
 .byte $1e,KEY_HOME,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
@@ -285,4 +323,5 @@ msg_clr:
 .encoding "petscii_mixed"
 .text "             "
 .byte 0
+
 

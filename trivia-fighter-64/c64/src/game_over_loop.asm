@@ -12,21 +12,29 @@ game_over:
 	
 	sfx_v1_play(SFX_GAME_OVER)
 	
-	ResetTimer(1)
-	ResetTimer(2)
-	ResetTimer(3)	
+	ResetTimer(TIMER_1)
+	lda #$00
+	SetTimerTr(TIMER_1)
+	
+	ResetTimer(TIMER_2)
+	lda #$00
+	SetTimerTr(TIMER_2)
+
+	ResetTimer(TIMER_SCREEN_CHANGE)
+	lda #$00
+	SetTimerTr(TIMER_SCREEN_CHANGE)
 	
 	lda #BUTTON_ACTION_G_OVER
 	sta USER_PORT_DATA
 
 game_over_loop:
 
-	GetTimerTr(3)
+	GetTimerTr(TIMER_SCREEN_CHANGE)
 	cmp #03 // time out
 	bne !+
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
-	// jmp restart // and go back to attract mode
+	jmp restart // and go back to attract mode
 !:
 
 !:
@@ -47,16 +55,20 @@ game_over_loop:
 	jmp restart
 !:
 	clc
-	GetTimerTr(1)
+	GetTimerTr(TIMER_2)
 	cmp #02
 	bcc game_over_loop
-	ResetTimer(1)
+	lda #$00
+	SetTimerTr(TIMER_2)
+	ResetTimer(TIMER_2)
 	// jsr randomly_flash_buttons
 	clc
-	GetTimerTr(2)
+	GetTimerTr(TIMER_3)
 	cmp #$02
 	bcc game_over_loop
-	ResetTimer(2)
+	lda #$00
+	SetTimerTr(TIMER_3)
+	ResetTimer(TIMER_3)
 	// toggle screen to draw
 	inc screen_draw
 	lda screen_draw
@@ -66,12 +78,6 @@ game_over_loop:
 	jmp game_over_loop
 !:
 	lda #$ff
-	sta screen_draw
-
-	// lda MLHS_ENABLE
-	// beq !+
-	// jsr MLHS_DRAW
-// !:
-	
+	sta screen_draw	
 	jmp game_over_loop
 

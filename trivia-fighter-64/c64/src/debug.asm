@@ -15,22 +15,24 @@ debug_stuff:
 !:
 	lda #$00
 	sta print_hex_inline_d
+	PrintHome()
+	PrintLF()
 	PrintColor(RED)
 
 	lda JOYSTICK_PORT_1
-	PrintHexXY(1,1)
+	PrintHex()
+	PrintChr($20)
 
-	
-	
-	lda play_music
-	PrintHexXY(16,1)
+	GetTimer(TIMER_SCREEN_CHANGE)
+	PrintHex()
+	PrintChr($20)
 
-
-	lda message
-	PrintHexXY(25,1)
+	GetTimerTr(TIMER_SCREEN_CHANGE)
+	PrintHex()
+	PrintChr($20)
 
 	lda random_num
-	PrintHexXY(28,1)
-
+	PrintHex()
+	PrintChr($20)
 
 	rts

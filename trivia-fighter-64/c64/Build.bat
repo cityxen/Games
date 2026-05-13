@@ -16,18 +16,20 @@ REM call Kickass.bat src/jread.asm
 call KickAss.bat src/main.asm
 echo //------------------------------------------------------
 
-del "prg_files\\trivia-fighters-64.sym"
-del "prg_files\\trivia-fighters-64-sorted.sym"
+del "prg_files\\tf64.sym"
+del "prg_files\\tf64-sorted.sym"
 
-rename "prg_files\\main.sym" "trivia-fighters-64.sym"
-sort   "prg_files\\trivia-fighters-64.sym" > "prg_files\\trivia-fighters-64-sorted.sym"
+rename "prg_files\\main.sym" "tf64.sym"
+sort   "prg_files\\tf64.sym" > "prg_files\\tf64-sorted.sym"
 
-exomizer sfx basic -o prg_files\\tf64.prg prg_files\\trivia-fighters-64.prg >nul 2>&1
+exomizer sfx basic -o prg_files\\tf64x.prg prg_files\\tf64.prg >nul 2>&1
 if %ERRORLEVEL% EQU 0 (
     echo ---- EXOMIZED GOOD! RC[%ERRORLEVEL%]
 ) else (
     echo ---- EXOMIZED BAD! RC[%ERRORLEVEL%]
 )
+del "prg_files\\tf64.prg"
+rename "prg_files\\tf64x.prg" "tf64.prg"
 
 echo F | xcopy "prg_files\\tf64.prg" "y:\\httpdocs\\c64\\tf64.prg" /i /Y >nul 2>&1
 if %ERRORLEVEL% EQU 0 (

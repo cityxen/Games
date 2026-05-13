@@ -6,7 +6,6 @@
 
 #import "Constants.asm"
 #import "Macros.asm"
-#import "DrawPetMateScreen.asm"
 
 .segment Offline [allowOverlap]
 *=$6b00
@@ -27,9 +26,9 @@
 
 //////////////////////////////////////////////////////////////////////////////////////
 // File stuff
-.file [name="trivia-fighters-64.prg", segments="Config,Sprites,SFX,Screens,Music,Offline,Program"]
-.disk [filename="trivia-fighters-64.d64", name="CITYXEN TF64", id="2026!" ] {
-	[name="trivia-fighters-64", type="prg",  segments="Config,Sprites,SFX,Screens,Music,Offline,Program"],
+.file [name="tf64.prg", segments="Config,Program,Sprites,SFX,Screens,Music,Offline"]
+.disk [filename="tf64.d64", name="CITYXEN TF64", id="2026!" ] {
+	[name="tf64", type="prg",  segments="Config,Program,Sprites,SFX,Screens,Music,Offline"],
     [name="--------------------",type="del"],
 }
 //////////////////////////////////////////////////////////////////////////////////////
@@ -46,8 +45,6 @@ usend:
 * = $0817 "Configuration"
 start:
     jmp initialize
-
-#define CONFIG_SFXKIT
 
 #import "config.asm"
 

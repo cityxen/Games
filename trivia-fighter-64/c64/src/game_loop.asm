@@ -375,6 +375,12 @@ game_step_round_init:
 	lda #$00
 	SetTimerTr(1)
 	ResetTimer(1)
+
+	// reset buzzed in state
+	sta player_1_buzzed_in
+	sta player_2_buzzed_in
+	sta game_round_first_buzzer
+
 	inc game_step
 	sfx_v2_play(SFX_GET_READY)
 	jmp game_loop
@@ -480,13 +486,163 @@ gst_lf_out:
 	PrintUp(1)
 	PrintRight(21)
 	Print(MLHL_DATA_ANS4)
+
+	// begin input checks here
+
 	PrintLF()
+	PrintLF()
+	PrintLF()
+	PrintRight(5 )
 
-	// do input checks here
+	lda player_1_buzzed_in
+	beq !+
+	PrintPlot(3,23)
+	Print(player_msg)
+	PrintChr('1')
+	PrintChr(' ')
+	lda player_1_buzzed_in
+	cmp #BUTTON_GREEN
+	bne !pb1+
+	Print(button_green_msg)
+!pb1:
+	cmp #BUTTON_RED
+	bne !pb1+
+	Print(button_red_msg)
+!pb1:
+	cmp #BUTTON_BLUE
+	bne !pb1+
+	Print(button_blue_msg)
+!pb1:
+	cmp #BUTTON_YELLOW
+	bne !pb1+
+	Print(button_yellow_msg)
+!pb1:
+	
+!:
+	lda player_2_buzzed_in
+	beq !+
+	PrintPlot(21,23)
+	Print(player_msg)
+	PrintChr('2')
+	PrintChr(' ')
+	lda player_2_buzzed_in
+	cmp #BUTTON_GREEN
+	bne !pb1+
+	Print(button_green_msg)
+!pb1:
+	cmp #BUTTON_RED
+	bne !pb1+
+	Print(button_red_msg)
+!pb1:
+	cmp #BUTTON_BLUE
+	bne !pb1+
+	Print(button_blue_msg)
+!pb1:
+	cmp #BUTTON_YELLOW
+	bne !pb1+
+	Print(button_yellow_msg)
+!pb1:	
+	
+!:
+	PrintPlot(19,23)
+	PrintChr(KEY_WHITE)
+	lda game_round_first_buzzer
+	beq !++
+	cmp #BUZZER_PLAYER_1
+	bne !+	
+	PrintChr('<')
+	jmp !++
+!:
+	PrintChr('>')	
+!:
 
 
 
+	jsr il_get_j1_m2
+	jsr il_get_j2_m2
 
+	lda player_1_buzzed_in
+	bne p2buzz
+
+	lda J1_B_GREEN // green // PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_GREEN
+		sta player_1_buzzed_in
+		lda #BUZZER_PLAYER_1
+		jsr who_buzzed_in_first
+		sfx_v1_play(SFX_POW)
+		jmp p2buzz
+!:
+	lda J1_B_YELLOW // yellow // PrintHex() 	PrintChr($20)
+	bne !+
+		lda #BUTTON_YELLOW
+		sta player_1_buzzed_in
+		lda #BUZZER_PLAYER_1
+		jsr who_buzzed_in_first
+		sfx_v1_play(SFX_POW)
+		jmp p2buzz
+!:
+	lda J1_B_RED // red // PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_RED
+		sta player_1_buzzed_in
+		lda #BUZZER_PLAYER_1
+		jsr who_buzzed_in_first
+		sfx_v1_play(SFX_POW)
+		jmp p2buzz
+!:
+	lda J1_B_BLUE // blue // PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_BLUE
+		sta player_1_buzzed_in
+		lda #BUZZER_PLAYER_1
+		jsr who_buzzed_in_first
+		sfx_v1_play(SFX_POW)
+!:
+
+p2buzz:
+
+	lda player_2_buzzed_in
+	bne buzz_check_done
+
+	lda J2_B_GREEN	// green PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_GREEN
+		sta player_2_buzzed_in
+		lda #BUZZER_PLAYER_2
+		jsr who_buzzed_in_first
+		sfx_v2_play(SFX_POW)
+		jmp buzz_check_done
+!:
+	lda J2_B_YELLOW // yellow	PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_YELLOW
+		sta player_2_buzzed_in
+		lda #BUZZER_PLAYER_2
+		jsr who_buzzed_in_first
+		sfx_v2_play(SFX_POW)
+		jmp buzz_check_done
+!:
+	lda J2_B_RED // red	PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_RED
+		sta player_2_buzzed_in
+		lda #BUZZER_PLAYER_2
+		jsr who_buzzed_in_first
+		sfx_v2_play(SFX_POW)
+		jmp buzz_check_done
+!:
+	lda J2_B_BLUE // blue	PrintHex()	PrintChr($20)
+	bne !+
+		lda #BUTTON_BLUE
+		sta player_2_buzzed_in
+		lda #BUZZER_PLAYER_2
+		jsr who_buzzed_in_first
+		sfx_v2_play(SFX_POW)
+		jmp buzz_check_done
+!:
+
+buzz_check_done:
 
 	GetTimerTr(1)
 	sta tmp_1
@@ -503,6 +659,16 @@ gst_lf_out:
 	inc game_step
 !:
 
-	
 	jmp game_loop
+
+who_buzzed_in_first:
+	pha
+	lda game_round_first_buzzer
+	bne !+
+	pla
+	sta game_round_first_buzzer
+	rts
+!:
+	pla
+	rts
 

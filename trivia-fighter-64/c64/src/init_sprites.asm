@@ -38,9 +38,9 @@ init_sprites_select_char:
 	sta $D01B
 	lda #$ff
 	sta SPRITE_MULTICOLOR
-	lda #sprite_mc1
+	lda #sprite_multi_color_1
 	sta SPRITE_MULTICOLOR_0
-	lda #sprite_mc2
+	lda #sprite_multi_color_2
 	sta SPRITE_MULTICOLOR_1
 	lda #%00110000
 	sta SPRITE_MSB_X
@@ -101,9 +101,9 @@ init_sprites_load_screen:
 	sta SPRITE_PRIORITY
 	lda #$03
 	sta SPRITE_MULTICOLOR
-	lda #sprite_mc1
+	lda #sprite_multi_color_1
 	sta SPRITE_MULTICOLOR_0
-	lda #sprite_mc2
+	lda #sprite_multi_color_2
 	sta SPRITE_MULTICOLOR_1
 	lda #sp_disk_load
 	sta SPRITE_1_POINTER
