@@ -43,6 +43,12 @@ ml_total_trivia:        .byte 0
 ml_total_trivia_text: .text "triva count:"
 .byte 0
 
+.const ml_loading_screen_bg_color  = PURPLE
+.const ml_loading_screen_txt_color = KEY_YELLOW
+
+.const TIMER_ROUND  = $0f
+.const TIMER_STRESS = $05
+
 trivia_round_text: .text "Round:"
 .byte 0
 
@@ -113,6 +119,11 @@ message: .byte 0
 .const select_sprite_7_x = 180
 .const select_sprite_7_y = 180
 .const select_sprite_7_m = 0
+
+.const intro_sprite_1_x = 85
+.const intro_sprite_1_y = 80
+.const intro_sprite_4_x = 5
+.const intro_sprite_4_y = 80
 
 .const sp_disk_load_x = 165
 .const sp_disk_load_y = 100
@@ -190,24 +201,24 @@ anim_text:
 // CityXen Avatars
 .const CXN_AVATAR_CLICKY   = 0
 cxn_avatar_clicky_t:
-.encoding "petscii_upper"
-.text "CLICKY    "
+.encoding "petscii_mixed"
+.text "Clicky    "
 .byte 0
 .const CXN_AVATAR_EAGULL   = 1
 cxn_avatar_eagull_t:
-.text "EAGULL    "
+.text "Eagull    "
 .byte 0
 .const CXN_AVATAR_HG       = 2
 cxn_avatar_hg_t:
-.text "HELMET GUY"
+.text "Helmet Guy"
 .byte 0
 .const CXN_AVATAR_RG5K     = 3
 cxn_avatar_rg5k_t:
-.text "ROBOGUY 5K"
+.text "RoboGuy 5K"
 .byte 0
 .const CXN_AVATAR_MSDOS    = 4
 cxn_avatar_msdos_t:
-.text "MISS DOS  "
+.text "Miss DOS  "
 .byte 0
 .const CXN_AVATAR_F1D0     = 5
 cxn_avatar_f1d0_t:
@@ -215,19 +226,19 @@ cxn_avatar_f1d0_t:
 .byte 0
 .const CXN_AVATAR_TRISH    = 6
 cxn_avatar_trish_t:
-.text "TRISH     "
+.text "Trish     "
 .byte 0
 .const CXN_AVATAR_POKEY    = 7
 cxn_avatar_pokey_t:
-.text "POKEY     "
+.text "Pokey     "
 .byte 0
 .const CXN_AVATAR_AMY      = 8
 cxn_avatar_amy_t:
-.text "AMY       "
+.text "Amy       "
 .byte 0
 .const CXN_AVATAR_VICTORIA = 9
 cxn_avatar_victoria_t:
-.text "VICTORIA  "
+.text "Victoria  "
 .byte 0
 
 .const CXN_AVATAR_END = 10
@@ -262,6 +273,12 @@ game_anim: .byte 0
 .const cxn_avatar_selected_p2  = %00000010
 .const cxn_avatar_selected_both= %00000011
 cxn_avatar_selected: .byte 0
+
+///////////////////////////////////////////////////////////////
+// Anim stuff
+
+.const anim_bg_color    = LIGHT_BLUE
+.const intro_anim_time  = $30
 
 //////////////////////////////////////////////////////////////
 // Button stuff

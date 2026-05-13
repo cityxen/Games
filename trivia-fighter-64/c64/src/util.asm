@@ -187,12 +187,28 @@ update_player_2_select_sprites:
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
 
+	//lda cxn_avatar_selected
+	//and #cxn_avatar_selected_p2
+	//cmp #cxn_avatar_selected_p2
+	//bne !+
+	//rts
+
 	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p2
-	cmp #cxn_avatar_selected_p2
-	bne !+
+
+PrintHexXY(0,10)
+
+	lda cxn_avatar_selected
+	and #cxn_avatar_selected_p2	
+	beq up2ss_out
+	lda #$00
+	sta SPRITE_3_X
+	sta SPRITE_3_Y
+	sta SPRITE_5_X
+	sta SPRITE_5_Y
 	rts
-!:
+
+up2ss_out:
 
 	// sprite 3
 	lda #select_sprite_3_x

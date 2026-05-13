@@ -19,7 +19,7 @@ draw_main_screen:
 // Draw LOGIN screen
 
 draw_select_char:
-	PrintUpperCase()
+	PrintLowerCase()
 	jsr wait_vbl
 	jsr init_sprites_select_char
 	DrawPetMateScreen(select_char)
@@ -75,14 +75,23 @@ draw_title:
 
 draw_loading_screen:
 	jsr init_sprites_load_screen
+
+	lda #ml_loading_screen_bg_color
+	sta BORDER_COLOR
+	sta BACKGROUND_COLOR
+	
 	PrintClear()
 	PrintLowerCase()
-	PrintChr(5)
+	PrintChr(ml_loading_screen_txt_color)
 	PrintDown(12)
 	PrintRight(7)
 	Print(MLHL_HOTLOAD_LOADING_TEXT)
-	lda #$05
-	sta $d020
+
+	FullReset(TIMER_1)
+!:
+	GetTimerTr(TIMER_1)
+	beq !-
+
 	rts
 
 /////////////////////////////////////////////////////

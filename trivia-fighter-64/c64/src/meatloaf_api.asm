@@ -42,7 +42,6 @@ MLHL_HOTLOAD_LOADING_TEXT:
 
 MLHL_LOAD_COUNT:
 
-    inc $d020
     lda SPRITE_ENABLE // disable sprites
     pha
     lda #$00
@@ -59,25 +58,21 @@ MLHL_LOAD_COUNT:
     ldx ml_drive_number
     ldy #$00
     jsr KERNAL_SETLFS
-    inc $d020
-
+    
     lda #00 // Set Load Address
     ldx #<ml_total_trivia
     ldy #>ml_total_trivia
     jsr KERNAL_LOAD
-    inc $d020
-
+    
     // re-enable disabled routines
 
     pla
     sta SPRITE_ENABLE // restore Sprite status
-    lda #$00
-    sta $d020
+
     rts
 
 MLHL_LOAD:
 
-    inc $d020
     lda SPRITE_ENABLE // disable sprites
     pha
     lda #$00
@@ -94,20 +89,17 @@ MLHL_LOAD:
     ldx ml_drive_number
     ldy #$00
     jsr KERNAL_SETLFS
-    inc $d020
 
     lda #00 // Set Load Address
     ldx #<MLHL_DATA_TABLE
     ldy #>MLHL_DATA_TABLE
     jsr KERNAL_LOAD
-    inc $d020
 
     // re-enable disabled routines
 
     pla
     sta SPRITE_ENABLE // restore Sprite status
-    lda #$00
-    sta $d020
+
     rts
 MLHL_LOAD_MSG:
 .encoding "petscii_mixed"

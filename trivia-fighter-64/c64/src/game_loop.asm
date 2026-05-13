@@ -48,9 +48,9 @@ game_loop:
 	cmp #GAME_STEP_SELECT_
 	bne !+
 	///// temporary jump over selection (remove after testing)
-	lda #GAME_STEP_ANIM_INTRO_
-	sta game_step
-	jmp !++
+	//lda #GAME_STEP_ANIM_INTRO_
+	//sta game_step
+	//jmp !++
 	/////
 	jmp game_step_select_init
 !:
@@ -335,35 +335,67 @@ pselectout:
 
 game_step_anim_init:
 	PrintClear()
+	lda #anim_bg_color
+	sta BORDER_COLOR
+	sta BACKGROUND_COLOR
+
 	lda #$00
-	SetTimerTr(2)
-	ResetTimer(2)
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_1)
+
 	inc game_step
 
 game_step_anim: // all anims for now
 	lda #$00
 	sta SPRITE_ENABLE
-	inc game_step
-	jmp game_loop
-
-	PrintHome()
-	PrintLowerCase()
 	
-	Print(anim_text)
-	PrintLF()
-	PrintDown(5)
-	GetTimer(2)
-	PrintHex()
-	PrintLF()
-	GetTimerTr(2)
-	PrintHex()
-	PrintLF()
-
-	GetTimerTr(2)
-	cmp #$01
-	bne !+
-	inc game_step
+	lda game_step
+	cmp #GAME_STEP_ANIM_INTRO
+	beq !+
+	    jmp gsa_out
 !:
+		lda #%00010010
+		sta SPRITE_ENABLE
+		sta SPRITE_EXPAND_X
+		sta SPRITE_EXPAND_Y
+		
+		lda #intro_sprite_1_x
+		sta SPRITE_1_X 
+		lda #intro_sprite_1_y
+		sta SPRITE_1_Y
+		lda #intro_sprite_4_x
+		sta SPRITE_4_X
+		lda #intro_sprite_4_y
+		sta SPRITE_4_Y
+
+		PrintLowerCase()
+		PrintHome()
+		PrintDown(15)
+		PrintRight(4)
+		Print(player_msg)
+		PrintChr('1')
+
+		PrintRight(16)
+		Print(player_msg)
+		PrintChr('2')
+		PrintLF()
+		PrintRight(4)
+
+		lda player_1_avatar
+		jsr print_player_name
+
+		PrintRight(14)
+		lda player_2_avatar
+		jsr print_player_name
+		
+		GetTimerTr(TIMER_1)
+		cmp #intro_anim_time
+		beq gsa_out
+		jmp game_loop
+
+gsa_out:
+	
+	inc game_step
 	jmp game_loop
 
 
@@ -372,32 +404,24 @@ game_step_round_init:
 	jsr draw_loading_screen
 	jsr MLHL_LOAD // load random trivia question
 	jsr draw_play_screen
-	lda #$00
-	SetTimerTr(1)
-	ResetTimer(1)
+	lda #$00	
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_1)
+	lda #TIMER_ROUND
+	SetTimerTo(TIMER_1)
 
 	// reset buzzed in state
+	lda #$00
 	sta player_1_buzzed_in
 	sta player_2_buzzed_in
 	sta game_round_first_buzzer
 
-	inc game_step
-	sfx_v2_play(SFX_GET_READY)
-	jmp game_loop
-
-gsr_lf_check: .byte 0
-game_step_round:
-
 	PrintHome()
-	PrintLowerCase()
-	PrintRight(16)
-	Print(trivia_round_text)
-	lda game_round_current
-	PrintHex()
 	PrintLF()
 	PrintLF()
 	PrintLF()
-	PrintRight(4)
+	PrintLF()
+	PrintRight(6)
 	PrintChr(5)
 
     lda #< MLHL_DATA_QUESTION
@@ -425,74 +449,69 @@ game_step_round:
 	lda #$00
 	sta gsr_lf_check
 	PrintLF()
-	PrintRight(4)
+	PrintRight(6)
 	jmp !-
 
 gst_lf_out:
 
 	PrintChr('?')
 
-	//PrintLF()
-	//PrintUp(1)
-	//lda MLHL_DATA_CORRECT
-	//sbc #47
-	//PrintHexXY(2,1)
 
 	PrintHome()
 	PrintDown(13)
 	PrintRight(3)
-
-	Print(MLHL_DATA_ANS1)
-
-	PrintLF()
-	PrintUp(1)
-	PrintRight(21)
-
-	Print(MLHL_DATA_ANS2)
-
-	PrintLF()
-	PrintDown(7)
-	PrintRight(3)
-
-	Print(MLHL_DATA_ANS3)
-
-	PrintLF()
-	PrintUp(1)
-	PrintRight(21)
-
-	Print(MLHL_DATA_ANS4)
-	
-	PrintLF()
-	//Print(MLHL_DATA_QUESTION)
-
-
-	PrintLF()
-	//lda MLHL_DATA_CORRECT
-	//sbc #47
-	//PrintHex()
-	PrintHome()
-	PrintDown(13)
-	PrintRight(3)
+	CenterAns(MLHL_DATA_ANS1)
 	Print(MLHL_DATA_ANS1)
 	PrintLF()
 	PrintUp(1)
 	PrintRight(21)
+	CenterAns(MLHL_DATA_ANS2)
 	Print(MLHL_DATA_ANS2)
 	PrintLF()
 	PrintDown(7)
 	PrintRight(3)
+	CenterAns(MLHL_DATA_ANS3)
 	Print(MLHL_DATA_ANS3)
 	PrintLF()
 	PrintUp(1)
 	PrintRight(21)
+	CenterAns(MLHL_DATA_ANS4)
 	Print(MLHL_DATA_ANS4)
 
-	// begin input checks here
+	PrintPlot(9,1)
+	lda player_1_avatar
+	jsr print_player_name
+	PrintRight(2)
+	lda player_2_avatar
+	jsr print_player_name
 
-	PrintLF()
-	PrintLF()
-	PrintLF()
-	PrintRight(5 )
+!:
+	lda 1094
+	cmp #32
+	bne !++
+	ldx #11
+!:
+	lda 1083,x
+	sta 1084,x
+	dex
+	bne !-
+	jmp !--
+!:
+	lda #'('
+	sta 1095
+
+	inc game_step
+	sfx_v2_play(SFX_GET_READY)
+	jmp game_loop
+
+gsr_lf_check: .byte 0
+game_step_round:
+
+	PrintPlot(16,24)
+	PrintLowerCase()
+	Print(trivia_round_text)
+	lda game_round_current
+	PrintHex()
 
 	lda player_1_buzzed_in
 	beq !+
@@ -556,109 +575,108 @@ gst_lf_out:
 	PrintChr('>')	
 !:
 
-
-
 	jsr il_get_j1_m2
 	jsr il_get_j2_m2
 
 	lda player_1_buzzed_in
+	cmp #$00
 	bne p2buzz
 
-	lda J1_B_GREEN // green // PrintHex()	PrintChr($20)
+	lda J1_B_GREEN
 	bne !+
 		lda #BUTTON_GREEN
 		sta player_1_buzzed_in
 		lda #BUZZER_PLAYER_1
 		jsr who_buzzed_in_first
-		sfx_v1_play(SFX_POW)
+		sfx_v1_play(SFX_DING)
 		jmp p2buzz
 !:
-	lda J1_B_YELLOW // yellow // PrintHex() 	PrintChr($20)
+	lda J1_B_YELLOW
 	bne !+
 		lda #BUTTON_YELLOW
 		sta player_1_buzzed_in
 		lda #BUZZER_PLAYER_1
 		jsr who_buzzed_in_first
-		sfx_v1_play(SFX_POW)
+		sfx_v1_play(SFX_DING)
 		jmp p2buzz
 !:
-	lda J1_B_RED // red // PrintHex()	PrintChr($20)
+	lda J1_B_RED
 	bne !+
 		lda #BUTTON_RED
 		sta player_1_buzzed_in
 		lda #BUZZER_PLAYER_1
 		jsr who_buzzed_in_first
-		sfx_v1_play(SFX_POW)
+		sfx_v1_play(SFX_DING)
 		jmp p2buzz
 !:
-	lda J1_B_BLUE // blue // PrintHex()	PrintChr($20)
+	lda J1_B_BLUE
 	bne !+
 		lda #BUTTON_BLUE
 		sta player_1_buzzed_in
 		lda #BUZZER_PLAYER_1
 		jsr who_buzzed_in_first
-		sfx_v1_play(SFX_POW)
+		sfx_v1_play(SFX_DING)
 !:
 
 p2buzz:
 
 	lda player_2_buzzed_in
+	cmp #$00
 	bne buzz_check_done
 
-	lda J2_B_GREEN	// green PrintHex()	PrintChr($20)
+	lda J2_B_GREEN
 	bne !+
 		lda #BUTTON_GREEN
 		sta player_2_buzzed_in
 		lda #BUZZER_PLAYER_2
 		jsr who_buzzed_in_first
-		sfx_v2_play(SFX_POW)
+		sfx_v2_play(SFX_DING)
 		jmp buzz_check_done
 !:
-	lda J2_B_YELLOW // yellow	PrintHex()	PrintChr($20)
+	lda J2_B_YELLOW
 	bne !+
 		lda #BUTTON_YELLOW
 		sta player_2_buzzed_in
 		lda #BUZZER_PLAYER_2
 		jsr who_buzzed_in_first
-		sfx_v2_play(SFX_POW)
+		sfx_v2_play(SFX_DING)
 		jmp buzz_check_done
 !:
-	lda J2_B_RED // red	PrintHex()	PrintChr($20)
+	lda J2_B_RED
 	bne !+
 		lda #BUTTON_RED
 		sta player_2_buzzed_in
 		lda #BUZZER_PLAYER_2
 		jsr who_buzzed_in_first
-		sfx_v2_play(SFX_POW)
+		sfx_v2_play(SFX_DING)
 		jmp buzz_check_done
 !:
-	lda J2_B_BLUE // blue	PrintHex()	PrintChr($20)
+	lda J2_B_BLUE
 	bne !+
 		lda #BUTTON_BLUE
 		sta player_2_buzzed_in
 		lda #BUZZER_PLAYER_2
 		jsr who_buzzed_in_first
-		sfx_v2_play(SFX_POW)
+		sfx_v2_play(SFX_DING)
 		jmp buzz_check_done
 !:
 
 buzz_check_done:
 
-	GetTimerTr(1)
+	GetTimerTr(TIMER_1)
 	sta tmp_1
 	sec
 	lda #$20
 	sbc tmp_1
 	tax
 	lda #$20
-	sta 1068,x
+	sta 1027,x
 
-	GetTimerTr(1)
+	GetTimerTr(TIMER_1)
 	cmp #32
 	bne !+
 	inc game_step
 !:
-
 	jmp game_loop
 
 who_buzzed_in_first:

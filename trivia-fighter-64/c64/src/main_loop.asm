@@ -175,25 +175,17 @@ next_scr:
 
 load_trivia_stress_test:
 
-	lda #$00
-	SetTimerTr(TIMER_1)
-	ResetTimer(TIMER_1)
-
 	jsr draw_loading_screen
 	jsr MLHL_LOAD // load random trivia question
 	jsr draw_play_screen
 	sfx_v2_play(SFX_POW)
 
 	PrintHome()
-	PrintLowerCase()
-	PrintRight(16)
-	Print(trivia_round_text)
-	lda game_round_current
-	PrintHex()
 	PrintLF()
 	PrintLF()
 	PrintLF()
-	PrintRight(4)
+	PrintLF()
+	PrintRight(6)
 	PrintChr(5)
 
     lda #< MLHL_DATA_QUESTION
@@ -221,7 +213,7 @@ load_trivia_stress_test:
 	lda #$00
 	sta gsr_lf_check
 	PrintLF()
-	PrintRight(4)
+	PrintRight(6)
 	jmp !-
 
 st_lf_out:
@@ -229,47 +221,67 @@ st_lf_out:
 	PrintChr('?')
 
 	PrintLF()
-	PrintUp(1)
+	
+	PrintChr(KEY_YELLOW)
 	lda MLHL_DATA_CORRECT
 	sbc #47
-	PrintHexXY(2,1)
+	PrintHexXY(2,2)
 
 	PrintHome()
+	PrintChr(KEY_WHITE)
 	PrintDown(13)
 	PrintRight(3)
 
+	CenterAns(MLHL_DATA_ANS1)
 	Print(MLHL_DATA_ANS1)
 
 	PrintLF()
 	PrintUp(1)
 	PrintRight(21)
 
+	CenterAns(MLHL_DATA_ANS2)
 	Print(MLHL_DATA_ANS2)
 
 	PrintLF()
 	PrintDown(7)
 	PrintRight(3)
 
+	CenterAns(MLHL_DATA_ANS3)
 	Print(MLHL_DATA_ANS3)
 
 	PrintLF()
 	PrintUp(1)
 	PrintRight(21)
 
+	CenterAns(MLHL_DATA_ANS4)
 	Print(MLHL_DATA_ANS4)
 	
 	PrintLF()
 
+	lda #TIMER_ROUND
+	SetTimerTo(TIMER_1)
+	lda #$00
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_1)
+
 !:
+	PrintPlot(16,24)
+	PrintLowerCase()
+	PrintChr(KEY_WHITE)
+	Print(trivia_round_text)
+	//lda #$ff
+	//PrintHex()
+	PrintChr(KEY_S+32)
+	PrintChr(KEY_T+32)
+
 	jsr input_get_key
 	cmp #KEY_Q
 	bne !+
 	lda #$00
 	sta screen_draw
-	SetTimerTr(TIMER_3)
 	SetTimerTr(TIMER_1)
-	ResetTimer(TIMER_3)	
 	ResetTimer(TIMER_1)
+	
 	jsr ml_screens
 	jmp main_loop
 !:
@@ -283,7 +295,7 @@ st_lf_out:
 	sbc tmp_1
 	tax
 	lda #$20
-	sta 1068,x
+	sta 1027,x
 
 	GetTimerTr(TIMER_1)
 	cmp #32
@@ -295,3 +307,27 @@ st_lf_out:
 	print_answer:
 
 		rts
+
+.macro CenterAns(ans) {
+	StrLen(ans)
+	stx x_reg   // Save X
+	lda #16
+	sec         // Set carry for subtraction
+	sbc x_reg   // A = A - temp
+	lsr
+
+	clc
+	cmp #18
+	bcc!+
+	lda #2
+!:
+
+	tax
+!:
+	stx x_reg
+	PrintChr(' ')
+	ldx x_reg
+	dex
+	bne !-
+}
+	
