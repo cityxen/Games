@@ -9,6 +9,16 @@
 
 main_loop_start:
 restart:
+	GetTimer(12)
+	ora VIC_RASTER_COUNTER
+	and #%00000111
+	sta player_1_avatar
+
+	GetTimer(13)
+	ora VIC_RASTER_COUNTER
+	and #%00000111
+	sta player_2_avatar
+
 	lda #01
 	sta sound_playing
 	jsr sfx_clear
@@ -34,19 +44,16 @@ restart:
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
 
-	ResetTimer(2)
-	ResetTimer(1)
-
-	lda #CXN_AVATAR_HG
-	sta player_1_avatar
-	lda #CXN_AVATAR_EAGULL
-	sta player_2_avatar
+	FullReset(TIMER_SCREEN_CHANGE)
+	FullReset(TIMER_2)
+	FullReset(TIMER_3)
 
 	lda #$00
 	sta screen_draw
 	PrintChr($93)
 	jsr ml_screens
 
+	
 
 main_loop:
 

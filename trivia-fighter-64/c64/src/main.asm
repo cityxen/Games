@@ -66,6 +66,5 @@ start:
 #import "util.asm"
 #import "version.asm"
 
-#import "messages.asm"
 
 

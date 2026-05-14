@@ -188,67 +188,6 @@ game_loop:
 	// determine game over condition here
 	jmp game_over
 
-	// check joystick port 1 values
-	jsr input_get_button
-	cmp #$ff
-	beq exit_select_button
-
-	!chk_buttons:
-	cmp #BUTTON_RED
-	bne !chk_buttons+
-	lda #BUTTON_LIGHT_RED
-	sta USER_PORT_DATA
-	lda #$00
-	sta button_actually_hit
-	jmp exit_select_button
-
-	!chk_buttons:
-	cmp #BUTTON_GREEN
-	bne !chk_buttons+
-	lda #BUTTON_LIGHT_GREEN
-	sta USER_PORT_DATA
-	lda #$01
-	sta button_actually_hit
-	jmp exit_select_button
-
-	!chk_buttons:
-	cmp #BUTTON_YELLOW
-	bne !chk_buttons+
-	lda #BUTTON_LIGHT_YELLOW
-	sta USER_PORT_DATA
-	lda #$02
-	sta button_actually_hit
-	jmp exit_select_button
-
-	!chk_buttons:
-	cmp #BUTTON_BLUE
-	bne !chk_buttons+
-	lda #BUTTON_LIGHT_BLUE
-	sta USER_PORT_DATA
-	lda #$03
-	sta button_actually_hit
-	jmp exit_select_button
-
-	!chk_buttons:
-	cmp #BUTTON_WHITE
-	bne !chk_buttons+
-	lda #BUTTON_LIGHT_WHITE
-	sta USER_PORT_DATA
-	lda #$04
-	sta button_actually_hit
-	jmp exit_select_button
-
-	!chk_buttons:
-
-exit_select_button:
-
-	lda button_actually_hit
-	lda button_did_hit
-	
-	sfx_v1_play(SFX_POW)
-
-	jmp game_loop
-
 game_step_select_init:
 	jsr init_sprites_game_init
 	lda #$00
@@ -455,8 +394,6 @@ game_step_round_init:
 gst_lf_out:
 
 	PrintChr('?')
-
-
 	PrintHome()
 	PrintDown(13)
 	PrintRight(3)
@@ -674,9 +611,95 @@ buzz_check_done:
 
 	GetTimerTr(TIMER_1)
 	cmp #32
-	bne !+
-	inc game_step
+	beq !+
+	jmp gsr_out
 !:
+
+	ClearScreen(BLACK)
+	FullReset(TIMER_1)
+gsr_in:
+	// determine winner of round here
+	PrintHome()
+	GetTimerTr(TIMER_1)
+	PrintHex()
+	PrintLF()
+	
+	lda #$00
+	sta game_round_winner
+	sta SPRITE_ENABLE
+	
+!:
+	
+
+	lda MLHL_DATA_CORRECT
+	sec
+	sbc #$30
+	PrintHex()
+	PrintLF()
+	PrintLF()
+	
+	Print(player_msg)
+	PrintChr('1')
+	PrintChr(' ')
+
+	lda MLHL_DATA_CORRECT // = the correct answer
+	sec
+	sbc #$30
+	tax
+	lda button_answer_translator,x
+	sta a_reg
+	PrintLF()
+	lda a_reg
+	PrintHex()
+	PrintLF()
+	lda a_reg
+	cmp player_1_buzzed_in
+	bne !+
+	Print(p_right_msg) 	// Player 1 Got it right
+	jmp !++
+!:
+	Print(p_wrong_msg) // Player 1 Got it wrong
+!:
+	PrintLF()
+	PrintLF()
+	Print(player_msg)
+	PrintChr('2')
+	PrintChr(' ')
+	lda MLHL_DATA_CORRECT // = the correct answer
+	sec
+	sbc #$30
+	tax
+	lda button_answer_translator,x
+	sta a_reg
+	PrintLF()
+	lda a_reg
+	PrintHex()
+	PrintLF()
+	lda a_reg
+	cmp player_2_buzzed_in
+	bne !+
+	Print(p_right_msg) // Player 2 Got it right
+	jmp !++
+!:
+	Print(p_wrong_msg) // Player 2 Got it wrong
+!:
+
+	lda game_round_first_buzzer // check who buzzed in first
+	cmp #BUZZER_PLAYER_1
+	bne !+
+	// Player 1 Buzzed In First
+	jmp !++
+!:
+	// Player 2 Buzzed In First
+!:
+
+	GetTimerTr(TIMER_1)
+	cmp #32
+	beq !+
+	jmp gsr_in
+!:
+	inc game_step
+gsr_out:
 	jmp game_loop
 
 who_buzzed_in_first:

@@ -69,11 +69,12 @@ player_2_healthbar:     .byte 0
 .const BUZZER_PLAYER_2 = 2
 
 game_round_first_buzzer: .byte 0
+game_round_winner:       .byte 0
 
 player_1_buzzed_in:      .byte 0 // BUTTON_RED
 player_2_buzzed_in:      .byte 0 // BUTTON_GREEN
 
-game_round_total:       .byte 7
+game_round_total:       .byte 5
 game_round_current:     .byte 0
 
 trivia_category_total:  .byte 5
@@ -83,9 +84,9 @@ trivia_question_current:.byte 0
 trivia_current_question:.byte 0 // current question 0-250 (255 if it is a meatloaf question)
 trivia_current_category:.byte 0 // 
 
-button_did_hit: .byte 0
-button_actually_hit: .byte 0
-message: .byte 0
+// button_did_hit: .byte 0
+// button_actually_hit: .byte 0
+// message: .byte 0
 
         
 //////////////////////////////////////////////////////////////
@@ -339,6 +340,9 @@ cxn_avatar_selected: .byte 0
 
 .const FLASH_TIMER_SPEED_CONST = $40
 
+button_answer_translator:
+.byte 0,BUTTON_GREEN,BUTTON_BLUE,BUTTON_RED,BUTTON_YELLOW
+
 button_red_msg:
 .encoding "petscii_mixed"
 .byte KEY_RED
@@ -364,35 +368,20 @@ button_white_msg:
 .byte KEY_WHITE
 .text "WHITE "
 .byte 0
+
 player_msg:
 .encoding "petscii_mixed"
 .byte KEY_WHITE
 .text "PLAYER "
 .byte 0
 
-countdown_text: 
-.byte $1e,KEY_HOME,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+p_right_msg:
+.text "got answer right"
 .byte 0
-msg_init:
-.byte 5,KEY_HOME,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_DOWN,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
-.byte KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT,KEY_CURSOR_RIGHT
+
+p_wrong_msg:
+.text "got answer wrong"
 .byte 0
-msg_getready:
-.encoding "screencode_mixed"
-.text "GET READY"
-.byte 0
-msg_miss:
-.text "   MISS"
-.byte 0
-msg_pow:
-.text "   POW"
-.byte 0
-msg_wrong:
-.text "  WRONG!"
-.byte 0
-msg_clr:
-.encoding "petscii_mixed"
-.text "             "
-.byte 0
+
 
 
