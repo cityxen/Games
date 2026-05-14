@@ -18,6 +18,7 @@
 #import "sfxkit.il.asm"
 #import "timers.il.asm"
 #import "string.il.asm"
+#import "sprite.il.asm"
 #import "score.il.asm"
 #import "random.il.asm"
 #import "meatloaf.il.asm"
@@ -46,7 +47,7 @@ ml_total_trivia_text: .text "triva count:"
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
 
-.const TIMER_ROUND  = $0f
+.const TIMER_ROUND  = $1f
 .const TIMER_STRESS = $05
 
 trivia_round_text: .text "Round:"
@@ -120,10 +121,25 @@ message: .byte 0
 .const select_sprite_7_y = 180
 .const select_sprite_7_m = 0
 
-.const intro_sprite_1_x = 85
+.const intro_sprite_1_x = 75
 .const intro_sprite_1_y = 80
-.const intro_sprite_4_x = 5
+.const intro_sprite_4_x = 220
 .const intro_sprite_4_y = 80
+
+.const trivia_sprite_1_x = 27
+.const trivia_sprite_1_y = 70
+.const trivia_sprite_4_x = 61
+.const trivia_sprite_4_y = 70
+
+.const main_sprite_1_x = 25
+.const main_sprite_1_y = 170
+.const main_sprite_4_x = 39
+.const main_sprite_4_y = 170
+
+.const game_over_sprite_1_x = 25
+.const game_over_sprite_1_y = 172
+.const game_over_sprite_4_x = 39
+.const game_over_sprite_4_y = 172
 
 .const sp_disk_load_x = 165
 .const sp_disk_load_y = 100
@@ -143,6 +159,44 @@ message: .byte 0
 .const sp_victoria  = $c9
 .const sp_disk_load = $ca
 
+.const sp_ptr_a     = $cb // R
+.const sp_ptr_b     = $cc // Blank
+.const sp_ptr_c     = $cd // Blank
+.const sp_ptr_d     = $ce // Blank
+.const sp_ptr_e     = $cf
+.const sp_ptr_f     = $d0
+.const sp_ptr_g     = $d1
+.const sp_ptr_h     = $d2
+.const sp_ptr_i     = $d3
+
+.const sp_ptr_yin_1 = $d4
+.const sp_ptr_yin_2 = $d5
+.const sp_ptr_yin_3 = $d6
+.const sp_ptr_yin_4 = $d7
+.const sp_ptr_yin_5 = $d8
+.const sp_ptr_yin_6 = $d9
+.const sp_ptr_yin_7 = $da
+.const sp_ptr_yin_8 = $db
+
+.const sp_ptr_center_body = $e2
+
+.const sp_ptr_body_left_1  = $dc
+.const sp_ptr_body_left_2  = $dd
+.const sp_ptr_body_left_3  = $de
+.const sp_ptr_body_left_4  = $df
+.const sp_ptr_body_left_5  = $e0
+.const sp_ptr_body_left_6  = $e1
+.const sp_ptr_punch_left   = $e3
+.const sp_ptr_kick_left    = $e4
+
+.const sp_ptr_body_right_1 = $e5
+.const sp_ptr_body_right_2 = $e6
+.const sp_ptr_body_right_3 = $e7
+.const sp_ptr_body_right_4 = $e8
+.const sp_ptr_body_right_5 = $e9
+.const sp_ptr_body_right_6 = $ea
+.const sp_ptr_punch_right  = $eb
+.const sp_ptr_kick_right   = $ec
 
 //////////////////////////////////////////////////////////////
 // Local Constants

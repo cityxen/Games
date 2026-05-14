@@ -58,8 +58,7 @@ draw_gameover:
 	jsr wait_vbl
 	DrawPetMateScreen(gameover_screen)
 	jsr debug_stuff
-	jsr init_sprites_ms
-	// jsr draw_score_game_over0
+	jsr init_sprites_game_over
 	rts
 
 draw_title:

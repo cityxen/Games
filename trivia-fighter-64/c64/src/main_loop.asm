@@ -37,10 +37,16 @@ restart:
 	ResetTimer(2)
 	ResetTimer(1)
 
+	lda #CXN_AVATAR_HG
+	sta player_1_avatar
+	lda #CXN_AVATAR_EAGULL
+	sta player_2_avatar
+
 	lda #$00
 	sta screen_draw
 	PrintChr($93)
 	jsr ml_screens
+
 
 main_loop:
 
@@ -83,7 +89,7 @@ ml_keys:
 	bne!ml+
 	PrintHome()
 	PrintDown(15)
-	PrintRight(27)
+	PrintRight(25)
 	PrintChr(5)
 	lda play_music
 	jsr print_yesno
@@ -129,23 +135,24 @@ ml_screens:
 !:
 	jsr draw_main_screen
  	jsr draw_title
+
 	PrintDown(14)
-	PrintRight(27)
+	PrintRight(25)
 	lda play_music
 	jsr print_yesno
 	PrintLF()
 
-	PrintRight(9)
+	PrintRight(10)
 	Print(ml_detected_text)
     lda ml_detected
 	jsr print_yesno
 	PrintLF()
-	PrintRight(9)
+	PrintRight(8)
 	Print(ml_enabled_text)
     lda ml_enabled
 	jsr print_yesno
 	PrintLF()
-	PrintRight(15)
+	PrintRight(13)
 	Print(ml_total_trivia_text)
 	lda ml_total_trivia
 	sta numLo

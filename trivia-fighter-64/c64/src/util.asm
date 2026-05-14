@@ -12,6 +12,8 @@ inc_player_1_avatar:
 	lda #$00
 	sta player_1_avatar
 !:
+	jsr print_player_1_name
+	jsr update_player_1_select_sprites
 	rts
 
 dec_player_1_avatar:
@@ -22,6 +24,8 @@ dec_player_1_avatar:
 	lda #CXN_AVATAR_END-1
 	sta player_1_avatar
 !:
+	jsr print_player_1_name
+	jsr update_player_1_select_sprites
 	rts
 
 inc_player_2_avatar:
@@ -32,6 +36,8 @@ inc_player_2_avatar:
 	lda #$00
 	sta player_2_avatar
 !:
+	jsr print_player_2_name
+	jsr update_player_2_select_sprites
 	rts
 
 dec_player_2_avatar:
@@ -42,6 +48,8 @@ dec_player_2_avatar:
 	lda #CXN_AVATAR_END-1
 	sta player_2_avatar
 !:
+	jsr print_player_2_name
+	jsr update_player_2_select_sprites
 	rts
 
 print_player_1_name:
@@ -49,10 +57,16 @@ print_player_1_name:
 	cmp #GAME_STEP_SELECT
 	bne !+
 	PrintPlot(PLAYER_1_SELECT_SCREEN_X,PLAYER_1_SELECT_SCREEN_Y)
-	jmp !++
+	jmp pp1n_out
+!:
+	cmp #GAME_STEP_SELECT_
+	bne !+
+	PrintPlot(PLAYER_1_SELECT_SCREEN_X,PLAYER_1_SELECT_SCREEN_Y)
+	jmp pp1n_out
 !:
 	PrintPlot(PLAYER_1_GAME_SCREEN_X,PLAYER_1_GAME_SCREEN_Y)
-!:
+
+pp1n_out:
 	lda player_1_avatar
 	jsr print_player_name
 	rts
@@ -62,10 +76,15 @@ print_player_2_name:
 	cmp #GAME_STEP_SELECT
 	bne !+
 	PrintPlot(PLAYER_2_SELECT_SCREEN_X,PLAYER_2_SELECT_SCREEN_Y)
-	jmp !++
+	jmp pp2n_out
+!:
+	cmp #GAME_STEP_SELECT_
+	bne !+
+	PrintPlot(PLAYER_2_SELECT_SCREEN_X,PLAYER_2_SELECT_SCREEN_Y)
+	jmp pp2n_out
 !:
 	PrintPlot(PLAYER_2_GAME_SCREEN_X,PLAYER_2_GAME_SCREEN_Y)
-!:
+pp2n_out:
 	lda player_2_avatar
 	jsr print_player_name
 	rts	
@@ -125,9 +144,6 @@ update_player_1_select_sprites:
 	sta SPRITE_1_COLOR
 
 	lda cxn_avatar_selected
-	PrintHexXY(0,0)
-
-	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p1
 	beq up1ss_out
 	lda #$00
@@ -176,27 +192,29 @@ up1ss_out:
 
 update_player_2_select_sprites:
 
+	// CopySprite(sp_hg,sp_ptr_d)
+	
+	//lda #sp_hg
+	//sta SPRITE_0_POINTER
+	//lda #sp_ptr_c
+	//sta SPRITE_1_POINTER
+
 	//sprite 4
 	lda #select_sprite_4_x
 	sta SPRITE_4_X
 	lda #select_sprite_4_y
 	sta SPRITE_4_Y
+	
 	ldx player_2_avatar	
-	lda cxn_avatar_sprite_pointer_i,x
-	sta SPRITE_4_POINTER
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
 
-	//lda cxn_avatar_selected
-	//and #cxn_avatar_selected_p2
-	//cmp #cxn_avatar_selected_p2
-	//bne !+
-	//rts
+	ldx player_2_avatar	
+	lda cxn_avatar_sprite_pointer_i,x
+	ReverseSpriteMultiColorA(sp_ptr_a)
 
-	lda cxn_avatar_selected
-	and #cxn_avatar_selected_p2
-
-PrintHexXY(0,10)
+	lda #sp_ptr_a
+	sta SPRITE_4_POINTER
 
 	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p2	
@@ -287,5 +305,4 @@ input_get_key:
 !gb:
 	lda #$00
 	rts
-
 

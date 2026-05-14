@@ -26,9 +26,9 @@ MLHL_URL_LEN_COUNT:
 MLHL_HOTLOAD_MSG:
 .encoding "petscii_mixed"
 .byte $9f
-.byte $0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$1d,$1d,$1d,$1d,$1d
+.byte $0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$0d,$1d,$1d,$1d,$1d,$1d
 .text "meatloaf > hotload daas enabled"
-.byte $0d,$0d,$9e,$1d,$1d
+.byte $0d,$9e,$1d,$1d
 .text "meatloaf.cc > cityxen.biz/hotload"
 .byte 0
 

@@ -253,13 +253,14 @@ game_step_select_init:
 	jsr init_sprites_game_init
 	lda #$00
 	sta cxn_avatar_selected
+
+	jsr print_player_1_name
+	jsr update_player_1_select_sprites
+	jsr print_player_2_name
+	jsr update_player_2_select_sprites
 	inc game_step
 
 game_step_select:
-
-	// PrintHome()
-	// lda cxn_avatar_selected
-	// PrintHexXY(0,5)
 
 	lda cxn_avatar_selected
 	cmp #cxn_avatar_selected_both
@@ -267,11 +268,6 @@ game_step_select:
 	inc game_step
 	jmp game_loop
 !:
-
-	jsr print_player_1_name
-	jsr update_player_1_select_sprites
-	jsr print_player_2_name
-	jsr update_player_2_select_sprites
 
 	jsr get_j1_m2 // update joystick
 	jsr get_j2_m2
@@ -302,10 +298,10 @@ p1select:
 	bne !+
 	
 	sfx_v1_play(SFX_GET_READY)
-	
 	lda cxn_avatar_selected
 	ora #cxn_avatar_selected_p1
 	sta cxn_avatar_selected
+	jsr update_player_1_select_sprites
 !:
 
 p2select:
@@ -329,6 +325,7 @@ p2select:
 	lda cxn_avatar_selected
 	ora #cxn_avatar_selected_p2
 	sta cxn_avatar_selected
+	jsr update_player_2_select_sprites
 !:
 pselectout:
 	jmp game_loop
@@ -368,6 +365,9 @@ game_step_anim: // all anims for now
 		lda #intro_sprite_4_y
 		sta SPRITE_4_Y
 
+		lda #%00000000
+		sta SPRITE_MSB_X
+
 		PrintLowerCase()
 		PrintHome()
 		PrintDown(15)
@@ -375,7 +375,7 @@ game_step_anim: // all anims for now
 		Print(player_msg)
 		PrintChr('1')
 
-		PrintRight(16)
+		PrintRight(14)
 		Print(player_msg)
 		PrintChr('2')
 		PrintLF()
@@ -384,7 +384,7 @@ game_step_anim: // all anims for now
 		lda player_1_avatar
 		jsr print_player_name
 
-		PrintRight(14)
+		PrintRight(10)
 		lda player_2_avatar
 		jsr print_player_name
 		
