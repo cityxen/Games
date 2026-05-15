@@ -4,6 +4,28 @@
 // CityXen Games: https://cityxen.itch.io
 //////////////////////////////////////
 
+.macro CenterAns(ans) {
+	StrLen(ans)
+	stx x_reg   // Save X
+	lda #16
+	sec         // Set carry for subtraction
+	sbc x_reg   // A = A - temp
+	lsr
+	clc
+	cmp #18
+	bcc!+
+	lda #2
+!:
+	tax
+!:
+	stx x_reg
+	PrintChr(' ')
+	ldx x_reg
+	dex
+	bne !-
+}
+
+
 inc_player_1_avatar:
 	inc player_1_avatar
 	lda player_1_avatar

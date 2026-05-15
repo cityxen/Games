@@ -56,7 +56,7 @@ trivia_round_text: .text "Round:"
 number_of_players:      .byte 0
 
 play_music:             .byte 0
-sound_playing:          .byte 0
+play_sound:             .byte 0
 screen_draw:            .byte 0
 
 player_1_avatar:        .byte 0

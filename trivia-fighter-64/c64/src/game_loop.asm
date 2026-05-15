@@ -5,53 +5,36 @@
 //////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-// Game start
-
+// Game loop init
 game_start:
-
+game_loop_init:
 	lda #0
 	sta game_round_current
-
 	lda #GAME_STEP_SELECT_
 	sta game_step
-
 	lda #PLAYER_INITIAL_HEALTH
 	sta player_1_healthbar
 	sta player_2_healthbar
-
 	lda #$00
 	sta player_1_avatar
-	
 	lda #$01
 	sta player_2_avatar
-
-	// jsr print_player_1_name
-	// jsr print_player_2_name	
-
 	lda #$00
 	sta play_music
-
 	jsr sfx_clear
-	
 	jsr draw_select_char
-	
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
-	
-	// lda #$01
-	// jsr set_message
-	
-game_loop:
+// END Game loop init 
+//////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// GAME LOOP BEGIN	
+game_loop:
 	// determine game_step
 	lda game_step
 	cmp #GAME_STEP_SELECT_
 	bne !+
-	///// temporary jump over selection (remove after testing)
-	//lda #GAME_STEP_ANIM_INTRO_
-	//sta game_step
-	//jmp !++
-	/////
 	jmp game_step_select_init
 !:
 	cmp #GAME_STEP_SELECT
@@ -68,19 +51,16 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	cmp #GAME_STEP_ROUND_1_
 	bne !+
 	lda #$01
 	sta game_round_current
 	jmp game_step_round_init
 !:
-
 	cmp #GAME_STEP_ROUND_1
 	bne !+
 	jmp game_step_round
 !:
-
 	cmp #GAME_STEP_ANIM_1_
 	bne !+
 	lda #0
@@ -91,19 +71,16 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	cmp #GAME_STEP_ROUND_2_
 	bne !+
 	lda #$02
 	sta game_round_current
 	jmp game_step_round_init
 !:
-
 	cmp #GAME_STEP_ROUND_2
 	bne !+
 	jmp game_step_round
 !:
-
 	cmp #GAME_STEP_ANIM_2_
 	bne !+
 	lda #0
@@ -114,20 +91,16 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	cmp #GAME_STEP_ROUND_3_
 	bne !+
 	lda #$03
 	sta game_round_current
 	jmp game_step_round_init
 !:
-
 	cmp #GAME_STEP_ROUND_3
 	bne !+
 	jmp game_step_round
 !:
-
-
 	cmp #GAME_STEP_ANIM_3_
 	bne !+
 	lda #0
@@ -138,19 +111,16 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	cmp #GAME_STEP_ROUND_4_
 	bne !+
 	lda #$04
 	sta game_round_current
 	jmp game_step_round_init
 !:
-
 	cmp #GAME_STEP_ROUND_4
 	bne !+
 	jmp game_step_round
 !:
-
 	cmp #GAME_STEP_ANIM_4_
 	bne !+
 	lda #0
@@ -161,19 +131,16 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	cmp #GAME_STEP_ROUND_5_
 	bne !+
 	lda #$05
 	sta game_round_current
 	jmp game_step_round_init
 !:
-
 	cmp #GAME_STEP_ROUND_5
 	bne !+
 	jmp game_step_round
 !:
-
 	cmp #GAME_STEP_ANIM_FINISH_
 	bne !+
 	lda #0
@@ -184,10 +151,13 @@ game_loop:
 	bne !+
 	jmp game_step_anim
 !:
-
 	// determine game over condition here
 	jmp game_over
+// END GAME LOOP
+////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// GAME STEP SELECT AVATAR INIT
 game_step_select_init:
 	jsr init_sprites_game_init
 	lda #$00
@@ -198,19 +168,20 @@ game_step_select_init:
 	jsr print_player_2_name
 	jsr update_player_2_select_sprites
 	inc game_step
+// END GAME STEP SELECT AVATAR INIT
+////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// GAME STEP SELECT AVATAR
 game_step_select:
-
 	lda cxn_avatar_selected
 	cmp #cxn_avatar_selected_both
 	bne !+
 	inc game_step
 	jmp game_loop
 !:
-
 	jsr get_j1_m2 // update joystick
 	jsr get_j2_m2
-
 	GetTimerTr(5) // input timers
 	bne !+
 	jmp game_loop
@@ -218,13 +189,11 @@ game_step_select:
 	ResetTimer(5)
 	lda #$00
 	SetTimerTr(5)
-
 p1select:
 	// check for selected already yes or no here
 	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p1
 	bne p2select
-
 	lda j1_left
 	bne !+
 	jsr dec_player_1_avatar
@@ -235,20 +204,17 @@ p1select:
 !:
 	lda j1_button
 	bne !+
-	
 	sfx_v1_play(SFX_GET_READY)
 	lda cxn_avatar_selected
 	ora #cxn_avatar_selected_p1
 	sta cxn_avatar_selected
 	jsr update_player_1_select_sprites
 !:
-
 p2select:
 	// check for selected already yes or no here
 	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p2
 	bne pselectout
-
 	lda j2_left
 	bne !+
 	jsr dec_player_2_avatar
@@ -259,7 +225,6 @@ p2select:
 !:
 	lda j2_button
 	bne !+
-	
 	sfx_v2_play(SFX_GET_READY)
 	lda cxn_avatar_selected
 	ora #cxn_avatar_selected_p2
@@ -268,93 +233,94 @@ p2select:
 !:
 pselectout:
 	jmp game_loop
+// END GAME STEP SELECT AVATAR
+////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// GAME STEP ANIM INIT
 game_step_anim_init:
 	PrintClear()
 	lda #anim_bg_color
 	sta BORDER_COLOR
 	sta BACKGROUND_COLOR
-
-	lda #$00
-	SetTimerTr(TIMER_1)
-	ResetTimer(TIMER_1)
-
+	FullReset(TIMER_1)
 	inc game_step
+// END GAME STEP ANIM INIT
+////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// GAME STEP ANIM
 game_step_anim: // all anims for now
 	lda #$00
 	sta SPRITE_ENABLE
-	
 	lda game_step
 	cmp #GAME_STEP_ANIM_INTRO
 	beq !+
-	    jmp gsa_out
+	jmp gsa_out
 !:
-		lda #%00010010
-		sta SPRITE_ENABLE
-		sta SPRITE_EXPAND_X
-		sta SPRITE_EXPAND_Y
-		
-		lda #intro_sprite_1_x
-		sta SPRITE_1_X 
-		lda #intro_sprite_1_y
-		sta SPRITE_1_Y
-		lda #intro_sprite_4_x
-		sta SPRITE_4_X
-		lda #intro_sprite_4_y
-		sta SPRITE_4_Y
-
-		lda #%00000000
-		sta SPRITE_MSB_X
-
-		PrintLowerCase()
-		PrintHome()
-		PrintDown(15)
-		PrintRight(4)
-		Print(player_msg)
-		PrintChr('1')
-
-		PrintRight(12)
-		Print(player_msg)
-		PrintChr('2')
-		PrintLF()
-		PrintRight(4)
-
-		lda player_1_avatar
-		jsr print_player_name
-
-		PrintRight(10)
-		lda player_2_avatar
-		jsr print_player_name
-		
-		GetTimerTr(TIMER_1)
-		cmp #intro_anim_time
-		beq gsa_out
-		jmp game_loop
-
-gsa_out:
-	
+	lda #%00010010
+	sta SPRITE_ENABLE
+	sta SPRITE_EXPAND_X
+	sta SPRITE_EXPAND_Y
+	lda #intro_sprite_1_x
+	sta SPRITE_1_X 
+	lda #intro_sprite_1_y
+	sta SPRITE_1_Y
+	lda #intro_sprite_4_x
+	sta SPRITE_4_X
+	lda #intro_sprite_4_y
+	sta SPRITE_4_Y
+	lda #%00000000
+	sta SPRITE_MSB_X
+	PrintLowerCase()
+	PrintHome()
+	PrintDown(15)
+	PrintRight(4)
+	Print(player_msg)
+	PrintChr('1')
+	PrintRight(12)
+	Print(player_msg)
+	PrintChr('2')
+	PrintLF()
+	PrintRight(4)
+	lda player_1_avatar
+	jsr print_player_name
+	PrintRight(10)
+	lda player_2_avatar
+	jsr print_player_name
+	GetTimerTr(TIMER_1)
+	cmp #intro_anim_time
+	beq gsa_out
+	jmp game_loop
+gsa_out:	
 	inc game_step
 	jmp game_loop
+// END GAME STEP ANIM
+////////////////////////////////////////////////////////////
 
-
+////////////////////////////////////////////////////////////
+// Game Step Round Init
 game_step_round_init:
-	
+	//////////////////////////////
+	// load random trivia question
 	jsr draw_loading_screen
-	jsr MLHL_LOAD // load random trivia question
+	jsr MLHL_LOAD
+	//////////////////////////////
+	// Draw play screen
 	jsr draw_play_screen
-	lda #$00	
-	SetTimerTr(TIMER_1)
-	ResetTimer(TIMER_1)
+	//////////////////////////////
+	// Reset Timer 1, set to ROUND time
+	FullReset(TIMER_1)
 	lda #TIMER_ROUND
 	SetTimerTo(TIMER_1)
-
+	//////////////////////////////
 	// reset buzzed in state
 	lda #$00
 	sta player_1_buzzed_in
 	sta player_2_buzzed_in
 	sta game_round_first_buzzer
-
+	//////////////////////////////
+	// Print stuff
 	PrintHome()
 	PrintLF()
 	PrintLF()
@@ -362,37 +328,32 @@ game_step_round_init:
 	PrintLF()
 	PrintRight(6)
 	PrintChr(5)
-
     lda #< MLHL_DATA_QUESTION
     sta zp_tmp_lo
     lda #> MLHL_DATA_QUESTION
-    sta zp_tmp_hi 
-
+    sta zp_tmp_hi
+	// Add linefeed if line gets too long on screen
 	ldy #$00
-	sty gsr_lf_check
+	sty tmp_1
 !:
 	lda (zp_tmp),y
 	beq gst_lf_out
     jsr KERNAL_CHROUT
 	lda (zp_tmp),y
-
 	iny
-	inc gsr_lf_check
+	inc tmp_1
 	cmp #' '
 	bne !-
-	
 	clc
-	lda gsr_lf_check
+	lda tmp_1
 	cmp #25
 	bcc !-
 	lda #$00
-	sta gsr_lf_check
+	sta tmp_1
 	PrintLF()
 	PrintRight(6)
 	jmp !-
-
 gst_lf_out:
-
 	PrintChr('?')
 	PrintHome()
 	PrintDown(13)
@@ -414,14 +375,12 @@ gst_lf_out:
 	PrintRight(21)
 	CenterAns(MLHL_DATA_ANS4)
 	Print(MLHL_DATA_ANS4)
-
 	PrintPlot(9,1)
 	lda player_1_avatar
 	jsr print_player_name
 	PrintRight(2)
 	lda player_2_avatar
 	jsr print_player_name
-
 !:
 	lda 1094
 	cmp #32
@@ -436,26 +395,28 @@ gst_lf_out:
 !:
 	lda #'('
 	sta 1095
-
 	inc game_step
 	sfx_v2_play(SFX_GET_READY)
 	jmp game_loop
+// END game round init
+////////////////////////////////////////////////////////////
 
-gsr_lf_check: .byte 0
+////////////////////////////////////////////////////////////
+// Game Step Round
 game_step_round:
-
 	PrintPlot(16,24)
 	PrintLowerCase()
 	Print(trivia_round_text)
 	lda game_round_current
 	PrintHex()
-
 	lda player_1_buzzed_in
 	beq !+
 	PrintPlot(3,23)
 	Print(player_msg)
 	PrintChr('1')
 	PrintChr(' ')
+	//////////////////////////////
+	// Check player 1 buzz in
 	lda player_1_buzzed_in
 	cmp #BUTTON_GREEN
 	bne !pb1+
@@ -473,8 +434,9 @@ game_step_round:
 	bne !pb1+
 	Print(button_yellow_msg)
 !pb1:
-	
 !:
+	//////////////////////////////
+	// Check player 2 buzz in
 	lda player_2_buzzed_in
 	beq !+
 	PrintPlot(21,23)
@@ -483,23 +445,23 @@ game_step_round:
 	PrintChr(' ')
 	lda player_2_buzzed_in
 	cmp #BUTTON_GREEN
-	bne !pb1+
+	bne !pb2+
 	Print(button_green_msg)
-!pb1:
+!pb2:
 	cmp #BUTTON_RED
-	bne !pb1+
+	bne !pb2+
 	Print(button_red_msg)
-!pb1:
+!pb2:
 	cmp #BUTTON_BLUE
-	bne !pb1+
+	bne !pb2+
 	Print(button_blue_msg)
-!pb1:
+!pb2:
 	cmp #BUTTON_YELLOW
-	bne !pb1+
+	bne !pb2+
 	Print(button_yellow_msg)
-!pb1:	
-	
-!:
+!pb2:
+	//////////////////////////////
+	// Print first buzz in status
 	PrintPlot(19,23)
 	PrintChr(KEY_WHITE)
 	lda game_round_first_buzzer
@@ -511,14 +473,15 @@ game_step_round:
 !:
 	PrintChr('>')	
 !:
-
+	//////////////////////////////
+	// Get Joystick Input
 	jsr il_get_j1_m2
 	jsr il_get_j2_m2
-
+	//////////////////////////////
+	// Check player 1 Joystick buzz in
 	lda player_1_buzzed_in
 	cmp #$00
 	bne p2buzz
-
 	lda J1_B_GREEN
 	bne !+
 		lda #BUTTON_GREEN
@@ -554,13 +517,12 @@ game_step_round:
 		jsr who_buzzed_in_first
 		sfx_v1_play(SFX_DING)
 !:
-
 p2buzz:
-
+	//////////////////////////////
+	// Check player 2 Joystick buzz in
 	lda player_2_buzzed_in
 	cmp #$00
 	bne buzz_check_done
-
 	lda J2_B_GREEN
 	bne !+
 		lda #BUTTON_GREEN
@@ -597,9 +559,9 @@ p2buzz:
 		sfx_v2_play(SFX_DING)
 		jmp buzz_check_done
 !:
-
 buzz_check_done:
-
+	//////////////////////////////
+	// Destroy timer bar at top
 	GetTimerTr(TIMER_1)
 	sta tmp_1
 	sec
@@ -614,7 +576,6 @@ buzz_check_done:
 	beq !+
 	jmp gsr_out
 !:
-
 	ClearScreen(BLACK)
 	FullReset(TIMER_1)
 gsr_in:
@@ -622,26 +583,21 @@ gsr_in:
 	PrintHome()
 	GetTimerTr(TIMER_1)
 	PrintHex()
-	PrintLF()
-	
+	PrintLF()	
 	lda #$00
 	sta game_round_winner
-	sta SPRITE_ENABLE
-	
-!:
-	
-
+	sta SPRITE_ENABLE	
+!:	
 	lda MLHL_DATA_CORRECT
 	sec
 	sbc #$30
 	PrintHex()
 	PrintLF()
 	PrintLF()
-	
+
 	Print(player_msg)
 	PrintChr('1')
 	PrintChr(' ')
-
 	lda MLHL_DATA_CORRECT // = the correct answer
 	sec
 	sbc #$30
@@ -689,9 +645,15 @@ gsr_in:
 	jmp gsr_in
 !:
 	inc game_step
+	//////////////////////////////
+	// Exit Game Step Round
 gsr_out:
 	jmp game_loop
+// END GAME ROUND
+////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// Who buzzed in first subroutine
 who_buzzed_in_first:
 	pha
 	lda game_round_first_buzzer
@@ -702,4 +664,7 @@ who_buzzed_in_first:
 !:
 	pla
 	rts
+// END WHO BUZZED IN FIRST
+////////////////////////////////////////////////////////////
+
 
