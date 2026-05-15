@@ -372,7 +372,8 @@
 .label cxn_avatar_eagull_t=$18ce
 .label il_it2_txt_color=$af8
 .label restart=$3ef5
-.label randomize_avatars=$50bf
+.label randomize_avatars=$50bf {
+}
 .label gsa_out=$4524
 .label print_hex_inline=$936
 .label j2_down=$a5a
@@ -380,7 +381,7 @@
 .label J2_B_YELLOW=$a5a
 .label ml_sdsskip=$176b
 .label MLHL_HOTLOAD_LOADING_TEXT=$3df9
-.label VERSION=$50e3
+.label VERSION=$50e0
 .label file_loc_hi=$d6b
 .label load_trivia_stress_test=$4047
 .label calc_sprite_dest=$15c4

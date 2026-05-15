@@ -307,24 +307,19 @@ input_get_key:
 	rts
 
 randomize_avatars: 
-	ldx VIC_RASTER_COUNTER
+	GetTimer(12)
+	and #%00001111
+	cmp #10
+	bcc !+
+	lda #1
 !:
-	inx
-	bne !-
-	ldx VIC_RASTER_COUNTER
-!:
-	inx
-	bne !-
-	
-
-	GetTimer(14)
-	//ora VIC_RASTER_COUNTER
-	
-	and #%00000111
 	sta player_1_avatar
 
 	GetTimer(13)
-	ora VIC_RASTER_COUNTER
-	and #%00000111
+	and #%00001111
+	cmp #10
+	bcc !+
+	lda #1
+!:	
 	sta player_2_avatar
 	rts

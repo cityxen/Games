@@ -307,7 +307,7 @@
 .label pyn_yes_txt=$a13
 .label random_init_sid=$16ec
 .label random_num=$16eb
-.label randomize_avatars=$50bf
+.label randomize_avatars=$50bf {
 .label randomly_flash_buttons=$5090
 .label reset_input_timer=$137f {
 .label reset_jitter_timer=$138e {
@@ -376,7 +376,7 @@
 .label update_player_2_select_sprites=$500f
 .label use_file_loc=$d68
 .label usend=$814
-.label VERSION=$50e3
+.label VERSION=$50e0
 .label wait_vbl=$821
 .label who_buzzed_in_first=$4a21
 .label wlsz=$924
@@ -388,6 +388,7 @@
 .label zero_strbuf=$14b8
 .label zeroize_filename_buffer=$d87
 .label zpnzp_c=$934
+}
 }
 }
 }

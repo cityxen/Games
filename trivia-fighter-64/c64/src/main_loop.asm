@@ -50,12 +50,12 @@ restart:
 main_loop:
 
 	jsr debug_stuff
-	GetTimerTr(TIMER_1)
+	GetTimerTr(TIMER_2)
 	cmp #$04
 	bne !ml+
 	lda #$00
-	SetTimerTr(TIMER_1)
-	ResetTimer(TIMER_1)
+	SetTimerTr(TIMER_2)
+	ResetTimer(TIMER_2)
 	jsr randomize_avatars
 	jsr init_sprites_ms
 	jsr randomly_flash_buttons
@@ -90,7 +90,7 @@ ml_keys:
 	bne!ml+
 	PrintHome()
 	PrintDown(15)
-	PrintRight(25)
+	PrintRight(24)
 	PrintChr(5)
 	lda play_music
 	jsr print_yesno
@@ -261,7 +261,7 @@ st_lf_out:
 	ResetTimer(TIMER_1)
 	
 	jsr ml_screens
-	jmp main_loop
+	jmp restart
 !:
 	//GetTimer(TIMER_1)	PrintHexXY(18,2)
 	//GetTimerTr(TIMER_1) PrintHexXY(21,2)
