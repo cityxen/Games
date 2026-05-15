@@ -9,15 +9,6 @@
 
 main_loop_start:
 restart:
-	GetTimer(12)
-	ora VIC_RASTER_COUNTER
-	and #%00000111
-	sta player_1_avatar
-
-	GetTimer(13)
-	ora VIC_RASTER_COUNTER
-	and #%00000111
-	sta player_2_avatar
 
 	lda #01
 	sta sound_playing
@@ -44,7 +35,10 @@ restart:
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
 
+	jsr randomize_avatars
+
 	FullReset(TIMER_SCREEN_CHANGE)
+	FullReset(TIMER_1)
 	FullReset(TIMER_2)
 	FullReset(TIMER_3)
 
@@ -53,26 +47,27 @@ restart:
 	PrintChr($93)
 	jsr ml_screens
 
-	
-
 main_loop:
 
 	jsr debug_stuff
-	GetTimerTr(TIMER_2)
-	cmp #$02
+	GetTimerTr(TIMER_1)
+	cmp #$04
 	bne !ml+
 	lda #$00
-	SetTimerTr(TIMER_2)
-	ResetTimer(TIMER_2)
+	SetTimerTr(TIMER_1)
+	ResetTimer(TIMER_1)
+	jsr randomize_avatars
+	jsr init_sprites_ms
 	jsr randomly_flash_buttons
 !ml:	
 	GetTimerTr(TIMER_SCREEN_CHANGE)
-	cmp #$01
+	cmp #$02
 	bne ml_keys
 	lda #$00
 	SetTimerTr(TIMER_SCREEN_CHANGE)
 	ResetTimer(TIMER_SCREEN_CHANGE)
 	inc screen_draw // toggle screen to draw
+
 	lda screen_draw
 	cmp #$02
 	bne !ml+
@@ -86,7 +81,6 @@ ml_keys:
 
 	cmp #KEY_M
 	bne !ml+
-
 	
 	inc play_music
 	lda play_music
@@ -141,36 +135,6 @@ ml_screens:
 	jmp next_scr
 !:
 	jsr draw_main_screen
- 	jsr draw_title
-
-	PrintDown(14)
-	PrintRight(25)
-	lda play_music
-	jsr print_yesno
-	PrintLF()
-
-	PrintRight(10)
-	Print(ml_detected_text)
-    lda ml_detected
-	jsr print_yesno
-	PrintLF()
-	PrintRight(8)
-	Print(ml_enabled_text)
-    lda ml_enabled
-	jsr print_yesno
-	PrintLF()
-	PrintRight(13)
-	Print(ml_total_trivia_text)
-	lda ml_total_trivia
-	sta numLo
-	lda ml_total_trivia+1
-	sta numHi
-	jsr print_decimal
-	PrintHome()
-
-
-	PrintLF()
-	Print(MLHL_HOTLOAD_MSG)
 
 	rts
 next_scr:

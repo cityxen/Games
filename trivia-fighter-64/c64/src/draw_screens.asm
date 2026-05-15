@@ -13,6 +13,35 @@ draw_main_screen:
 	jsr init_sprites_ms
 	DrawPetMateScreen(main_screen)
 
+	PrintHome()
+	PrintChr(KEY_WHITE)
+	PrintDown(15)
+	PrintRight(24)
+	lda play_music
+	jsr print_yesno
+	PrintLF()
+
+	PrintRight(9)
+	Print(ml_detected_text)
+    lda ml_detected
+	jsr print_yesno
+	PrintLF()
+	PrintRight(7)
+	Print(ml_enabled_text)
+    lda ml_enabled
+	jsr print_yesno
+	PrintLF()
+	PrintRight(12)
+	Print(ml_total_trivia_text)
+	lda ml_total_trivia
+	sta numLo
+	lda ml_total_trivia+1
+	sta numHi
+	jsr print_decimal
+	PrintHome()
+
+	PrintLF()
+	Print(MLHL_HOTLOAD_MSG)
 	rts
 
 //////////////////////////////////////////////////////////////////

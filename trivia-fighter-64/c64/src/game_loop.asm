@@ -314,7 +314,7 @@ game_step_anim: // all anims for now
 		Print(player_msg)
 		PrintChr('1')
 
-		PrintRight(14)
+		PrintRight(12)
 		Print(player_msg)
 		PrintChr('2')
 		PrintLF()
@@ -648,11 +648,6 @@ gsr_in:
 	tax
 	lda button_answer_translator,x
 	sta a_reg
-	PrintLF()
-	lda a_reg
-	PrintHex()
-	PrintLF()
-	lda a_reg
 	cmp player_1_buzzed_in
 	bne !+
 	Print(p_right_msg) 	// Player 1 Got it right
@@ -671,11 +666,6 @@ gsr_in:
 	tax
 	lda button_answer_translator,x
 	sta a_reg
-	PrintLF()
-	lda a_reg
-	PrintHex()
-	PrintLF()
-	lda a_reg
 	cmp player_2_buzzed_in
 	bne !+
 	Print(p_right_msg) // Player 2 Got it right

@@ -133,9 +133,9 @@ trivia_current_category:.byte 0 //
 .const trivia_sprite_4_y = 70
 
 .const main_sprite_1_x = 25
-.const main_sprite_1_y = 170
+.const main_sprite_1_y = 160
 .const main_sprite_4_x = 39
-.const main_sprite_4_y = 170
+.const main_sprite_4_y = 160
 
 .const game_over_sprite_1_x = 25
 .const game_over_sprite_1_y = 172
