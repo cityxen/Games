@@ -8,7 +8,7 @@
 // Game loop init
 game_start:
 game_loop_init:
-	lda #0
+	lda #$00
 	sta game_round_current
 	lda #GAME_STEP_SELECT_
 	sta game_step
@@ -43,7 +43,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_INTRO_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -63,7 +63,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_1_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -83,7 +83,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_2_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -103,7 +103,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_3_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -123,7 +123,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_4_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -143,7 +143,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_FINISH_
 	bne !+
-	lda #0
+	lda #$00
 	sta game_anim
 	jmp game_step_anim_init
 !:
@@ -182,13 +182,11 @@ game_step_select:
 !:
 	jsr get_j1_m2 // update joystick
 	jsr get_j2_m2
-	GetTimerTr(5) // input timers
+	GetTimerTr(TIMER_INPUT) // input timers
 	bne !+
 	jmp game_loop
 !:
-	ResetTimer(5)
-	lda #$00
-	SetTimerTr(5)
+	FullReset(TIMER_INPUT)
 p1select:
 	// check for selected already yes or no here
 	lda cxn_avatar_selected
@@ -452,6 +450,7 @@ game_step_round:
 	Print(player_msg)
 	PrintChr('2')
 	PrintChr(' ')
+
 	lda player_2_buzzed_in
 	cmp #BUTTON_GREEN
 	bne !pb2+
@@ -469,6 +468,7 @@ game_step_round:
 	bne !pb2+
 	Print(button_yellow_msg)
 !pb2:
+!:
 	//////////////////////////////
 	// Print first buzz in status
 	PrintPlot(19,23)
@@ -482,6 +482,7 @@ game_step_round:
 !:
 	PrintChr('>')	
 !:
+
 	//////////////////////////////
 	// Get Joystick Input
 	jsr il_get_j1_m2
@@ -489,7 +490,6 @@ game_step_round:
 	//////////////////////////////
 	// Check player 1 Joystick buzz in
 	lda player_1_buzzed_in
-	cmp #$00
 	bne p2buzz
 	lda J1_B_GREEN
 	bne !+
@@ -530,7 +530,6 @@ p2buzz:
 	//////////////////////////////
 	// Check player 2 Joystick buzz in
 	lda player_2_buzzed_in
-	cmp #$00
 	bne buzz_check_done
 	lda J2_B_GREEN
 	bne !+
@@ -587,8 +586,12 @@ buzz_check_done:
 !:
 	ClearScreen(BLACK)
 	FullReset(TIMER_1)
-gsr_in:
-	// determine winner of round here
+
+gsr_in: // determine winner of round here
+	
+	lda #$10
+	sta player_1_round_counter
+	sta player_2_round_counter
 	PrintHome()
 	GetTimerTr(TIMER_1)
 	PrintHex()
@@ -616,9 +619,11 @@ gsr_in:
 	cmp player_1_buzzed_in
 	bne !+
 	Print(p_right_msg) 	// Player 1 Got it right
+	inc player_1_round_counter
 	jmp !++
 !:
 	Print(p_wrong_msg) // Player 1 Got it wrong
+	dec player_1_round_counter
 !:
 	PrintLF()
 	PrintLF()
@@ -634,19 +639,58 @@ gsr_in:
 	cmp player_2_buzzed_in
 	bne !+
 	Print(p_right_msg) // Player 2 Got it right
+	inc player_2_round_counter
 	jmp !++
 !:
 	Print(p_wrong_msg) // Player 2 Got it wrong
+	dec player_2_round_counter
 !:
 
 	lda game_round_first_buzzer // check who buzzed in first
 	cmp #BUZZER_PLAYER_1
 	bne !+
 	// Player 1 Buzzed In First
+	inc player_1_round_counter
 	jmp !++
 !:
 	// Player 2 Buzzed In First
+	inc player_2_round_counter
 !:
+
+	PrintLF()
+	PrintLF()
+	Print(player_msg)
+	PrintChr('1')
+	PrintChr(' ')
+	Print(p_counter_msg)
+	lda player_1_round_counter
+	PrintHex()
+	
+	PrintLF()
+	PrintLF()
+	Print(player_msg)
+	PrintChr('2')
+	PrintChr(' ')
+	Print(p_counter_msg)
+	lda player_2_round_counter
+	PrintHex()
+
+	lda player_1_round_counter
+	cmp player_2_round_counter
+	bcs p1_wins             // C=1 means player_1 >= player_2 // fall through: player_2 wins
+p2_wins:
+	lda #02
+	jmp p_win_out
+p1_wins:
+	lda #01
+p_win_out:
+	sta game_round_winner
+
+	PrintLF()
+	PrintLF()
+	Print(p_winner_msg)
+	lda game_round_winner
+	PrintHex()
 
 	GetTimerTr(TIMER_1)
 	cmp #32
@@ -660,20 +704,4 @@ gsr_out:
 	jmp game_loop
 // END GAME ROUND
 ////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////
-// Who buzzed in first subroutine
-who_buzzed_in_first:
-	pha
-	lda game_round_first_buzzer
-	bne !+
-	pla
-	sta game_round_first_buzzer
-	rts
-!:
-	pla
-	rts
-// END WHO BUZZED IN FIRST
-////////////////////////////////////////////////////////////
-
 

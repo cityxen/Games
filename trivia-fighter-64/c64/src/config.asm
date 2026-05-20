@@ -46,8 +46,23 @@ ml_total_trivia_text: .text "triva count:"
 .byte 0
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
-.const TIMER_ROUND  = $1f
-.const TIMER_STRESS = $05
+.const TIMER_ROUND  = $60
+.const TIMER_STRESS = $10
+
+.const TIMER_FADER_SPEED   = $30 // fade from black, dk gr, m gr, l gr, white
+.const TIMER_FADER         = 9
+// start times to begin fading
+.const TIMER_QUESTION_FADE = $10
+.const TIMER_FADE_Q        = 10
+.const TIMER_ANS_1_FADE    = $30
+.const TIMER_FADE_A1       = 11
+.const TIMER_ANS_2_FADE    = $60
+.const TIMER_FADE_A2       = 12
+.const TIMER_ANS_3_FADE    = $90
+.const TIMER_FADE_A3       = 13
+.const TIMER_ANS_4_FADE    = $c0
+.const TIMER_FADE_A4       = 14
+
 trivia_round_text: .text "Round:"
 .byte 0
 number_of_players:       .byte 0
@@ -62,6 +77,8 @@ game_round_first_buzzer: .byte 0
 game_round_winner:       .byte 0
 player_1_buzzed_in:      .byte 0 // BUTTON_RED
 player_2_buzzed_in:      .byte 0 // BUTTON_GREEN
+player_1_round_counter:  .byte 0
+player_2_round_counter:  .byte 0
 game_round_total:        .byte 5
 game_round_current:      .byte 0
 trivia_category_total:   .byte 5
@@ -330,4 +347,10 @@ p_right_msg:
 .byte 0
 p_wrong_msg:
 .text "got answer wrong"
+.byte 0
+p_counter_msg:
+.text "Counter:"
+.byte 0
+p_winner_msg:
+.text "Winner:"
 .byte 0

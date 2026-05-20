@@ -7,24 +7,31 @@
 //////////////////////////////////////////////////////////////
 // Initialize Sprites (MAIN SCREEN TURN ON)
 
-init_sprites:
-init_sprites_ms:
-
+// Shared sprite mode setup. Call with A = expand mask (%00010010 or $00).
+// Sets multicolors, ENABLE, PRIORITY, EXPAND_X/Y, MULTICOLOR.
+init_sprite_mode:
+	pha
 	lda #sprite_multi_color_1
 	sta SPRITE_MULTICOLOR_0
 	lda #sprite_multi_color_2
 	sta SPRITE_MULTICOLOR_1
-	
 	lda #%00010010
 	sta SPRITE_ENABLE
 	sta SPRITE_PRIORITY
-	lda #%00010010
+	pla
 	sta SPRITE_EXPAND_X
 	sta SPRITE_EXPAND_Y
 	lda #$ff
 	sta SPRITE_MULTICOLOR
 	lda #$00
 	sta SPRITE_PRIORITY
+	rts
+
+init_sprites:
+init_sprites_ms:
+
+	lda #%00010010
+	jsr init_sprite_mode
 
 	lda #main_sprite_1_x
 	sta SPRITE_1_X
@@ -48,14 +55,12 @@ init_sprites_ms:
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
-
-	ldx player_2_avatar
 	lda cxn_avatar_sprite_pointer_i,x
 
 	ReverseSpriteMultiColorA(sp_ptr_a)
 	lda #sp_ptr_a
 	sta SPRITE_4_POINTER
-	
+
 	rts
 
 //////////////////////////////////////////////////////////////
@@ -94,21 +99,8 @@ init_sprites_select_char:
 
 init_sprites_play:
 
-	lda #sprite_multi_color_1
-	sta SPRITE_MULTICOLOR_0
-	lda #sprite_multi_color_2
-	sta SPRITE_MULTICOLOR_1
-	
-	lda #%00010010
-	sta SPRITE_ENABLE
-	sta SPRITE_PRIORITY
-	lda #$00 //00010010
-	sta SPRITE_EXPAND_X
-	sta SPRITE_EXPAND_Y
-	lda #$ff
-	sta SPRITE_MULTICOLOR
 	lda #$00
-	sta SPRITE_PRIORITY
+	jsr init_sprite_mode
 
 	lda #trivia_sprite_1_x
 	sta SPRITE_1_X
@@ -132,13 +124,10 @@ init_sprites_play:
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
-
-	ldx player_2_avatar
 	lda cxn_avatar_sprite_pointer_i,x
 	ReverseSpriteMultiColorA(sp_ptr_a)
 	lda #sp_ptr_a
 	sta SPRITE_4_POINTER
-	
 
 	rts
 
@@ -195,22 +184,8 @@ init_sprites_load_screen:
 
 init_sprites_game_over:
 
-
-	lda #sprite_multi_color_1
-	sta SPRITE_MULTICOLOR_0
-	lda #sprite_multi_color_2
-	sta SPRITE_MULTICOLOR_1
-	
 	lda #%00010010
-	sta SPRITE_ENABLE
-	sta SPRITE_PRIORITY
-	lda #%00010010
-	sta SPRITE_EXPAND_X
-	sta SPRITE_EXPAND_Y
-	lda #$ff
-	sta SPRITE_MULTICOLOR
-	lda #$00
-	sta SPRITE_PRIORITY
+	jsr init_sprite_mode
 
 	lda #game_over_sprite_1_x
 	sta SPRITE_1_X
@@ -234,8 +209,6 @@ init_sprites_game_over:
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
-
-	ldx player_2_avatar
 	lda cxn_avatar_sprite_pointer_i,x
 
 	ReverseSpriteMultiColorA(sp_ptr_a)

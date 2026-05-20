@@ -12,17 +12,9 @@ game_over:
 	
 	sfx_v1_play(SFX_GAME_OVER)
 	
-	ResetTimer(TIMER_1)
-	lda #$00
-	SetTimerTr(TIMER_1)
-	
-	ResetTimer(TIMER_2)
-	lda #$00
-	SetTimerTr(TIMER_2)
-
-	ResetTimer(TIMER_SCREEN_CHANGE)
-	lda #$00
-	SetTimerTr(TIMER_SCREEN_CHANGE)
+	FullReset(TIMER_1)
+	FullReset(TIMER_2)
+	FullReset(TIMER_SCREEN_CHANGE)
 	
 	lda #BUTTON_ACTION_G_OVER
 	sta USER_PORT_DATA
@@ -30,7 +22,7 @@ game_over:
 game_over_loop:
 
 	GetTimerTr(TIMER_SCREEN_CHANGE)
-	cmp #03 // time out
+	cmp #$03 // time out
 	bne !+
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA

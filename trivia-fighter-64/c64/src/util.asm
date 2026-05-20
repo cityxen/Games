@@ -115,15 +115,12 @@ print_player_name:
 	sta a_reg
 	stx x_reg
 	sty y_reg
+	tax              // avatar index → X before zp_tmp clobbers A
 	lda zp_tmp_lo
 	sta tmp_1
 	lda zp_tmp_hi
 	sta tmp_2
 
-	lda a_reg
-
-	// lda with player avatar 
-	tax
 	lda cxn_avatar_t_i,x
 	tax
 	lda cxn_avatar_t,x
@@ -307,3 +304,21 @@ randomize_avatars:
 !:	
 	sta player_2_avatar
 	rts
+
+
+
+////////////////////////////////////////////////////////////
+// Who buzzed in first subroutine
+who_buzzed_in_first:
+	pha
+	lda game_round_first_buzzer
+	bne !+
+	pla
+	sta game_round_first_buzzer
+	rts
+!:
+	pla
+	rts
+// END WHO BUZZED IN FIRST
+////////////////////////////////////////////////////////////
+

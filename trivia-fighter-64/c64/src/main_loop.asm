@@ -8,7 +8,7 @@
 // Main loop initialize
 main_loop_start:
 restart:
-	lda #01
+	lda #$01
 	sta play_sound
 	jsr sfx_clear
 	ldx #0
@@ -53,9 +53,8 @@ main_loop:
 	jsr input_get_key
 	cmp #KEY_M
 	bne !+
-	inc play_music
 	lda play_music
-	and #%00000001
+	eor #$01
 	sta play_music
 	lda screen_draw
 	bne!+
@@ -182,7 +181,7 @@ st_lf_out:
 	CenterAns(MLHL_DATA_ANS4)
 	Print(MLHL_DATA_ANS4)
 	PrintLF()
-	lda #TIMER_ROUND
+	lda #TIMER_STRESS
 	SetTimerTo(TIMER_1)
 	FullReset(TIMER_1)
 !:
