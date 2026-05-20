@@ -38,17 +38,20 @@ game_over_loop:
 !:
 
 !:
-	// lda JOYSTICK_PORT_1
-	jsr input_get_button
-	cmp #BUTTON_RED
+	//////////////////////////////
+	// Get Joystick Input
+	jsr il_get_j1_m2
+	jsr il_get_j2_m2
+	// jsr input_get_button
+	lda J1_B_RED
 	beq !+
-	cmp #BUTTON_GREEN 
+	lda J1_B_GREEN 
 	beq !+
-	cmp #BUTTON_YELLOW
+	lda J1_B_YELLOW
 	beq !+
- 	cmp #BUTTON_BLUE
+ 	lda J1_B_BLUE
 	beq !+
-	cmp #BUTTON_WHITE
+	lda J1_B_WHITE
 	beq !+
 	jmp !++
 !:

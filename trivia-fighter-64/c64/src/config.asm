@@ -1,22 +1,30 @@
 //////////////////////////////////////////////////////////////////////////////////////
+//
 // TRIVIA FIGHTERS 64 for C64
-// By Deadline / CityXen 2026
+//
+//                            by Deadline / CityXen 2026
+// 
+// Dependencies:
+// The include folder from: https://github.com/cityxen/Commodore64_Programming/
+// must be in kickassembler path in the KickAss.cfg file:
+//   -libdir "PATHTO:\dev\cityxen\Commodore64_Programming\include"
+//
+// CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io
-//////////////////////////////////////
-
+//
+//////////////////////////////////////////////////////////////////////////////////////
 #importonce
-
 //////////////////////////////////////////////////////////////
-// some inline subroutines
-
-#import "constants.asm" 
+// Load in C64 include inline subroutines
+#import "constants.asm"
+#import "macros.asm"
 #import "sys.il.asm"
 #import "print.il.asm"
-#import "input.il.asm"
 #import "disk.il.asm"
 #import "music.il.asm"
 #import "sfxkit.il.asm"
 #import "timers.il.asm"
+#import "input.il.asm"
 #import "string.il.asm"
 #import "sprite.il.asm"
 #import "score.il.asm"
@@ -24,79 +32,49 @@
 #import "meatloaf.il.asm"
 #import "honkheckbutt.il.asm"
 #import "drawpetmatescreen.il.asm"
-
 //////////////////////////////////////////////////////////////
 // some vars
-
 debug_mode:             .byte 0
 dev_mode:               .byte 0
-
-GAME_NAME:
-.encoding "petscii_mixed"
+GAME_NAME: .encoding "petscii_mixed"
 .text "trivia fighters 64!"
 .byte 0
-
 offline_trivia_file:    .byte 0  // load from disk (from random)
 offline_trivia_q:       .byte 0  // there will be 2 questions in the block this will determine which (from 2nd random)
-
-ml_total_trivia:        .byte 0
-                        .byte 0
+ml_total_trivia:        .byte 0,0
 ml_total_trivia_text: .text "triva count:"
 .byte 0
-
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
-
 .const TIMER_ROUND  = $1f
 .const TIMER_STRESS = $05
-
 trivia_round_text: .text "Round:"
 .byte 0
-
-number_of_players:      .byte 0
-
-play_music:             .byte 0
-play_sound:             .byte 0
-screen_draw:            .byte 0
-
-player_1_avatar:        .byte 0
-player_1_healthbar:     .byte 0
-
-player_2_avatar:        .byte 0
-player_2_healthbar:     .byte 0
-
-.const BUZZER_PLAYER_1 = 1
-.const BUZZER_PLAYER_2 = 2
-
+number_of_players:       .byte 0
+play_music:              .byte 0
+play_sound:              .byte 0
+screen_draw:             .byte 0
+player_1_avatar:         .byte 0
+player_1_healthbar:      .byte 0
+player_2_avatar:         .byte 0
+player_2_healthbar:      .byte 0
 game_round_first_buzzer: .byte 0
 game_round_winner:       .byte 0
-
 player_1_buzzed_in:      .byte 0 // BUTTON_RED
 player_2_buzzed_in:      .byte 0 // BUTTON_GREEN
-
-game_round_total:       .byte 5
-game_round_current:     .byte 0
-
-trivia_category_total:  .byte 5
-
-trivia_question_current:.byte 0
-
-trivia_current_question:.byte 0 // current question 0-250 (255 if it is a meatloaf question)
-trivia_current_category:.byte 0 // 
-
-// button_did_hit: .byte 0
-// button_actually_hit: .byte 0
-// message: .byte 0
-
-        
+game_round_total:        .byte 5
+game_round_current:      .byte 0
+trivia_category_total:   .byte 5
+trivia_question_current: .byte 0
+trivia_current_question: .byte 0 // current question 0-250 (255 if it is a meatloaf question)
+trivia_current_category: .byte 0 // 
+.const BUZZER_PLAYER_1 = 1
+.const BUZZER_PLAYER_2 = 2
 //////////////////////////////////////////////////////////////
 // Sprite stuff
-
 .const sprite_multi_color_1 = 11
 .const sprite_multi_color_2 = 12
-
 // sprite locations for select char screen
-
 .const select_sprite_0_x = 50
 .const select_sprite_0_y = 167
 .const select_sprite_0_m = 0
@@ -201,28 +179,22 @@ trivia_current_category:.byte 0 //
 
 //////////////////////////////////////////////////////////////
 // Local Constants
-
 // player initial values
 .const PLAYER_INITIAL_HEALTH = 5
-
 // select screen
 .const PLAYER_1_SELECT_SCREEN_X = 4 // where to put names
 .const PLAYER_1_SELECT_SCREEN_Y = 12
 .const PLAYER_2_SELECT_SCREEN_X = 26
 .const PLAYER_2_SELECT_SCREEN_Y = 12
-
 // game on
 .const PLAYER_1_GAME_SCREEN_X = 1 // where to put names
 .const PLAYER_1_GAME_SCREEN_Y = 2
 .const PLAYER_2_GAME_SCREEN_X = 10
 .const PLAYER_2_GAME_SCREEN_Y = 2
-
 game_step:              .byte 0
-game_step_t:
-.encoding "petscii_upper"
+game_step_t: .encoding "petscii_upper"
 .text "GAME STEP"
 .byte 0
-
 .const GAME_STEP_SELECT_     = 0
 .const GAME_STEP_SELECT      = 1
 .const GAME_STEP_ANIM_INTRO_ = 2
@@ -248,57 +220,41 @@ game_step_t:
 .const GAME_STEP_ANIM_FINISH_= 22
 .const GAME_STEP_ANIM_FINISH = 23
 
-anim_text:
+.const CXN_AVATAR_CLICKY     = 0 // CityXen Avatars
+.const CXN_AVATAR_EAGULL     = 1
+.const CXN_AVATAR_HG         = 2
+.const CXN_AVATAR_RG5K       = 3
+.const CXN_AVATAR_MSDOS      = 4
+.const CXN_AVATAR_F1D0       = 5
+.const CXN_AVATAR_TRISH      = 6
+.const CXN_AVATAR_POKEY      = 7
+.const CXN_AVATAR_AMY        = 8
+.const CXN_AVATAR_VICTORIA   = 9
+.const CXN_AVATAR_END        = 10
+
 .encoding "petscii_mixed"
-.text "Insert visually stunning anim here!"
+cxn_avatar_clicky_t:   .text "Clicky    "
+.byte 0
+cxn_avatar_eagull_t:   .text "Eagull    "
+.byte 0
+cxn_avatar_hg_t:       .text "Helmet Guy"
+.byte 0
+cxn_avatar_rg5k_t:     .text "RoboGuy 5K"
+.byte 0
+cxn_avatar_msdos_t:    .text "Miss DOS  "
+.byte 0
+cxn_avatar_f1d0_t:     .text "F1D0      "
+.byte 0
+cxn_avatar_trish_t:    .text "Trish     "
+.byte 0
+cxn_avatar_pokey_t:    .text "Pokey     "
+.byte 0
+cxn_avatar_amy_t:      .text "Amy       "
+.byte 0
+cxn_avatar_victoria_t: .text "Victoria  "
 .byte 0
 
-// CityXen Avatars
-.const CXN_AVATAR_CLICKY   = 0
-cxn_avatar_clicky_t:
-.encoding "petscii_mixed"
-.text "Clicky    "
-.byte 0
-.const CXN_AVATAR_EAGULL   = 1
-cxn_avatar_eagull_t:
-.text "Eagull    "
-.byte 0
-.const CXN_AVATAR_HG       = 2
-cxn_avatar_hg_t:
-.text "Helmet Guy"
-.byte 0
-.const CXN_AVATAR_RG5K     = 3
-cxn_avatar_rg5k_t:
-.text "RoboGuy 5K"
-.byte 0
-.const CXN_AVATAR_MSDOS    = 4
-cxn_avatar_msdos_t:
-.text "Miss DOS  "
-.byte 0
-.const CXN_AVATAR_F1D0     = 5
-cxn_avatar_f1d0_t:
-.text "F1D0      "
-.byte 0
-.const CXN_AVATAR_TRISH    = 6
-cxn_avatar_trish_t:
-.text "Trish     "
-.byte 0
-.const CXN_AVATAR_POKEY    = 7
-cxn_avatar_pokey_t:
-.text "Pokey     "
-.byte 0
-.const CXN_AVATAR_AMY      = 8
-cxn_avatar_amy_t:
-.text "Amy       "
-.byte 0
-.const CXN_AVATAR_VICTORIA = 9
-cxn_avatar_victoria_t:
-.text "Victoria  "
-.byte 0
-
-.const CXN_AVATAR_END = 10
-
-cxn_avatar_t:
+cxn_avatar_t: // text lookup table
 .word cxn_avatar_clicky_t
 .word cxn_avatar_eagull_t
 .word cxn_avatar_hg_t
@@ -310,13 +266,13 @@ cxn_avatar_t:
 .word cxn_avatar_amy_t
 .word cxn_avatar_victoria_t
 
-cxn_avatar_t_i:
+cxn_avatar_t_i: // lookup table
 .byte 0,2,4,6,8,10,12,14,16,18
 
-cxn_avatar_sprite_pointer_i:
+cxn_avatar_sprite_pointer_i: // sprite pointer lookup table
 .byte sp_clicky,sp_eagull,sp_hg,sp_rg5k,sp_msdos,sp_f1d0,sp_trish,sp_pokey,sp_amy,sp_victoria
 
-cxn_avatar_sprite_color_i:
+cxn_avatar_sprite_color_i: // sprite color lookup table
 .byte GREEN,ORANGE,WHITE,RED,RED,GREEN,YELLOW,BLUE,LIGHT_RED,LIGHT_RED
 
 .const print_pointer_lo = $fa
@@ -331,18 +287,14 @@ cxn_avatar_selected: .byte 0
 
 ///////////////////////////////////////////////////////////////
 // Anim stuff
-
 .const anim_bg_color    = LIGHT_BLUE
 .const intro_anim_time  = $30
 
 //////////////////////////////////////////////////////////////
 // Button stuff
-
 .const FLASH_TIMER_SPEED_CONST = $40
-
 button_answer_translator:
 .byte 0,BUTTON_GREEN,BUTTON_BLUE,BUTTON_RED,BUTTON_YELLOW
-
 button_red_msg:
 .encoding "petscii_mixed"
 .byte KEY_RED
@@ -368,20 +320,14 @@ button_white_msg:
 .byte KEY_WHITE
 .text "WHITE "
 .byte 0
-
 player_msg:
 .encoding "petscii_mixed"
 .byte KEY_WHITE
 .text "PLAYER "
 .byte 0
-
 p_right_msg:
 .text "got answer right"
 .byte 0
-
 p_wrong_msg:
 .text "got answer wrong"
 .byte 0
-
-
-

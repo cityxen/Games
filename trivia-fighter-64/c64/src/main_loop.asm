@@ -74,14 +74,18 @@ main_loop:
 	SetTimerTo(0)
 	jmp load_trivia_stress_test
 !:
-	jsr input_get_button
-	cmp #BUTTON_RED
+	//////////////////////////////
+	// Get Joystick Input
+	jsr il_get_j1_m2
+	jsr il_get_j2_m2
+	// jsr input_get_button 
+	lda J1_B_RED
 	bne !+
 	lda #$00 // set 1 Player Mode
 	sta number_of_players
 	jmp ml_game_start
 !:
-	cmp #BUTTON_WHITE
+	lda J2_B_RED
 	bne !+
 	lda #$01 // set 2 Player Mode
 	sta number_of_players
@@ -209,5 +213,3 @@ st_lf_out:
 	bne !--
 	jmp load_trivia_stress_test
 // END STRESS TEST
-
-	

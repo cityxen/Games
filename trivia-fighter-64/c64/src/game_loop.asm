@@ -404,6 +404,15 @@ gst_lf_out:
 ////////////////////////////////////////////////////////////
 // Game Step Round
 game_step_round:
+
+	jsr input_get_key
+	cmp #KEY_Q
+	bne !+
+	lda #$00
+	sta screen_draw
+	jmp restart
+!:
+
 	PrintPlot(16,24)
 	PrintLowerCase()
 	Print(trivia_round_text)
@@ -467,7 +476,7 @@ game_step_round:
 	lda game_round_first_buzzer
 	beq !++
 	cmp #BUZZER_PLAYER_1
-	bne !+	
+	bne !+
 	PrintChr('<')
 	jmp !++
 !:
@@ -583,7 +592,7 @@ gsr_in:
 	PrintHome()
 	GetTimerTr(TIMER_1)
 	PrintHex()
-	PrintLF()	
+	PrintLF()
 	lda #$00
 	sta game_round_winner
 	sta SPRITE_ENABLE	

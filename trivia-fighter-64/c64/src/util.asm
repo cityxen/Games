@@ -214,14 +214,6 @@ up1ss_out:
 
 update_player_2_select_sprites:
 
-	// CopySprite(sp_hg,sp_ptr_d)
-	
-	//lda #sp_hg
-	//sta SPRITE_0_POINTER
-	//lda #sp_ptr_c
-	//sta SPRITE_1_POINTER
-
-	//sprite 4
 	lda #select_sprite_4_x
 	sta SPRITE_4_X
 	lda #select_sprite_4_y
@@ -296,36 +288,6 @@ randomly_flash_buttons:
 	and #BUTTON_LIGHT_ALL
 	sta random_num
 	sta USER_PORT_DATA
-	rts
-
-/////////////////////////////////////////////////////
-// Get Button Press
-
-input_get_button:
-	GetTimerTr(5) // joystick read timer
-	beq !gb+
-	ResetTimer(5)
-	lda #$00
-	SetTimerTr(5)
-	lda JOYSTICK_PORT_1
-	rts
-!gb:
-	lda #$ff
-	rts
-
-/////////////////////////////////////////////////////
-// Get Key Press
-
-input_get_key:
-	// lda irq_timer_input_tr
-	// beq !gb+
-	jsr KERNAL_GETIN
-	// sta whack_key
-	// jsr reset_input_timer
-	// lda whack_key
-	rts
-!gb:
-	lda #$00
 	rts
 
 randomize_avatars: 

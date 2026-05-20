@@ -38,6 +38,13 @@ if %ERRORLEVEL% EQU 0 (
     echo ---- COPIED TO Y DRIVE BAD! RC[%ERRORLEVEL%]
 )
 
+echo F | xcopy "prg_files\\tf64.prg" "r:\\c64\\tf64.prg" /i /Y >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo ---- COPIED TO R DRIVE GOOD! RC[%ERRORLEVEL%]
+) else (
+    echo ---- COPIED TO R DRIVE BAD! RC[%ERRORLEVEL%]
+)
+
 ftp -s:ftp.u64 >nul 2>&1
 if %ERRORLEVEL% EQU 0 (
     echo ---- FTP'd GOOD! RC[%ERRORLEVEL%]
