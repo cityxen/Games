@@ -15,7 +15,9 @@ REM call genkickass-script.bat -t C64 -o ../prg_files -m true -s true -l "RETRO_
 REM call Kickass.bat src/jread.asm
 call KickAss.bat src/main.asm
 echo //------------------------------------------------------
-EXIT /B 0
+
+REM EXIT /B 0
+
 del "prg_files\\wad.sym"
 del "prg_files\\wad.sym"
 
@@ -31,7 +33,7 @@ if %ERRORLEVEL% EQU 0 (
 del "prg_files\\wad.prg"
 rename "prg_files\\wadx.prg" "wad.prg"
 
-echo F | xcopy "prg_files\\wadx.prg" "y:\\httpdocs\\c64\\wad.prg" /i /Y >nul 2>&1
+echo F | xcopy "prg_files\\wad.prg" "y:\\httpdocs\\c64\\wad.prg" /i /Y >nul 2>&1
 if %ERRORLEVEL% EQU 0 (
     echo ---- COPIED TO Y DRIVE GOOD! RC[%ERRORLEVEL%]
 ) else (
