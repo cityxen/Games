@@ -306,6 +306,9 @@ game_step_round_init:
 	//////////////////////////////
 	// Draw play screen
 	jsr draw_play_screen
+
+	jsr update_health_bars
+
 	//////////////////////////////
 	// Reset Timer 1, set to ROUND time
 	FullReset(TIMER_1)
@@ -317,42 +320,10 @@ game_step_round_init:
 	sta player_1_buzzed_in
 	sta player_2_buzzed_in
 	sta game_round_first_buzzer
-	//////////////////////////////
-	// Print stuff
-	PrintHome()
-	PrintLF()
-	PrintLF()
-	PrintLF()
-	PrintLF()
-	PrintRight(6)
-	PrintChr(5)
-    lda #< MLHL_DATA_QUESTION
-    sta zp_tmp_lo
-    lda #> MLHL_DATA_QUESTION
-    sta zp_tmp_hi
-	// Add linefeed if line gets too long on screen
-	ldy #$00
-	sty tmp_1
-!:
-	lda (zp_tmp),y
-	beq gst_lf_out
-    jsr KERNAL_CHROUT
-	lda (zp_tmp),y
-	iny
-	inc tmp_1
-	cmp #' '
-	bne !-
-	clc
-	lda tmp_1
-	cmp #25
-	bcc !-
-	lda #$00
-	sta tmp_1
-	PrintLF()
-	PrintRight(6)
-	jmp !-
-gst_lf_out:
-	PrintChr('?')
+	sta game_round_winner
+
+	jsr print_question
+
 	PrintHome()
 	PrintDown(13)
 	PrintRight(3)
@@ -592,21 +563,51 @@ gsr_in: // determine winner of round here
 	lda #$10
 	sta player_1_round_counter
 	sta player_2_round_counter
+
 	PrintHome()
-	GetTimerTr(TIMER_1)
-	PrintHex()
+	//GetTimerTr(TIMER_1)	PrintHex()
 	PrintLF()
+	
 	lda #$00
-	sta game_round_winner
-	sta SPRITE_ENABLE	
+	sta SPRITE_ENABLE	  // disable sprites
+	
+	
 !:	
+
+	// TODO: Print Question, then correct answer
+	jsr print_question
+	PrintLF()
+	PrintLF()
+	PrintRight(12)
+
 	lda MLHL_DATA_CORRECT
 	sec
 	sbc #$30
-	PrintHex()
+	cmp #$01
+	bne !+
+	Print(MLHL_DATA_ANS1)
+	jmp pca_o
+!:
+	cmp #$02
+	bne !+
+	Print(MLHL_DATA_ANS2)
+	jmp pca_o
+!:
+	cmp #$03
+	bne !+
+	Print(MLHL_DATA_ANS3)
+	jmp pca_o
+!:
+	cmp #$04
+	bne !+
+	Print(MLHL_DATA_ANS4)
+	jmp pca_o
+!:
+pca_o:
+	
 	PrintLF()
 	PrintLF()
-
+	PrintRight(6)
 	Print(player_msg)
 	PrintChr('1')
 	PrintChr(' ')
@@ -627,6 +628,7 @@ gsr_in: // determine winner of round here
 !:
 	PrintLF()
 	PrintLF()
+	PrintRight(6)
 	Print(player_msg)
 	PrintChr('2')
 	PrintChr(' ')
@@ -636,6 +638,7 @@ gsr_in: // determine winner of round here
 	tax
 	lda button_answer_translator,x
 	sta a_reg
+
 	cmp player_2_buzzed_in
 	bne !+
 	Print(p_right_msg) // Player 2 Got it right
@@ -657,43 +660,31 @@ gsr_in: // determine winner of round here
 	inc player_2_round_counter
 !:
 
-	PrintLF()
-	PrintLF()
-	Print(player_msg)
-	PrintChr('1')
-	PrintChr(' ')
-	Print(p_counter_msg)
-	lda player_1_round_counter
-	PrintHex()
-	
-	PrintLF()
-	PrintLF()
-	Print(player_msg)
-	PrintChr('2')
-	PrintChr(' ')
-	Print(p_counter_msg)
-	lda player_2_round_counter
-	PrintHex()
-
+	lda game_round_winner
+	bne p_win_done
 	lda player_1_round_counter
 	cmp player_2_round_counter
 	bcs p1_wins             // C=1 means player_1 >= player_2 // fall through: player_2 wins
 p2_wins:
 	lda #02
+	dec player_1_healthbar
 	jmp p_win_out
 p1_wins:
 	lda #01
+	dec player_2_healthbar
 p_win_out:
 	sta game_round_winner
+p_win_done:
 
 	PrintLF()
 	PrintLF()
+	PrintRight(6)
 	Print(p_winner_msg)
 	lda game_round_winner
 	PrintHex()
 
 	GetTimerTr(TIMER_1)
-	cmp #32
+	cmp #TIMER_SHOW_ANSWER
 	beq !+
 	jmp gsr_in
 !:
@@ -705,3 +696,43 @@ gsr_out:
 // END GAME ROUND
 ////////////////////////////////////////////////////////////
 
+
+
+print_question:
+	//////////////////////////////
+	// Print stuff
+	PrintHome()
+	PrintLF()
+	PrintLF()
+	PrintLF()
+	PrintLF()
+	PrintRight(6)
+	PrintChr(5)
+    lda #< MLHL_DATA_QUESTION
+    sta zp_tmp_lo
+    lda #> MLHL_DATA_QUESTION
+    sta zp_tmp_hi
+	// Add linefeed if line gets too long on screen
+	ldy #$00
+	sty tmp_1
+!:
+	lda (zp_tmp),y
+	beq gst_lf_out
+    jsr KERNAL_CHROUT
+	lda (zp_tmp),y
+	iny
+	inc tmp_1
+	cmp #' '
+	bne !-
+	clc
+	lda tmp_1
+	cmp #25
+	bcc !-
+	lda #$00
+	sta tmp_1
+	PrintLF()
+	PrintRight(6)
+	jmp !-
+gst_lf_out:
+	PrintChr('?')
+	rts

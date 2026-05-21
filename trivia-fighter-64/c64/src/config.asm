@@ -46,8 +46,11 @@ ml_total_trivia_text: .text "triva count:"
 .byte 0
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
-.const TIMER_ROUND  = $60
+
+.const TIMER_ROUND  = $20
 .const TIMER_STRESS = $10
+.const TIMER_SHOW_ANSWER = $10
+
 
 .const TIMER_FADER_SPEED   = $30 // fade from black, dk gr, m gr, l gr, white
 .const TIMER_FADER         = 9
@@ -197,7 +200,9 @@ trivia_current_category: .byte 0 //
 //////////////////////////////////////////////////////////////
 // Local Constants
 // player initial values
-.const PLAYER_INITIAL_HEALTH = 5
+.const PLAYER_INITIAL_HEALTH    = 5
+.const PLAYER_1_HEALTH_BAR_LOC  = 1067
+.const PLAYER_2_HEALTH_BAR_LOC  = 1096
 // select screen
 .const PLAYER_1_SELECT_SCREEN_X = 4 // where to put names
 .const PLAYER_1_SELECT_SCREEN_Y = 12
@@ -312,6 +317,7 @@ cxn_avatar_selected: .byte 0
 .const FLASH_TIMER_SPEED_CONST = $40
 button_answer_translator:
 .byte 0,BUTTON_GREEN,BUTTON_BLUE,BUTTON_RED,BUTTON_YELLOW
+
 button_red_msg:
 .encoding "petscii_mixed"
 .byte KEY_RED
@@ -343,10 +349,10 @@ player_msg:
 .text "PLAYER "
 .byte 0
 p_right_msg:
-.text "got answer right"
+.text "got answer RIGHT"
 .byte 0
 p_wrong_msg:
-.text "got answer wrong"
+.text "got answer WRONG"
 .byte 0
 p_counter_msg:
 .text "Counter:"

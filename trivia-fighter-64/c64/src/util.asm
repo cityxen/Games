@@ -322,3 +322,22 @@ who_buzzed_in_first:
 // END WHO BUZZED IN FIRST
 ////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// draw healthbar changes subroutine
+update_health_bars:
+	lda #$40
+	ldx #$00 
+!:
+	sta PLAYER_1_HEALTH_BAR_LOC,x
+	inx
+	cpx player_1_healthbar
+	bne !-
+	ldx #$00
+!:
+	sta PLAYER_2_HEALTH_BAR_LOC,x
+	inx
+	cpx player_2_healthbar
+	bne !-
+	rts
+// END health bar update
+////////////////////////////////////////////////////////////
