@@ -143,41 +143,39 @@ trivia_current_category: .byte 0 //
 .const sp_disk_load_x = 165
 .const sp_disk_load_y = 100
 
-.const sp_pointers  = $c0 // Sprite Pointers
-.const sp_happyface = $c0
+.const sp_pointers         = $c0 // Sprite Pointers
+.const sp_hg               = $c0
+.const sp_eagull           = $c1
+.const sp_clicky           = $c2
+.const sp_rg5k             = $c3
+.const sp_msdos            = $c4
+.const sp_f1d0             = $c5
+.const sp_trish            = $c6
+.const sp_pokey            = $c7
+.const sp_amy              = $c8
+.const sp_victoria         = $c9
+.const sp_disk_load        = $ca
 
-.const sp_hg        = $c0
-.const sp_eagull    = $c1
-.const sp_clicky    = $c2
-.const sp_rg5k      = $c3
-.const sp_msdos     = $c4
-.const sp_f1d0      = $c5
-.const sp_trish     = $c6
-.const sp_pokey     = $c7
-.const sp_amy       = $c8
-.const sp_victoria  = $c9
-.const sp_disk_load = $ca
+.const sp_ptr_a            = $cb // reverse head for p2
+.const sp_ptr_b            = $cc // reserved / blank
+.const sp_ptr_atk_lightning= $cd // attack 1
+.const sp_ptr_atk_swirl    = $ce // attack 2
+.const sp_ptr_atk_banana   = $cf
+.const sp_ptr_atk_wifi     = $d0
+.const sp_ptr_atk_cloud    = $d1
+.const sp_ptr_atk_darts    = $d2
+.const sp_ptr_atk_star     = $d3
 
-.const sp_ptr_a     = $cb // R
-.const sp_ptr_b     = $cc // Blank
-.const sp_ptr_c     = $cd // Blank
-.const sp_ptr_d     = $ce // Blank
-.const sp_ptr_e     = $cf
-.const sp_ptr_f     = $d0
-.const sp_ptr_g     = $d1
-.const sp_ptr_h     = $d2
-.const sp_ptr_i     = $d3
+.const sp_ptr_yin_1        = $d4
+.const sp_ptr_yin_2        = $d5
+.const sp_ptr_yin_3        = $d6
+.const sp_ptr_yin_4        = $d7
+.const sp_ptr_yin_5        = $d8
+.const sp_ptr_yin_6        = $d9
+.const sp_ptr_yin_7        = $da
+.const sp_ptr_yin_8        = $db
 
-.const sp_ptr_yin_1 = $d4
-.const sp_ptr_yin_2 = $d5
-.const sp_ptr_yin_3 = $d6
-.const sp_ptr_yin_4 = $d7
-.const sp_ptr_yin_5 = $d8
-.const sp_ptr_yin_6 = $d9
-.const sp_ptr_yin_7 = $da
-.const sp_ptr_yin_8 = $db
-
-.const sp_ptr_center_body = $e2
+.const sp_ptr_center_body  = $e2
 
 .const sp_ptr_body_left_1  = $dc
 .const sp_ptr_body_left_2  = $dd
@@ -196,6 +194,18 @@ trivia_current_category: .byte 0 //
 .const sp_ptr_body_right_6 = $ea
 .const sp_ptr_punch_right  = $eb
 .const sp_ptr_kick_right   = $ec
+
+.const sp_ptr_heart        = $ed
+.const sp_ptr_star         = $ee
+.const sp_ptr_rad          = $ef
+.const sp_ptr_skull        = $f0
+.const sp_ptr_poo          = $f1
+.const sp_ptr_frown        = $f2
+.const sp_ptr_msdos        = $f3
+.const sp_ptr_dollar       = $f4
+.const sp_ptr_arrow        = $f5
+.const sp_ptr_commodore    = $f6
+.const sp_ptr_comic_bubble = $f7
 
 //////////////////////////////////////////////////////////////
 // Local Constants
