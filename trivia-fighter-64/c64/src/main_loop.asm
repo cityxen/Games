@@ -37,6 +37,8 @@ main_loop:
 	
 	jsr wait_vbl
 	FlushSpriteObj(yin_obj, yin_state)
+	FlushSpriteObj(player_1_obj, player_1_state)
+	FlushSpriteObj(player_2_obj, player_2_state)
 
 	jsr debug_stuff
 	GetTimerTr(TIMER_2)
@@ -68,6 +70,14 @@ main_loop:
 	PrintChr(5)
 	lda play_music
 	jsr print_yesno
+!:
+	cmp #KEY_D
+	bne !+
+	DisableSpriteObj(yin_obj)
+!:
+	cmp #KEY_E
+	bne !+
+	EnableSpriteObj(yin_obj)
 !:
 	cmp #KEY_T
 	bne !+

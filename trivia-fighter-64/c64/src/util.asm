@@ -381,6 +381,8 @@ init_timers_user_hook:
 irq_timer_user_hook:
 
 	TickSpriteObj(yin_obj, yin_state)
+	TickSpriteObj(player_1_obj, player_1_state)
+	TickSpriteObj(player_2_obj, player_2_state)
 
 /*
 	GetTimerTr(TIMER_SPRITE_ANIM)

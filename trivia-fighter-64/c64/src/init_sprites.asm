@@ -9,12 +9,15 @@ init_sprites:
 // Initialize Sprites (MAIN SCREEN TURN ON)
 init_sprites_ms:
 
+
 	lda #sprite_multi_color_1
 	sta SPRITE_MULTICOLOR_0
 	lda #sprite_multi_color_2
 	sta SPRITE_MULTICOLOR_1
+	/*
 
-	lda #%11010010
+	lda #%00010010
+	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	sta SPRITE_PRIORITY
 
@@ -35,14 +38,6 @@ init_sprites_ms:
 	lda #main_sprite_4_y
 	sta SPRITE_4_Y
 	
-	lda #main_sprite_7_x
-	sta SPRITE_7_X
-	lda #main_sprite_7_y
-	sta SPRITE_7_Y
-
-	lda #WHITE
-	sta SPRITE_7_COLOR
-	
 	lda #%00010000
 	sta SPRITE_MSB_X
 	ldx player_1_avatar
@@ -50,17 +45,29 @@ init_sprites_ms:
 	sta SPRITE_1_POINTER
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_1_COLOR
-	
+	*/
+
+	ldx player_1_avatar
+	lda cxn_avatar_sprite_color_i,x
+	ldx #$06
+	jsr sobj_set_color
+
+	ldx player_1_avatar
+	lda cxn_avatar_sprite_pointer_i,x
+	CopySpriteA(sp_ptr_b)
+
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
-	sta SPRITE_4_COLOR
+	ldx #$03
+	jsr sobj_set_color
+
+	ldx player_2_avatar
 	lda cxn_avatar_sprite_pointer_i,x
 	ReverseSpriteMultiColorA(sp_ptr_a)
-	lda #sp_ptr_a
-	sta SPRITE_4_POINTER
 
-	lda #sp_ptr_yin_1
-	sta SPRITE_7_POINTER
+	//lda #sp_ptr_a
+	//sta SPRITE_4_POINTER
+	//*/
 	rts
 
 
@@ -76,6 +83,7 @@ init_sprites_game_init:
 init_sprites_select_char:
 
 	lda #%00111111
+	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	lda #$00
 	sta SPRITE_EXPAND_X
@@ -98,6 +106,7 @@ init_sprites_play:
 	lda #$00
 	
 	lda #%00010010
+	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	sta SPRITE_PRIORITY
 
@@ -161,9 +170,9 @@ init_sprites_load_screen:
 //////////////////////////////////////////////////////////////
 // Initialize Sprites (Game Over Screen)
 init_sprites_game_over:
+	/*
 	lda #%00010010
-	
-	lda #%00010010
+	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	sta SPRITE_PRIORITY
 
@@ -196,9 +205,8 @@ init_sprites_game_over:
 	ReverseSpriteMultiColorA(sp_ptr_a)
 	lda #sp_ptr_a
 	sta SPRITE_4_POINTER
+	*/
 	rts
-
-
 
 
 construct_sprite_body_p1:

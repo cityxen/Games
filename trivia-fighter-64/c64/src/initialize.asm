@@ -32,5 +32,7 @@ initialize:
     jsr random_init_sid
 
     ApplySpriteObj(yin_obj, yin_state)
+    ApplySpriteObj(player_1_obj, player_1_state)
+    ApplySpriteObj(player_2_obj, player_2_state)
 
     jmp main_loop_start

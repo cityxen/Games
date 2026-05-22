@@ -52,9 +52,6 @@ ml_total_trivia_text: .text "triva count:"
 .const TIMER_STRESS = $10
 .const TIMER_SHOW_ANSWER = $10
 
-.const TIMER_SPRITE_ANIM       = 8
-.const TIMER_SPRITE_ANIM_SPEED = $5
-
 .const TIMER_FADER_SPEED   = $30 // fade from black, dk gr, m gr, l gr, white
 .const TIMER_FADER         = 9
 // start times to begin fading
@@ -163,7 +160,7 @@ trivia_current_category: .byte 0 //
 .const sp_disk_load        = $ca
 
 .const sp_ptr_a            = $cb // reverse head for p2
-.const sp_ptr_b            = $cc // reserved / blank
+.const sp_ptr_b            = $cc // p1 head
 .const sp_ptr_atk_lightning= $cd // attack 1
 .const sp_ptr_atk_swirl    = $ce // attack 2
 .const sp_ptr_atk_banana   = $cf
@@ -212,18 +209,6 @@ trivia_current_category: .byte 0 //
 .const sp_ptr_arrow        = $f5
 .const sp_ptr_commodore    = $f6
 .const sp_ptr_comic_bubble = $f7
-
-/*
-.const SP_ANIM_YINYANG = 0
-.const SP_ANIM_BODY_P1 = 1
-.const SP_ANIM_BODY_P2 = 2
-
-sprite_anim_table_counters: .byte $00,$00,$00,$00,$00,$00,$00,$00,$00
-sprite_anim_table_speed:    .byte $00,$00,$00,$00,$00,$00,$00,$00,$00
-
-sprite_anim_table_yin_yang: .byte $d4,$d5,$d6,$d7,$d8,$d9,$da,$db,$00
-*/
-
 
 //////////////////////////////////////////////////////////////
 // Local Constants
@@ -325,6 +310,9 @@ cxn_avatar_sprite_pointer_i: // sprite pointer lookup table
 cxn_avatar_sprite_color_i: // sprite color lookup table
 .byte GREEN,ORANGE,WHITE,RED,RED,GREEN,YELLOW,BLUE,LIGHT_RED,LIGHT_RED
 
+player_1_sprite_color: .byte 0
+player_2_sprite_color: .byte 0
+
 .const print_pointer_lo = $fa
 .const print_pointer_hi = $fb
 
@@ -389,14 +377,36 @@ p_winner_msg:
 .text "Winner:"
 .byte 0
 
-
+// .const TIMER_SPRITE_ANIM       = 8
+.const TIMER_SPRITE_ANIM_SPEED = $4
 
 yin_obj:
-SpriteObjBegin(%10000000, %10000000, %00000000, %00000000, %00000000, %00000000, %10000000, TIMER_SPRITE_ANIM_SPEED)
+SpriteObjBegin(%10000000, %10000000, %00000000, %00000000, %00000000, %00000000, %00000000, TIMER_SPRITE_ANIM_SPEED)
 SpriteObjEntry(7, 98, 148, WHITE, sp_ptr_yin_1, <yin_anim_table, >yin_anim_table)
 SpriteObjEnd()
-
 yin_anim_table: .byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8, $00
-
 yin_state:
 SpriteObjState() 
+
+player_1_obj:
+SpriteObjBegin(%01100000, %01100000, %01100000, %00000000, %00000000, %00000000, %00000000, 20)
+SpriteObjEntry(6, 41, 160, player_1_sprite_color, sp_ptr_b, <player_1_head_anim, >player_1_head_anim)
+SpriteObjEntry(5, 41, 180, LIGHT_RED, sp_ptr_body_left_1, <player_1_body_anim, >player_1_body_anim)
+SpriteObjEnd()
+player_1_head_anim: .byte sp_ptr_b,sp_ptr_b,$00
+player_1_body_anim: .byte sp_ptr_body_left_1,sp_ptr_body_left_2,sp_ptr_body_left_3,sp_ptr_body_left_4,sp_ptr_body_left_5,sp_ptr_body_left_6,sp_ptr_punch_left,sp_ptr_kick_left, $00
+player_1_state:
+SpriteObjState()
+
+player_2_obj:
+SpriteObjBegin(%00001100, %00001100, %00001100, %00000000, %00000000, %00000000, %00001100, 20)
+SpriteObjEntry(3, 41, 160, player_2_sprite_color, sp_ptr_a, <player_2_head_anim, >player_2_head_anim)
+SpriteObjEntry(2, 41, 180, LIGHT_RED, sp_ptr_body_right_2, <player_2_body_anim, >player_2_body_anim)
+SpriteObjEnd()
+player_2_head_anim: .byte sp_ptr_a,sp_ptr_a,$00
+player_2_body_anim:
+.byte sp_ptr_body_right_1,sp_ptr_body_right_2,sp_ptr_body_right_3
+.byte sp_ptr_body_right_4,sp_ptr_body_right_5,sp_ptr_body_right_6
+.byte sp_ptr_punch_right, $00
+player_2_state:
+SpriteObjState()
