@@ -22,14 +22,15 @@ del "prg_files\\tf64-sorted.sym"
 rename "prg_files\\main.sym" "tf64.sym"
 sort   "prg_files\\tf64.sym" > "prg_files\\tf64-sorted.sym"
 
-exomizer sfx basic -o prg_files\\tf64x.prg prg_files\\tf64.prg >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    echo ---- EXOMIZED GOOD! RC[%ERRORLEVEL%]
-) else (
-    echo ---- EXOMIZED BAD! RC[%ERRORLEVEL%]
-)
-del "prg_files\\tf64.prg"
-rename "prg_files\\tf64x.prg" "tf64.prg"
+
+rem exomizer sfx basic -o prg_files\\tf64x.prg prg_files\\tf64.prg >nul 2>&1
+rem if %ERRORLEVEL% EQU 0 (
+rem     echo ---- EXOMIZED GOOD! RC[%ERRORLEVEL%]
+rem ) else (
+rem     echo ---- EXOMIZED BAD! RC[%ERRORLEVEL%]
+rem )
+rem del "prg_files\\tf64.prg"
+rem rename "prg_files\\tf64x.prg" "tf64.prg"
 
 echo F | xcopy "prg_files\\tf64.prg" "y:\\httpdocs\\c64\\tf64.prg" /i /Y >nul 2>&1
 if %ERRORLEVEL% EQU 0 (

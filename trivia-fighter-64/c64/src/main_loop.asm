@@ -34,11 +34,8 @@ restart:
 //////////////////////////////////////////////////////////////
 // Main loop
 main_loop:
-	
-	jsr wait_vbl
-	FlushSpriteObj(yin_obj, yin_state)
-	FlushSpriteObj(player_1_obj, player_1_state)
-	FlushSpriteObj(player_2_obj, player_2_state)
+
+	jsr anim_sprites_main_loop
 
 	jsr debug_stuff
 	GetTimerTr(TIMER_2)
@@ -48,6 +45,7 @@ main_loop:
 	jsr randomize_avatars
 	jsr init_sprites_ms
 	jsr randomly_flash_buttons
+	ResetSpriteObjMove()
 !:	
 	GetTimerTr(TIMER_SCREEN_CHANGE)
 	cmp #$02
@@ -226,3 +224,14 @@ st_lf_out:
 	bne !--
 	jmp load_trivia_stress_test
 // END STRESS TEST
+
+anim_sprites_main_loop:
+	TickSpriteObjMove(yin_obj, yin_move_table)
+	TickSpriteObjSfx(yin_state, yin_sfx_table)
+	jsr wait_vbl
+	FlushSpriteObj(yin_obj, yin_state)
+	jsr wait_vbl
+	FlushSpriteObj(player_1_obj, player_1_state)
+	jsr wait_vbl
+	FlushSpriteObj(player_2_obj, player_2_state)
+	rts

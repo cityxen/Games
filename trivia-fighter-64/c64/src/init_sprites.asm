@@ -54,7 +54,7 @@ init_sprites_ms:
 
 	ldx player_1_avatar
 	lda cxn_avatar_sprite_pointer_i,x
-	CopySpriteA(sp_ptr_b)
+	CopySpriteA(sp_ptr_p1_head)
 
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
@@ -63,7 +63,7 @@ init_sprites_ms:
 
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_pointer_i,x
-	ReverseSpriteMultiColorA(sp_ptr_a)
+	ReverseSpriteMultiColorA(sp_ptr_p2_head)
 
 	//lda #sp_ptr_a
 	//sta SPRITE_4_POINTER
@@ -135,8 +135,8 @@ init_sprites_play:
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
 	lda cxn_avatar_sprite_pointer_i,x
-	ReverseSpriteMultiColorA(sp_ptr_a)
-	lda #sp_ptr_a
+	ReverseSpriteMultiColorA(sp_ptr_p2_head)
+	lda #sp_ptr_p2_head
 	sta SPRITE_4_POINTER
 	rts
 

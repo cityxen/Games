@@ -222,9 +222,9 @@ update_player_2_select_sprites:
 
 	ldx player_2_avatar	
 	lda cxn_avatar_sprite_pointer_i,x
-	ReverseSpriteMultiColorA(sp_ptr_a)
+	ReverseSpriteMultiColorA(sp_ptr_p2_head)
 
-	lda #sp_ptr_a
+	lda #sp_ptr_p2_head
 	sta SPRITE_4_POINTER
 
 	lda cxn_avatar_selected
@@ -342,9 +342,6 @@ update_health_bars:
 // END health bar update
 ////////////////////////////////////////////////////////////
 
-
-
-
 init_timers_user_hook:
 	lda #TIMER_FADER_SPEED
 	SetTimerTo(TIMER_FADER)
@@ -370,11 +367,6 @@ init_timers_user_hook:
 	lda #TIMER_ANS_4_FADE
 	SetTimer(TIMER_FADE_A4)
 	FullReset(TIMER_FADE_A4)
-/*
-	lda #TIMER_SPRITE_ANIM_SPEED
-	SetTimerTo(TIMER_SPRITE_ANIM)
-	FullReset(TIMER_SPRITE_ANIM)	
-	*/
 
 	rts
 
@@ -384,26 +376,6 @@ irq_timer_user_hook:
 	TickSpriteObj(player_1_obj, player_1_state)
 	TickSpriteObj(player_2_obj, player_2_state)
 
-/*
-	GetTimerTr(TIMER_SPRITE_ANIM)
-	beq !++
-	FullReset(TIMER_SPRITE_ANIM)
-	ldx #$00
-	inc sprite_anim_table_counters,x
-	lda sprite_anim_table_counters,x
-	tax
-	lda sprite_anim_table_yin_yang,x
-	beq !+
-	sta SPRITE_7_POINTER
-	jmp !++
-!:
-	ldx #$00
-	lda #$00
-	sta sprite_anim_table_counters,x
-	lda sprite_anim_table_yin_yang,x
-	sta SPRITE_7_POINTER
-!:
-	*/
 	rts
 
 begin_fade_in_question:

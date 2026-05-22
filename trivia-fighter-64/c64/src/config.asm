@@ -146,6 +146,40 @@ trivia_current_category: .byte 0 //
 .const sp_disk_load_x = 165
 .const sp_disk_load_y = 100
 
+// $a0 // $2800
+// $a1
+// $a2
+// $a3
+// $a4
+// $a5
+// $a6
+// $a7
+// $a8
+// $a9
+// $aa
+// $ab
+// $ac
+// $ad
+// $ae
+// $af
+
+// $b0 // $2c00
+// $b1
+// $b2
+// $b3
+// $b4
+// $b5
+// $b6
+// $b7
+// $b8
+// $b9
+// $ba
+// $bb
+// $bc
+// $bd
+// $be
+// $bf
+
 .const sp_pointers         = $c0 // Sprite Pointers
 .const sp_hg               = $c0
 .const sp_eagull           = $c1
@@ -159,8 +193,9 @@ trivia_current_category: .byte 0 //
 .const sp_victoria         = $c9
 .const sp_disk_load        = $ca
 
-.const sp_ptr_a            = $cb // reverse head for p2
-.const sp_ptr_b            = $cc // p1 head
+.const sp_ptr_p1_head      = $cb // p1 head
+.const sp_ptr_p2_head      = $cc // reverse head for p2
+
 .const sp_ptr_atk_lightning= $cd // attack 1
 .const sp_ptr_atk_swirl    = $ce // attack 2
 .const sp_ptr_atk_banana   = $cf
@@ -178,14 +213,14 @@ trivia_current_category: .byte 0 //
 .const sp_ptr_yin_7        = $da
 .const sp_ptr_yin_8        = $db
 
-.const sp_ptr_center_body  = $e2
+.const sp_ptr_center_body  = $dc
 
-.const sp_ptr_body_left_1  = $dc
-.const sp_ptr_body_left_2  = $dd
-.const sp_ptr_body_left_3  = $de
-.const sp_ptr_body_left_4  = $df
-.const sp_ptr_body_left_5  = $e0
-.const sp_ptr_body_left_6  = $e1
+.const sp_ptr_body_left_1  = $dd
+.const sp_ptr_body_left_2  = $de
+.const sp_ptr_body_left_3  = $df
+.const sp_ptr_body_left_4  = $e0
+.const sp_ptr_body_left_5  = $e1
+.const sp_ptr_body_left_6  = $e2
 .const sp_ptr_punch_left   = $e3
 .const sp_ptr_kick_left    = $e4
 
@@ -384,29 +419,58 @@ yin_obj:
 SpriteObjBegin(%10000000, %10000000, %00000000, %00000000, %00000000, %00000000, %00000000, TIMER_SPRITE_ANIM_SPEED)
 SpriteObjEntry(7, 98, 148, WHITE, sp_ptr_yin_1, <yin_anim_table, >yin_anim_table)
 SpriteObjEnd()
-yin_anim_table: .byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8, $00
+yin_anim_table:
+.byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8
+.byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8
+.byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8, $00
 yin_state:
-SpriteObjState() 
+SpriteObjState()
+
+yin_move_table:
+SpriteObjMoveEntry(4, 0)    // move right 4px per tick
+SpriteObjMoveEntry(4, 0)
+SpriteObjMoveEntry(4, -2)   // curve up
+SpriteObjMoveEntry(4, -2)
+SpriteObjMoveEntry(4, 0)    // move right 4px per tick
+SpriteObjMoveEntry(4, 0)
+SpriteObjMoveEntry(4, 2)   // curve up
+SpriteObjMoveEntry(4, 2)
+SpriteObjMoveEntry(4, 0)    // move right 4px per tick
+SpriteObjMoveEntry(4, 0)
+SpriteObjMoveEntry(4, -2)   // curve up
+SpriteObjMoveEntry(4, -2)
+SpriteObjMoveEntry(4, 0)    // move right 4px per tick
+SpriteObjMoveEntry(4, 0)
+SpriteObjMoveEntry(4, 2)   // curve up
+SpriteObjMoveEntry(4, 2)
+SpriteObjMoveStop()         // freeze at end
+
+yin_sfx_table:
+SpriteObjSfxEntry(5, 2, SFX_MISS)   // play DING on voice 2 at frame 14
+SpriteObjSfxEnd()
 
 player_1_obj:
 SpriteObjBegin(%01100000, %01100000, %01100000, %00000000, %00000000, %00000000, %00000000, 20)
-SpriteObjEntry(6, 41, 160, player_1_sprite_color, sp_ptr_b, <player_1_head_anim, >player_1_head_anim)
+SpriteObjEntry(6, 41, 160, player_1_sprite_color, sp_ptr_p1_head, <player_1_head_anim, >player_1_head_anim)
 SpriteObjEntry(5, 41, 180, LIGHT_RED, sp_ptr_body_left_1, <player_1_body_anim, >player_1_body_anim)
 SpriteObjEnd()
-player_1_head_anim: .byte sp_ptr_b,sp_ptr_b,$00
-player_1_body_anim: .byte sp_ptr_body_left_1,sp_ptr_body_left_2,sp_ptr_body_left_3,sp_ptr_body_left_4,sp_ptr_body_left_5,sp_ptr_body_left_6,sp_ptr_punch_left,sp_ptr_kick_left, $00
+player_1_head_anim: .byte sp_ptr_p1_head,sp_ptr_p1_head,$00
+player_1_body_anim:
+.byte sp_ptr_body_left_1,sp_ptr_body_left_2,sp_ptr_body_left_3
+.byte sp_ptr_body_left_4,sp_ptr_body_left_5,sp_ptr_body_left_6
+.byte sp_ptr_punch_left,sp_ptr_kick_left, $00
 player_1_state:
 SpriteObjState()
 
 player_2_obj:
 SpriteObjBegin(%00001100, %00001100, %00001100, %00000000, %00000000, %00000000, %00001100, 20)
-SpriteObjEntry(3, 41, 160, player_2_sprite_color, sp_ptr_a, <player_2_head_anim, >player_2_head_anim)
+SpriteObjEntry(3, 41, 160, player_2_sprite_color, sp_ptr_p2_head, <player_2_head_anim, >player_2_head_anim)
 SpriteObjEntry(2, 41, 180, LIGHT_RED, sp_ptr_body_right_2, <player_2_body_anim, >player_2_body_anim)
 SpriteObjEnd()
-player_2_head_anim: .byte sp_ptr_a,sp_ptr_a,$00
+player_2_head_anim: .byte sp_ptr_p2_head,sp_ptr_p2_head,$00
 player_2_body_anim:
 .byte sp_ptr_body_right_1,sp_ptr_body_right_2,sp_ptr_body_right_3
 .byte sp_ptr_body_right_4,sp_ptr_body_right_5,sp_ptr_body_right_6
-.byte sp_ptr_punch_right, $00
+.byte sp_ptr_punch_right, sp_ptr_kick_right, $00
 player_2_state:
 SpriteObjState()

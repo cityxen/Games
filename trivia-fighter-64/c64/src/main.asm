@@ -17,10 +17,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 // Set up segments
 .segment Offline [allowOverlap]
-*=$6b00
+*=$c500
 #import "offline_trivia.asm"
 .segment Sprites [allowOverlap]
-*=$3000 "SPRITES"
+*=$2800 "SPRITES"
 #import "data/trivia-fighters-64-sprites.asm"
 .segment Screens [allowOverlap]
 *=$6ce0 "SCREENS"
