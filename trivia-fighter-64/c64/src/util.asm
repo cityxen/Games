@@ -341,3 +341,80 @@ update_health_bars:
 	rts
 // END health bar update
 ////////////////////////////////////////////////////////////
+
+
+
+
+init_timers_user_hook:
+	lda #TIMER_FADER_SPEED
+	SetTimerTo(TIMER_FADER)
+	FullReset(TIMER_FADER)
+
+// start times to begin fading
+	lda #TIMER_QUESTION_FADE
+	SetTimer(TIMER_FADE_Q)
+	FullReset(TIMER_FADE_Q)
+
+	lda #TIMER_ANS_1_FADE
+	SetTimer(TIMER_FADE_A1)
+	FullReset(TIMER_FADE_A1)
+
+	lda #TIMER_ANS_2_FADE
+	SetTimer(TIMER_FADE_A2)
+	FullReset(TIMER_FADE_A2)
+
+	lda #TIMER_ANS_3_FADE
+	SetTimer(TIMER_FADE_A3)
+	FullReset(TIMER_FADE_A3)
+
+	lda #TIMER_ANS_4_FADE
+	SetTimer(TIMER_FADE_A4)
+	FullReset(TIMER_FADE_A4)
+/*
+	lda #TIMER_SPRITE_ANIM_SPEED
+	SetTimerTo(TIMER_SPRITE_ANIM)
+	FullReset(TIMER_SPRITE_ANIM)	
+	*/
+
+	rts
+
+irq_timer_user_hook:
+
+	TickSpriteObj(yin_obj, yin_state)
+
+/*
+	GetTimerTr(TIMER_SPRITE_ANIM)
+	beq !++
+	FullReset(TIMER_SPRITE_ANIM)
+	ldx #$00
+	inc sprite_anim_table_counters,x
+	lda sprite_anim_table_counters,x
+	tax
+	lda sprite_anim_table_yin_yang,x
+	beq !+
+	sta SPRITE_7_POINTER
+	jmp !++
+!:
+	ldx #$00
+	lda #$00
+	sta sprite_anim_table_counters,x
+	lda sprite_anim_table_yin_yang,x
+	sta SPRITE_7_POINTER
+!:
+	*/
+	rts
+
+begin_fade_in_question:
+	rts
+
+begin_fade_in_ans_1:
+	rts
+
+begin_fade_in_ans_2:
+	rts
+
+begin_fade_in_ans_3:
+	rts
+
+begin_fade_in_ans_4:
+	rts

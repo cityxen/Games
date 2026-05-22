@@ -34,6 +34,10 @@ restart:
 //////////////////////////////////////////////////////////////
 // Main loop
 main_loop:
+	
+	jsr wait_vbl
+	FlushSpriteObj(yin_obj, yin_state)
+
 	jsr debug_stuff
 	GetTimerTr(TIMER_2)
 	cmp #$04

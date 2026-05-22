@@ -32,6 +32,7 @@
 #import "meatloaf.il.asm"
 #import "honkheckbutt.il.asm"
 #import "drawpetmatescreen.il.asm"
+#import "sprite_obj.il.asm"
 //////////////////////////////////////////////////////////////
 // some vars
 debug_mode:             .byte 0
@@ -51,6 +52,8 @@ ml_total_trivia_text: .text "triva count:"
 .const TIMER_STRESS = $10
 .const TIMER_SHOW_ANSWER = $10
 
+.const TIMER_SPRITE_ANIM       = 8
+.const TIMER_SPRITE_ANIM_SPEED = $5
 
 .const TIMER_FADER_SPEED   = $30 // fade from black, dk gr, m gr, l gr, white
 .const TIMER_FADER         = 9
@@ -135,6 +138,9 @@ trivia_current_category: .byte 0 //
 .const main_sprite_4_x = 39
 .const main_sprite_4_y = 160
 
+.const main_sprite_7_x = 98
+.const main_sprite_7_y = 148
+
 .const game_over_sprite_1_x = 25
 .const game_over_sprite_1_y = 172
 .const game_over_sprite_4_x = 39
@@ -206,6 +212,18 @@ trivia_current_category: .byte 0 //
 .const sp_ptr_arrow        = $f5
 .const sp_ptr_commodore    = $f6
 .const sp_ptr_comic_bubble = $f7
+
+/*
+.const SP_ANIM_YINYANG = 0
+.const SP_ANIM_BODY_P1 = 1
+.const SP_ANIM_BODY_P2 = 2
+
+sprite_anim_table_counters: .byte $00,$00,$00,$00,$00,$00,$00,$00,$00
+sprite_anim_table_speed:    .byte $00,$00,$00,$00,$00,$00,$00,$00,$00
+
+sprite_anim_table_yin_yang: .byte $d4,$d5,$d6,$d7,$d8,$d9,$da,$db,$00
+*/
+
 
 //////////////////////////////////////////////////////////////
 // Local Constants
@@ -370,3 +388,15 @@ p_counter_msg:
 p_winner_msg:
 .text "Winner:"
 .byte 0
+
+
+
+yin_obj:
+SpriteObjBegin(%10000000, %10000000, %00000000, %00000000, %00000000, %00000000, %10000000, TIMER_SPRITE_ANIM_SPEED)
+SpriteObjEntry(7, 98, 148, WHITE, sp_ptr_yin_1, <yin_anim_table, >yin_anim_table)
+SpriteObjEnd()
+
+yin_anim_table: .byte sp_ptr_yin_1, sp_ptr_yin_2, sp_ptr_yin_3, sp_ptr_yin_4, sp_ptr_yin_5, sp_ptr_yin_6, sp_ptr_yin_7, sp_ptr_yin_8, $00
+
+yin_state:
+SpriteObjState() 

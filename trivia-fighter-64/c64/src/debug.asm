@@ -6,7 +6,6 @@
 
 //////////////////////////////////////////////////////////////
 // DEBUG STUFF
-
 debug_stuff:
 	lda debug_mode
 	and #$01
@@ -36,3 +35,4 @@ debug_stuff:
 	PrintChr($20)
 
 	rts
+	
