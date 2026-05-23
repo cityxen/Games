@@ -1,0 +1,8 @@
+open 192.168.1.4 21
+guest
+anonymous
+cd Usb2
+cd dev
+binary
+put prg_files/sutehk.prg
+quit
