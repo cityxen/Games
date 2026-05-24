@@ -1,0 +1,199 @@
+.label beep_loop=$a85
+.label beep=$a83
+.label button_actually_hit=$805
+.label button_to_hit=$804
+.label clear_message_row=$c15
+.label cmr_loop=$c19
+.label dds_done=$a58
+.label dds_loop=$a33
+.label did_hit=$807
+.label dmr_done=$c2e
+.label dmr_loop=$c22
+.label doodle_col=$817
+.label doodle_row=$818
+.label doodle_timer_hi=$811
+.label doodle_timer_lo=$810
+.label doodle_timer_set_hi=$813
+.label doodle_timer_set_lo=$812
+.label doodle=$806
+.label draw_doodle_sprite=$a2a
+.label draw_message_row=$c20
+.label draw_score_line=$ad7
+.label dsl_easy=$bcd
+.label dsl_hard=$bf1
+.label dsl_lv_digit=$b6d
+.label dsl_lv_ones=$b5a
+.label dsl_lv_skip_tens=$b67
+.label dsl_lv_tens=$b50
+.label dsl_tens_done=$b0c
+.label dsl_tens=$b02
+.label eds_done=$a82
+.label eds_loop=$a62
+.label erase_doodle_sprite=$a59
+.label game_loop=$130c
+.label game_over_loop=$143e
+.label game_over=$13c7
+.label game_setup_doodle=$e5c
+.label game_start=$12b8
+.label get_random=$874
+.label gl_alive=$131d
+.label gl_bad_doodle_hit=$1375
+.label gl_check_input=$133d
+.label gl_doodle_expired=$132f
+.label gl_no_fire=$13ae
+.label gl_no_msg=$1328
+.label gl_pow_no_add=$137f
+.label gl_wrong_button=$1395
+.label gl_wrong_no_sub=$135c
+.label go_ones=$1413
+.label go_pf_done=$1430
+.label go_pf_loop=$1423
+.label go_restart=$1451 {
+.label go_tens=$1409
+.label gr_no_fb=$87f
+.label gs_lives_done=$12d8
+.label gs_try_hard=$12ce
+.label gsd_doodle_loop=$ea1
+.label gsd_draw=$eba
+.label gsd_easy_doodle=$eb0
+.label gsd_pick_slot=$e76
+.label gsd_slot_loop=$e79
+.label hc_inner=$a1f
+.label hgr_clear=$a13
+.label hgr_init=$a06
+.label hgr_row_hi=$946
+.label hgr_row_lo=$886
+.label initial_life_easy=$80e
+.label initial_life_hard=$80d
+.label initial_life=$80c
+.label initialize=$c7e
+.label joy_fired=$815
+.label joy_prev_btn=$816
+.label joy_slot=$814
+.label last_slot=$809
+.label load_doodle_timer=$865
+.label main_loop_start=$1272
+.label main_loop=$1286
+.label message=$808
+.label ml_draw_attract=$1119 {
+.label ml_draw_mode_txt=$1228 {
+.label ml_s_aim1=$f54 {
+.label ml_s_aim2=$f75 {
+.label ml_s_aim3=$f87 {
+.label ml_s_aim4=$fa7 {
+.label ml_s_bad=$fcd {
+.label ml_s_choose=$10ad {
+.label ml_s_choose2=$10c9 {
+.label ml_s_credit=$f32 {
+.label ml_s_deasy=$104a {
+.label ml_s_dhard=$108a {
+.label ml_s_diff=$102d {
+.label ml_s_dnormal=$106d {
+.label ml_s_fire=$10e8 {
+.label ml_s_good=$fea {
+.label ml_s_howto=$f46 {
+.label ml_s_measy=$10fe {
+.label ml_s_mhard=$1110 {
+.label ml_s_mnormal=$1107 {
+.label ml_s_modepfx=$10df {
+.label ml_s_scoring=$fc3 {
+.label ml_s_title=$f1e {
+.label ml_s_wrong=$100f {
+.label ml_select_easy=$12a0
+.label ml_select_normal=$12a8
+.label ml_show_mode=$12ad
+.label mmt_easy=$1252 {
+.label mmt_hard=$1262 {
+.label mmt_normal=$1242 {
+.label msg_gameover=$13b1
+.label msg_getready=$cd6
+.label msg_miss=$ce1
+.label msg_pow=$cec
+.label msg_press_fire=$13bc
+.label msg_wrong=$cf7
+.label pa_done=$f1d
+.label pa_loop=$f14
+.label print_at=$f01
+.label read_joystick=$a8c
+.label restart=$1272
+.label rj_btn_held=$ad0
+.label rj_btn_not_pressed=$ad1
+.label rj_pdl_done=$a99
+.label rj_pdl=$a91
+.label rj_slot_done=$ab3
+.label rnd_hi=$873
+.label rnd_lo=$872
+.label score=$80b
+.label screen_draw=$80f
+.label sds_check_40=$dff
+.label sds_check_80=$dcf
+.label sds_easy=$d7e
+.label sds_f20_ok=$dcc
+.label sds_f30_ok=$dfc
+.label sds_f40_ok=$e2c
+.label sds_hard=$d8f
+.label sds_normal=$d9c
+.label sds_reload=$e58
+.label sds_score_039=$e2f
+.label sds_set_f20=$dc2
+.label sds_set_f30=$df2
+.label sds_set_f40=$e22
+.label sds_set_f50=$e4e
+.label sds_try_hard=$d8b
+.label set_doodle_speed=$d77
+.label set_message=$d02
+.label set_sprite_ptr=$c6f
+.label show_message=$d11
+.label slot_col=$d6d
+.label slot_row=$d72
+.label sm_check_timer=$d57 {
+.label sm_done=$d6c
+.label sm_try2=$d28
+.label sm_try3=$d3a
+.label sm_try4=$d4c
+.label sprite_data=$c2f
+.label start=$800
+.label tick_doodle_timer=$84b
+.label timer_fired=$821
+.label timer_reload=$819
+.label timer_val=$81d
+.label tt_expired=$862
+.label tt_lo_nonzero=$858
+.label txt_row_hi=$ee9
+.label txt_row_lo=$ed1
+.label update_timers=$830
+.label ut_loop=$832
+.label ut_next=$847
+.label wait_vbl=$825
+.label whack_life=$80a
+.label whack_mode=$803
+.label wv_in=$82a
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
