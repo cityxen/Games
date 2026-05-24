@@ -11,6 +11,20 @@
 #import "Constants.asm"
 #import "Macros.asm"
 
+.segment Sprites [allowOverlap]
+*=$3000 "SPRITES"
+#import "sutehk-sprites.asm"
+
+//////////////////////////////////////////////////////////////////////////////////////
+// File stuff
+.file [name="sutehk.prg", segments="Program,Sprites,Levels"]
+.disk [filename="sutehk.d64", name="CITYXEN", id="2026!" ] {
+	[name="sutehk", type="prg",  segments="Program,Sprites,Levels"],
+    [name="--------------------",type="del"],
+}
+
+.segment Program [allowOverlap]
+
 *=$0801
 CityXenUpstart(start)
 
@@ -35,6 +49,10 @@ start:
 #import "vars.asm"
 
 // Game code last — all constants are now resolved
-#import "room-layout.asm"
+
 #import "mainmenu.asm"
 #import "gameon.asm"
+
+.segment Levels [allowOverlap]
+*=$4200 "LEVELS"
+#import "room-layout.asm"

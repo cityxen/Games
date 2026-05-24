@@ -17,16 +17,37 @@ gameon:
 game_loop:
     jsr game_input
     jsr game_move_enemies
+    jsr game_animate_orbs
     jmp game_loop
 
 //////////////////////////////////////////////////////////////////////////////////////
-// game_init_screen: set up screen colors for the game
+// game_init_screen: set up screen colors and sprite 0 (sutehk) for the game
 game_init_screen:
     lda #$93            // clear screen
     jsr KERNAL_CHROUT
     lda #BLACK
     sta BACKGROUND_COLOR
     sta BORDER_COLOR
+    // Enable sprite 0; all sprites multicolor
+    lda #%00000001
+    sta SPRITE_ENABLE           // orb sprites added dynamically by game_draw_orb_sprites
+    lda #%11111111
+    sta SPRITE_MULTICOLOR       // all 8 sprites multicolor
+    lda #sprite_multicolor_1
+    sta SPRITE_MULTICOLOR_0
+    lda #sprite_multicolor_2
+    sta SPRITE_MULTICOLOR_1
+    // Sprite 0 = sutehk (yellow); sprites 1-7 = emerald orbs (green)
+    lda #YELLOW
+    sta SPRITE_0_COLOR
+    lda #GREEN
+    sta SPRITE_1_COLOR
+    sta SPRITE_2_COLOR
+    sta SPRITE_3_COLOR
+    sta SPRITE_4_COLOR
+    sta SPRITE_5_COLOR
+    sta SPRITE_6_COLOR
+    sta SPRITE_7_COLOR
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -35,16 +56,24 @@ game_draw:
     lda #0
     sta gd_row
 gd_row_loop:
-    // Set up screen/color RAM pointers for this row
+    // Set up screen/color RAM pointers for both screen rows of this game row
     ldx gd_row
     lda level_row_lo,x
     sta zp_ptr_screen_lo
     lda level_row_hi,x
     sta zp_ptr_screen_hi
+    lda level_row2_lo,x
+    sta zp_ptr_screen2_lo
+    lda level_row2_hi,x
+    sta zp_ptr_screen2_hi
     lda color_row_lo,x
     sta zp_ptr_color_lo
     lda color_row_hi,x
     sta zp_ptr_color_hi
+    lda color_row2_lo,x
+    sta zp_ptr_color2_lo
+    lda color_row2_hi,x
+    sta zp_ptr_color2_hi
 
     // Compute row_base = row * 20 (for indexing into game_map)
     lda gd_row
@@ -62,6 +91,7 @@ gd_row_loop:
 
     lda #0
     sta gd_col
+    sta gd_screen_col
 gd_col_loop:
     // Compute map index = row_base + col
     lda gd_row_base
@@ -72,43 +102,106 @@ gd_col_loop:
     lda game_map,x
     tax                 // X = OBJ_* type
 
-    ldy gd_col
-    lda type_to_tile,x
+    ldy gd_screen_col   // Y = tile_col * 2 (left char column)
+    lda type_to_tile_tl,x
     sta (zp_ptr_screen),y
+    lda type_to_tile_bl,x
+    sta (zp_ptr_screen2),y
     lda type_to_color,x
     sta (zp_ptr_color),y
+    sta (zp_ptr_color2),y
+    iny                 // Y = tile_col * 2 + 1 (right char column)
+    lda type_to_tile_tr,x
+    sta (zp_ptr_screen),y
+    lda type_to_tile_br,x
+    sta (zp_ptr_screen2),y
+    lda type_to_color,x
+    sta (zp_ptr_color),y
+    sta (zp_ptr_color2),y
 
     inc gd_col
+    inc gd_screen_col
+    inc gd_screen_col   // +2 per tile (2 chars wide)
     lda gd_col
     cmp #LEVEL_W
-    bne gd_col_loop
+    beq gd_col_done
+    jmp gd_col_loop
+gd_col_done:
 
     inc gd_row
     lda gd_row
     cmp #LEVEL_H
-    bne gd_row_loop
+    beq gd_row_done
+    jmp gd_row_loop
+gd_row_done:
 
     jsr game_draw_player
     jsr game_draw_hud
+    jsr game_draw_orb_sprites
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
-// game_draw_player: draw @ at player_x, player_y
+// game_draw_player: position sprite 0 (sutehk) at player_x, player_y
+// Direction frame is chosen from last move_dx/move_dy.
+// Char tiles beneath the player are left as floor (sprite overlays them).
 game_draw_player:
-    ldy player_y
-    lda level_row_lo,y
-    sta zp_ptr_screen_lo
-    lda level_row_hi,y
-    sta zp_ptr_screen_hi
-    lda color_row_lo,y
-    sta zp_ptr_color_lo
-    lda color_row_hi,y
-    sta zp_ptr_color_hi
-    ldy player_x
-    lda #TILE_PLAYER
-    sta (zp_ptr_screen),y
-    lda #YELLOW
-    sta (zp_ptr_color),y
+    // Select directional sprite pointer
+    lda move_dy
+    bmi gdp_up
+    cmp #1
+    beq gdp_down
+    lda move_dx
+    bmi gdp_left
+    cmp #1
+    beq gdp_right
+    lda #sprite_pointer_sutehk_down     // default: face down
+    jmp gdp_set_ptr
+gdp_up:
+    lda #sprite_pointer_sutehk_up
+    jmp gdp_set_ptr
+gdp_down:
+    lda #sprite_pointer_sutehk_down
+    jmp gdp_set_ptr
+gdp_left:
+    lda #sprite_pointer_sutehk_left
+    jmp gdp_set_ptr
+gdp_right:
+    lda #sprite_pointer_sutehk_right
+gdp_set_ptr:
+    sta SPRITE_0_POINTER
+
+    // Sprite X = player_x * 16 + 24
+    // Tiles 0-14 fit in 8 bits (X <= 248); tiles 15-19 need MSB bit set
+    lda player_x
+    cmp #15
+    bcc gdp_msb_clear
+    lda SPRITE_MSB_X
+    ora #%00000001
+    sta SPRITE_MSB_X
+    jmp gdp_x_set
+gdp_msb_clear:
+    lda SPRITE_MSB_X
+    and #%11111110
+    sta SPRITE_MSB_X
+gdp_x_set:
+    lda player_x
+    asl
+    asl
+    asl
+    asl             // * 16
+    clc
+    adc #24
+    sta SPRITE_0_X
+
+    // Sprite Y = player_y * 16 + 90  (max py=9: 9*16+90=234, always fits in byte)
+    lda player_y
+    asl
+    asl
+    asl
+    asl             // * 16
+    clc
+    adc #90
+    sta SPRITE_0_Y
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +214,7 @@ game_erase_player:
     jmp draw_map_cell   // tail call
 
 //////////////////////////////////////////////////////////////////////////////////////
-// draw_map_cell: draw game_map tile at (tmp_x, tmp_y) to screen+color RAM
+// draw_map_cell: draw 2x2 game_map tile at (tmp_x, tmp_y) to screen+color RAM
 draw_map_cell:
     jsr map_get_type    // A = OBJ_* type at (tmp_x, tmp_y)
     tax                 // X = type
@@ -131,20 +224,42 @@ draw_map_cell:
     sta zp_ptr_screen_lo
     lda level_row_hi,y
     sta zp_ptr_screen_hi
+    lda level_row2_lo,y
+    sta zp_ptr_screen2_lo
+    lda level_row2_hi,y
+    sta zp_ptr_screen2_hi
     lda color_row_lo,y
     sta zp_ptr_color_lo
     lda color_row_hi,y
     sta zp_ptr_color_hi
+    lda color_row2_lo,y
+    sta zp_ptr_color2_lo
+    lda color_row2_hi,y
+    sta zp_ptr_color2_hi
 
-    ldy tmp_x
-    lda type_to_tile,x
+    // Screen col = tmp_x * 2
+    lda tmp_x
+    asl
+    tay
+    lda type_to_tile_tl,x
     sta (zp_ptr_screen),y
+    lda type_to_tile_bl,x
+    sta (zp_ptr_screen2),y
     lda type_to_color,x
     sta (zp_ptr_color),y
+    sta (zp_ptr_color2),y
+    iny
+    lda type_to_tile_tr,x
+    sta (zp_ptr_screen),y
+    lda type_to_tile_br,x
+    sta (zp_ptr_screen2),y
+    lda type_to_color,x
+    sta (zp_ptr_color),y
+    sta (zp_ptr_color2),y
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
-// game_draw_hud: draw title banner and RITES count
+// game_draw_hud: draw title banner, level number, RITES count, restart hint
 game_draw_hud:
     // Title at row 1, col 6
     ldx #1
@@ -152,6 +267,31 @@ game_draw_hud:
     clc
     jsr KERNAL_PLOT
     Print(str_title)
+
+    // Level label at row 3, col 1
+    ldx #3
+    ldy #1
+    clc
+    jsr KERNAL_PLOT
+    Print(str_level_lbl)
+    // Level number 1-indexed; levels 10-15 (current_level 9-14) print two digits
+    lda current_level
+    cmp #9
+    bcc gdh_lv_single       // current_level < 9: single digit
+    lda #'1'
+    jsr KERNAL_CHROUT
+    lda current_level
+    sec
+    sbc #9                  // A = current_level - 9 (0 for lvl10 ... 5 for lvl15)
+    clc
+    adc #'0'                // -> '0'..'5'
+    jsr KERNAL_CHROUT
+    jmp gdh_lv_done
+gdh_lv_single:
+    clc
+    adc #'1'                // current_level 0-8 -> '1'-'9'
+    jsr KERNAL_CHROUT
+gdh_lv_done:
 
     // RITES label at row 3, col 14
     ldx #3
@@ -173,6 +313,13 @@ game_draw_hud:
     clc
     adc #'0'
     jsr KERNAL_CHROUT
+
+    // Restart/quit hint at row 3, col 28
+    ldx #3
+    ldy #28
+    clc
+    jsr KERNAL_PLOT
+    Print(str_restart_lbl)
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -298,16 +445,36 @@ gi_check_keys:
     jmp gi_do_move
 !:
     cmp #KEY_D
-    bne gi_done
+    bne gi_check_restart
     lda #1
     sta move_dx
     lda #0
     sta move_dy
+    jmp gi_do_move
+
+gi_check_restart:
+    cmp #KEY_R
+    bne gi_check_quit
+    jsr game_restart_level
+    jmp gi_done
+
+gi_check_quit:
+    cmp #KEY_Q
+    bne gi_done
+    jmp mainmenu
 
 gi_do_move:
     jsr game_try_move
 
 gi_done:
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// game_restart_level: reload current level and redraw from scratch
+game_restart_level:
+    jsr game_init_screen
+    jsr init_level
+    jsr game_draw
     rts
 
 gi_joy: .byte 0
@@ -364,6 +531,7 @@ gtm_move:
     lda gtm_new_y
     sta player_y
     jsr game_draw_player
+    jsr game_draw_orb_sprites
     jsr game_check_win
 
 gtm_fail:
@@ -613,4 +781,171 @@ game_move_enemies:
     beq gme_done
     // TODO: enemy movement (Lesser Servants) - levels with enemies coming soon
 gme_done:
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// game_animate_orbs: flip animation frame on the enemy-move timer tick
+game_animate_orbs:
+    GetTimerTr(TIMER_ENEMY_MOVE)
+    bne gao_tick
+    rts
+gao_tick:
+    FullReset(TIMER_ENEMY_MOVE)
+    lda orb_anim_frame
+    eor #1
+    sta orb_anim_frame
+    jmp game_draw_orb_sprites
+
+//////////////////////////////////////////////////////////////////////////////////////
+// game_draw_orb_sprites: scan map for OBJ_ORB/OBJ_RELIC, place as sprites 1-7
+// Uses current orb_anim_frame (emerald frame1 or frame2). Does NOT toggle it.
+game_draw_orb_sprites:
+    // Choose emerald sprite pointer from current animation frame
+    lda orb_anim_frame
+    bne gdos_frame2
+    lda #sprite_pointer_emerald_frame1
+    jmp gdos_ptr_set
+gdos_frame2:
+    lda #sprite_pointer_emerald_frame2
+gdos_ptr_set:
+    sta gdos_cur_ptr
+
+    // Init: sprite 0 = player (always on); sprites 1+ assigned to orbs found
+    lda #1
+    sta gdos_sprite_num
+    lda #%00000001              // start with only sprite 0 enabled
+    sta gdos_enable_mask
+    lda SPRITE_MSB_X
+    and #%00000001              // preserve player sprite 0 X-MSB
+    sta gdos_msb_mask
+
+    lda #0
+    sta gdos_row
+gdos_outer:
+    lda gdos_row
+    asl
+    asl
+    sta gdos_tmp
+    lda gdos_row
+    asl
+    asl
+    asl
+    asl
+    clc
+    adc gdos_tmp
+    sta gdos_row_base
+
+    lda #0
+    sta gdos_col
+gdos_inner:
+    lda gdos_row_base
+    clc
+    adc gdos_col
+    tax
+    lda game_map,x
+    cmp #OBJ_ORB
+    beq gdos_is_orb
+    cmp #OBJ_RELIC
+    beq gdos_is_orb
+    cmp #OBJ_STATUE
+    beq gdos_is_statue
+    cmp #OBJ_PYRAMID
+    beq gdos_is_pyramid
+    jmp gdos_next_col
+
+gdos_is_orb:
+    lda gdos_cur_ptr
+    sta gdos_place_ptr
+    lda #GREEN
+    sta gdos_place_color
+    jmp gdos_check_slot
+
+gdos_is_statue:
+    lda #sprite_pointer_statue
+    sta gdos_place_ptr
+    lda #WHITE
+    sta gdos_place_color
+    jmp gdos_check_slot
+
+gdos_is_pyramid:
+    lda #sprite_pointer_pyramid
+    sta gdos_place_ptr
+    lda #YELLOW
+    sta gdos_place_color
+
+gdos_check_slot:
+    lda gdos_sprite_num
+    cmp #8
+    bne gdos_place
+    jmp gdos_apply              // all 7 sprite slots used
+
+gdos_place:
+    asl                         // A = sprite_num * 2
+    sta gdos_sprite_reg_off
+
+    // Set sprite pointer and color
+    ldx gdos_sprite_num
+    lda gdos_place_ptr
+    sta SPRITE_POINTERS,x
+    lda gdos_place_color
+    sta SPRITE_COLORS,x
+
+    // Sprite Y = row * 16 + 90
+    lda gdos_row
+    asl
+    asl
+    asl
+    asl
+    clc
+    adc #90
+    ldx gdos_sprite_reg_off
+    sta SPRITE_LOCATIONS+1,x
+
+    // Sprite X MSB: col >= 15 needs bit set in SPRITE_MSB_X
+    lda gdos_col
+    cmp #15
+    bcc gdos_x_lo
+    ldy gdos_sprite_num
+    lda sprite_bit_tbl,y
+    ora gdos_msb_mask
+    sta gdos_msb_mask
+
+gdos_x_lo:
+    // Sprite X lo = col * 16 + 24
+    lda gdos_col
+    asl
+    asl
+    asl
+    asl
+    clc
+    adc #24
+    ldx gdos_sprite_reg_off
+    sta SPRITE_LOCATIONS,x
+
+    // Accumulate enable bit for this sprite
+    ldy gdos_sprite_num
+    lda sprite_bit_tbl,y
+    ora gdos_enable_mask
+    sta gdos_enable_mask
+
+    inc gdos_sprite_num
+
+gdos_next_col:
+    inc gdos_col
+    lda gdos_col
+    cmp #LEVEL_W
+    beq gdos_end_col
+    jmp gdos_inner
+gdos_end_col:
+    inc gdos_row
+    lda gdos_row
+    cmp #LEVEL_H
+    beq gdos_apply
+    jmp gdos_outer
+
+gdos_apply:
+    lda gdos_enable_mask
+    sta SPRITE_ENABLE
+    lda gdos_msb_mask
+    sta SPRITE_MSB_X
     rts

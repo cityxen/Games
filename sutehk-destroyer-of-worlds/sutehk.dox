@@ -3,7 +3,7 @@ THE ONLY RULE (REPEAT THIS TO YOURSELF)
 
 Only identical objects interacting causes effects.
 
-The player never “uses” things.
+The player never "uses" things.
 The player arranges inevitabilities.
 
 BASE OBJECT SET (FINAL)
@@ -21,13 +21,13 @@ MATCH +1
 
 2. STATUE
 
-Immovable
+Pushable
 
-Blocks movement
+Slides until blocked
 
 When STATUE touches STATUE
 
-One disappears
+Both disappear
 
 MATCH +1
 
@@ -72,13 +72,13 @@ When RELIC touches RELIC
 
 NOTHING happens
 
-When RELIC touches ORB
+When RELIC touches ORB (either direction)
 
 MATCH +1
 
 RELIC disappears
 
-ORB stays
+ORB survives
 
 This teaches:
 
@@ -104,16 +104,16 @@ STATE	MEANING
 
 Trigger
 
-ORB + ORB - both STATE=1, MATCH+1
+ORB + ORB → both STATE=1, MATCH+1
 
 STATUE
 STATE	MEANING
-0	Solid
+0	Present
 1	Removed
 
 Trigger
 
-STATUE + STATUE → one STATE=1, MATCH+1
+STATUE + STATUE → both STATE=1, MATCH+1
 
 GATE
 STATE	MEANING
@@ -126,11 +126,12 @@ GATE + GATE → both STATE=1
 
 ENEMY
 STATE	MEANING
-0	Moving
+0	Moving forward
+1	Moving reverse
 
 Trigger
 
-ENEMY + ENEMY → reverse direction
+ENEMY + ENEMY → both flip STATE
 
 RELIC
 STATE	MEANING
@@ -139,7 +140,8 @@ STATE	MEANING
 
 Trigger
 
-RELIC + ORB → RELIC removed, MATCH+1
+RELIC + ORB (either direction) → RELIC STATE=1, MATCH+1
+RELIC + RELIC → no change
 
 SAMPLE LEVELS (3 REAL ONES)
 LEVEL 1 — TEACH MATCHING
@@ -157,18 +159,19 @@ Push ORBs together. Done.
 LEVEL 2 — SPACE VS SCORE
 ##########
 # S  S G #
-#   O    #
+#  O   O #
 #   @    #
 ##########
 
 
 Goal: MATCH 2 / 2
 
-Match STATUES to clear path
+Match STATUES for one Rite
 
-Match ORBS for score
+Match ORBS for another
 
-Gate only opens if you bring in a second GATE (from enemy push next level)
+Gate is there — but you have no second gate, so it stays shut.
+Not every object can be resolved. Learn what you can and can't do.
 
 LEVEL 3 — THE LIAR
 ##########
@@ -200,7 +203,7 @@ HUD becomes:
 RITES: 0 / N
 
 
-That’s it. Zero mechanical change.
+That's it. Zero mechanical change.
 
 PETSCII CHAR MAP
 Object	Char
