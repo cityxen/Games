@@ -9,44 +9,14 @@ init_sprites:
 // Initialize Sprites (MAIN SCREEN TURN ON)
 init_sprites_ms:
 
+	lda #%11101100
+	sta SPRITE_ENABLE
 
 	lda #sprite_multi_color_1
 	sta SPRITE_MULTICOLOR_0
 	lda #sprite_multi_color_2
 	sta SPRITE_MULTICOLOR_1
-	/*
-
-	lda #%00010010
-	ora SPRITE_ENABLE
-	sta SPRITE_ENABLE
-	sta SPRITE_PRIORITY
-
-	lda #%00010010
-	sta SPRITE_EXPAND_X
-	sta SPRITE_EXPAND_Y	
-	sta SPRITE_MULTICOLOR
-	lda #$00
-	sta SPRITE_PRIORITY
-
-	lda #main_sprite_1_x
-	sta SPRITE_1_X
-	lda #main_sprite_1_y
-	sta SPRITE_1_Y
-
-	lda #main_sprite_4_x
-	sta SPRITE_4_X
-	lda #main_sprite_4_y
-	sta SPRITE_4_Y
 	
-	lda #%00010000
-	sta SPRITE_MSB_X
-	ldx player_1_avatar
-	lda cxn_avatar_sprite_pointer_i,x
-	sta SPRITE_1_POINTER
-	lda cxn_avatar_sprite_color_i,x
-	sta SPRITE_1_COLOR
-	*/
-
 	ldx player_1_avatar
 	lda cxn_avatar_sprite_color_i,x
 	ldx #$06
@@ -65,16 +35,13 @@ init_sprites_ms:
 	lda cxn_avatar_sprite_pointer_i,x
 	ReverseSpriteMultiColorA(sp_ptr_p2_head)
 
-	//lda #sp_ptr_a
-	//sta SPRITE_4_POINTER
-	//*/
 	rts
 
 
 //////////////////////////////////////////////////////////////
 // Initialize Sprites (IT INSTRUCT YOU)
 init_sprites_iiy:
-	// lda #$00	sta SPRITE_ENABLE
+	
 	rts
 
 //////////////////////////////////////////////////////////////
@@ -83,7 +50,7 @@ init_sprites_game_init:
 init_sprites_select_char:
 
 	lda #%00111111
-	ora SPRITE_ENABLE
+	//ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	lda #$00
 	sta SPRITE_EXPAND_X
@@ -109,12 +76,10 @@ init_sprites_play:
 	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
 	sta SPRITE_PRIORITY
-
-	sta SPRITE_EXPAND_X
-	sta SPRITE_EXPAND_Y	
 	sta SPRITE_MULTICOLOR
 	lda #$00
-	sta SPRITE_PRIORITY
+	sta SPRITE_EXPAND_X
+	sta SPRITE_EXPAND_Y	
 
 	lda #trivia_sprite_1_x
 	sta SPRITE_1_X

@@ -42,9 +42,7 @@ GAME_NAME: .encoding "petscii_mixed"
 .byte 0
 offline_trivia_file:    .byte 0  // load from disk (from random)
 offline_trivia_q:       .byte 0  // there will be 2 questions in the block this will determine which (from 2nd random)
-ml_total_trivia:        .byte 0,0
-ml_total_trivia_text: .text "triva count:"
-.byte 0
+
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
 
@@ -427,6 +425,7 @@ yin_state:
 SpriteObjState()
 
 yin_move_table:
+/*
 SpriteObjMoveEntry(4, 0)    // move right 4px per tick
 SpriteObjMoveEntry(4, 0)
 SpriteObjMoveEntry(4, -2)   // curve up
@@ -443,6 +442,7 @@ SpriteObjMoveEntry(4, 0)    // move right 4px per tick
 SpriteObjMoveEntry(4, 0)
 SpriteObjMoveEntry(4, 2)   // curve up
 SpriteObjMoveEntry(4, 2)
+*/
 SpriteObjMoveStop()         // freeze at end
 
 yin_sfx_table:

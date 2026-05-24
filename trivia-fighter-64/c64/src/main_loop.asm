@@ -30,6 +30,15 @@ restart:
 	sta screen_draw
 	PrintChr($93)
 	jsr ml_screens
+
+    ApplySpriteObj(yin_obj, yin_state)
+    ApplySpriteObj(player_1_obj, player_1_state)
+    ApplySpriteObj(player_2_obj, player_2_state)
+	
+	EnableSpriteObj(yin_obj)
+	EnableSpriteObj(player_1_obj)
+	EnableSpriteObj(player_2_obj)
+
 	// fall through to main_loop
 //////////////////////////////////////////////////////////////
 // Main loop
@@ -69,14 +78,7 @@ main_loop:
 	lda play_music
 	jsr print_yesno
 !:
-	cmp #KEY_D
-	bne !+
-	DisableSpriteObj(yin_obj)
-!:
-	cmp #KEY_E
-	bne !+
-	EnableSpriteObj(yin_obj)
-!:
+	
 	cmp #KEY_T
 	bne !+
 	lda #$00

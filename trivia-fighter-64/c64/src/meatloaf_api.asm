@@ -103,6 +103,14 @@ MLHL_LOAD_MSG:
 .encoding "petscii_mixed"
 .text "loading"
 .byte 0
+
+ml_total_trivia_text:
+.text "triva count:"
+.byte 0
+
+ml_total_trivia:
+.byte 0,0
+
 ///////////////////////////////////////
 // DATA TABLE
 MLHL_DATA_TABLE:
