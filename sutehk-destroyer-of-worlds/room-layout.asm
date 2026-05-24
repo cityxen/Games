@@ -15,6 +15,7 @@
 // Level tile key:
 //   1 = OBJ_WALL    2 = OBJ_FLOOR   3 = OBJ_ORB
 //   4 = OBJ_STATUE  5 = OBJ_GATE    6 = OBJ_ENEMY   7 = OBJ_RELIC   8 = OBJ_PYRAMID
+//   9 = OBJ_LEVER_UP
 
 //////////////////////////////////////////////////////////////////////////////////////
 // LEVEL 1 - Teach Matching
@@ -89,10 +90,10 @@ level4_data:
 // col: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
 .byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 0
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 1
-.byte    1, 2, 7, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 1  // row 2: relic x=2, orb x=17
+.byte    1, 2, 7, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 3, 2, 1  // row 2: relic x=2, wall x=10, orb x=17
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 4
-.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 5 player@(10,5)
+.byte    1, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 5: lever x=5, player@(10,5)
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 6
 .byte    1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 2, 1  // row 7: orb x=2, relic x=17
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 8
@@ -153,11 +154,11 @@ level7_data:
 .byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 0
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 1 player@(10,1)
 .byte    1, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 2: orbs x=3, x=16
-.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3: lever x=10
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 4
 .byte    1, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 1  // row 5: statues x=3, x=16
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 6
-.byte    1, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 7: relic x=3, orb x=16
+.byte    1, 2, 2, 7, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 7: relic x=3, wall x=9, orb x=16
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 8
 .byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 9
 level7_px:    .byte 10
@@ -195,9 +196,9 @@ level9_data:
 .byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 0
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 1
 .byte    1, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 1  // row 2: statues x=3, x=16
-.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3
+.byte    1, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3: lever x=5
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 4 player@(10,4)
-.byte    1, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 5: relic x=3, orb x=16
+.byte    1, 2, 2, 7, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 5: relic x=3, wall x=10, orb x=16
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 6
 .byte    1, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 1  // row 7: relic x=3, orb x=16
 .byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 8
@@ -332,17 +333,43 @@ level15_goal:  .byte 4
 level15_enemies: .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
+// LEVEL 16 - The Seal
+// Goal: 1 Rite. Introduce the lever. A wall at (10,5) blocks the two Pyramids from
+// matching. Step on the Lever at (10,7) to open the gap, then push them together.
+level16_data:
+// col: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
+.byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 0
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 1
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 2
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 3 player@(4,3)
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 4
+.byte    1, 2, 8, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 8, 2, 1  // row 5: pyramid x=2, wall x=10, pyramid x=17
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 6
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 7: lever x=10
+.byte    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1  // row 8
+.byte    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  // row 9
+level16_px:    .byte 4
+level16_py:    .byte 3
+level16_goal:  .byte 1
+level16_enemies: .byte 0
+
+//////////////////////////////////////////////////////////////////////////////////////
 // Level pointer tables (indexed by current_level)
 level_data_lo:   .byte <level1_data,  <level2_data,  <level3_data,  <level4_data,  <level5_data
                  .byte <level6_data,  <level7_data,  <level8_data,  <level9_data,  <level10_data
                  .byte <level11_data, <level12_data, <level13_data, <level14_data, <level15_data
+                 .byte <level16_data
 level_data_hi:   .byte >level1_data,  >level2_data,  >level3_data,  >level4_data,  >level5_data
                  .byte >level6_data,  >level7_data,  >level8_data,  >level9_data,  >level10_data
                  .byte >level11_data, >level12_data, >level13_data, >level14_data, >level15_data
-level_px_tbl:    .byte 10, 10, 10, 10, 10,  3, 10, 10, 10, 10, 10, 10, 10,  3, 10
-level_py_tbl:    .byte  4,  5,  4,  5,  5,  5,  1,  8,  4,  3,  5,  5,  4,  5,  4
-level_goal_tbl:  .byte  1,  2,  1,  2,  3,  3,  3,  3,  4,  5,  1,  2,  3,  3,  4
-level_enemy_tbl: .byte  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+                 .byte >level16_data
+level_px_tbl:    .byte 10, 10, 10, 10, 10,  3, 10, 10, 10, 10, 10, 10, 10,  3, 10,  4
+level_py_tbl:    .byte  4,  5,  4,  5,  5,  5,  1,  8,  4,  3,  5,  5,  4,  5,  4,  3
+level_goal_tbl:  .byte  1,  2,  1,  2,  3,  3,  3,  3,  4,  5,  1,  2,  3,  3,  4,  1
+level_enemy_tbl: .byte  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+// Lever target cell per level (0,0 = no lever; cell (0,0) is always a border wall)
+level_lever_tx_tbl: .byte  0,  0,  0, 10,  0,  0,  9,  0, 10,  0,  0,  0,  0,  0,  0, 10
+level_lever_ty_tbl: .byte  0,  0,  0,  2,  0,  0,  7,  0,  5,  0,  0,  0,  0,  0,  0,  5
 
 //////////////////////////////////////////////////////////////////////////////////////
 // init_level: loads current_level data into game_map and resets player/match state
@@ -367,6 +394,12 @@ init_level:
     // Load enemy count
     lda level_enemy_tbl,x
     sta enemy_count
+
+    // Load lever target cell
+    lda level_lever_tx_tbl,x
+    sta lever_target_x
+    lda level_lever_ty_tbl,x
+    sta lever_target_y
 
     // Set source pointer to level data
     lda level_data_lo,x

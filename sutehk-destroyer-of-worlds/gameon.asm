@@ -508,7 +508,13 @@ game_try_move:
     cmp #OBJ_NONE
     beq gtm_move
 
-    // Pushable: ORB, STATUE, RELIC - try to slide it
+    // Lever: player steps on it to toggle and move there
+    cmp #OBJ_LEVER_UP
+    beq gtm_lever
+    cmp #OBJ_LEVER_DOWN
+    beq gtm_lever
+
+    // Pushable: ORB, STATUE, RELIC, PYRAMID - try to slide it
     jsr game_push_sliding
     bcc gtm_fail        // carry clear = blocked, can't push
 
@@ -539,6 +545,52 @@ gtm_fail:
 
 gtm_new_x: .byte 0
 gtm_new_y: .byte 0
+gtm_lev_x: .byte 0
+gtm_lev_y: .byte 0
+
+//////////////////////////////////////////////////////////////////////////////////////
+// gtm_lever: player steps on lever — toggle lever state and its target cell
+// tmp_x/y = lever tile position (where player will move)
+gtm_lever:
+    lda tmp_x
+    sta gtm_lev_x
+    lda tmp_y
+    sta gtm_lev_y
+    jsr map_get_type          // A = current lever type (LEVER_UP or LEVER_DOWN)
+    cmp #OBJ_LEVER_UP
+    beq gtm_lev_activate
+
+    // LEVER_DOWN → LEVER_UP: close (target becomes wall)
+    lda #OBJ_LEVER_UP
+    sta map_val
+    jsr map_set_type
+    jsr draw_map_cell
+    lda #OBJ_WALL
+    sta map_val
+    jmp gtm_lev_target
+
+gtm_lev_activate:
+    // LEVER_UP → LEVER_DOWN: open (target becomes floor)
+    lda #OBJ_LEVER_DOWN
+    sta map_val
+    jsr map_set_type
+    jsr draw_map_cell
+    lda #OBJ_FLOOR
+    sta map_val
+
+gtm_lev_target:
+    lda lever_target_x
+    sta tmp_x
+    lda lever_target_y
+    sta tmp_y
+    jsr map_set_type
+    jsr draw_map_cell
+
+    lda gtm_lev_x
+    sta tmp_x
+    lda gtm_lev_y
+    sta tmp_y
+    jmp gtm_move
 
 //////////////////////////////////////////////////////////////////////////////////////
 // game_push_sliding: slide the object at (tmp_x,tmp_y) in (move_dx,move_dy)
@@ -851,6 +903,10 @@ gdos_inner:
     beq gdos_is_statue
     cmp #OBJ_PYRAMID
     beq gdos_is_pyramid
+    cmp #OBJ_LEVER_UP
+    beq gdos_is_lever_up
+    cmp #OBJ_LEVER_DOWN
+    beq gdos_is_lever_down
     jmp gdos_next_col
 
 gdos_is_orb:
@@ -871,6 +927,20 @@ gdos_is_pyramid:
     lda #sprite_pointer_pyramid
     sta gdos_place_ptr
     lda #YELLOW
+    sta gdos_place_color
+    jmp gdos_check_slot
+
+gdos_is_lever_up:
+    lda #sprite_pointer_lever_up
+    sta gdos_place_ptr
+    lda #ORANGE
+    sta gdos_place_color
+    jmp gdos_check_slot
+
+gdos_is_lever_down:
+    lda #sprite_pointer_lever_down
+    sta gdos_place_ptr
+    lda #ORANGE
     sta gdos_place_color
 
 gdos_check_slot:

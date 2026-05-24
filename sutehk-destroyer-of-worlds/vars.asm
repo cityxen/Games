@@ -24,7 +24,9 @@
 .const OBJ_GATE   = 5   // Seal of Binding - solid; GATE+GATE = open
 .const OBJ_ENEMY  = 6   // Lesser Servant - moves in loop
 .const OBJ_RELIC   = 7   // False Relic - looks like ORB; RELIC+ORB = match
-.const OBJ_PYRAMID = 8   // Eternal Monument - slides; PYRAMID+PYRAMID = match
+.const OBJ_PYRAMID  = 8   // Eternal Monument - slides; PYRAMID+PYRAMID = match
+.const OBJ_LEVER_UP = 9   // Switch - player activates to open target cell
+.const OBJ_LEVER_DOWN = 10 // Switch in activated state
 
 //////////////////////////////////////////////////////////////////////////////////////
 // 2x2 tile screen codes (TL=top-left  TR=top-right  BL=bottom-left  BR=bottom-right)
@@ -74,7 +76,7 @@
 .const LEVEL_H        = 10      // Level height in tiles
 .const LEVEL_SCREEN_X = 0       // 20 tiles * 2 chars wide = 40 fills the screen
 .const LEVEL_SCREEN_Y = 5       // Screen row offset (leaves rows 0-4 for title/HUD)
-.const LEVEL_COUNT    = 15      // Number of levels
+.const LEVEL_COUNT    = 16      // Number of levels
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Timer indices (beyond the standard ones in timers.il.asm)
@@ -160,7 +162,7 @@ color_row2_hi:
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-// 2x2 tile lookup tables indexed by OBJ_* type (0-8)
+// 2x2 tile lookup tables indexed by OBJ_* type (0-10)
 type_to_tile_tl:
 .byte TILE_FLOOR_TL     // 0: OBJ_NONE
 .byte TILE_WALL_TL      // 1: OBJ_WALL
@@ -171,6 +173,8 @@ type_to_tile_tl:
 .byte TILE_ENEMY_TL     // 6: OBJ_ENEMY
 .byte TILE_FLOOR_TL     // 7: OBJ_RELIC   (sprite overlay)
 .byte TILE_FLOOR_TL     // 8: OBJ_PYRAMID (sprite overlay)
+.byte TILE_FLOOR_TL     // 9: OBJ_LEVER_UP   (sprite overlay)
+.byte TILE_FLOOR_TL     // 10: OBJ_LEVER_DOWN (sprite overlay)
 
 type_to_tile_tr:
 .byte TILE_FLOOR_TR
@@ -182,6 +186,8 @@ type_to_tile_tr:
 .byte TILE_ENEMY_TR
 .byte TILE_FLOOR_TR     // 7: OBJ_RELIC   (sprite overlay)
 .byte TILE_FLOOR_TR     // 8: OBJ_PYRAMID (sprite overlay)
+.byte TILE_FLOOR_TR     // 9: OBJ_LEVER_UP   (sprite overlay)
+.byte TILE_FLOOR_TR     // 10: OBJ_LEVER_DOWN (sprite overlay)
 
 type_to_tile_bl:
 .byte TILE_FLOOR_BL
@@ -193,6 +199,8 @@ type_to_tile_bl:
 .byte TILE_ENEMY_BL
 .byte TILE_FLOOR_BL     // 7: OBJ_RELIC   (sprite overlay)
 .byte TILE_FLOOR_BL     // 8: OBJ_PYRAMID (sprite overlay)
+.byte TILE_FLOOR_BL     // 9: OBJ_LEVER_UP   (sprite overlay)
+.byte TILE_FLOOR_BL     // 10: OBJ_LEVER_DOWN (sprite overlay)
 
 type_to_tile_br:
 .byte TILE_FLOOR_BR
@@ -204,6 +212,8 @@ type_to_tile_br:
 .byte TILE_ENEMY_BR
 .byte TILE_FLOOR_BR     // 7: OBJ_RELIC   (sprite overlay)
 .byte TILE_FLOOR_BR     // 8: OBJ_PYRAMID (sprite overlay)
+.byte TILE_FLOOR_BR     // 9: OBJ_LEVER_UP   (sprite overlay)
+.byte TILE_FLOOR_BR     // 10: OBJ_LEVER_DOWN (sprite overlay)
 
 type_to_color:
 .byte BLACK             // 0: OBJ_NONE
@@ -215,6 +225,13 @@ type_to_color:
 .byte RED               // 6: OBJ_ENEMY
 .byte BLACK             // 7: OBJ_RELIC   (sprite; char color irrelevant)
 .byte BLACK             // 8: OBJ_PYRAMID (sprite; char color irrelevant)
+.byte BLACK             // 9: OBJ_LEVER_UP   (sprite; char color irrelevant)
+.byte BLACK             // 10: OBJ_LEVER_DOWN (sprite; char color irrelevant)
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Lever target cell (loaded per-level from room-layout tables)
+lever_target_x:     .byte 0
+lever_target_y:     .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Push subroutine locals
