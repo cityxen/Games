@@ -1,6 +1,6 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1779634776
-::res://images/::1778519371
+::res://::1779742510
+::res://images/::1779634777
 067de4bf-25f6-4873-acc5-562973c195dd.png::CompressedTexture2D::970445797591836431::1752250863::1779634777::1::::<><><>0<>0<>3b7a8c5618d2ab0ec8266732486d2cdb<>res://.godot/imported/067de4bf-25f6-4873-acc5-562973c195dd.png-1fc34ea00d6c9ae527014a5b0a890b85.ctex::
 button-blue.png::CompressedTexture2D::3166476655909105232::1752215020::1779634777::1::::<><><>0<>0<>9183262701c99d583d57db5cb33d8fad<>res://.godot/imported/button-blue.png-ed87e11576d53a21ff1cbd13966b90b2.ctex::
 button-green.png::CompressedTexture2D::4457949090669349364::1752215054::1779634777::1::::<><><>0<>0<>248342aa8992bb001a7c7923a551580d<>res://.godot/imported/button-green.png-f2db84cea9fae17c69ea009bd9327041.ctex::
@@ -17,7 +17,7 @@ doodle-star.png::CompressedTexture2D::5815425792534727726::1752216000::177963477
 doodle-tao.png::CompressedTexture2D::3880433419450331446::1752216509::1779634777::1::::<><><>0<>0<>0be99c41981c4ebfe6abc4db18808cab<>res://.godot/imported/doodle-tao.png-65b3345032b265653e4eed66d6f300c4.ctex::
 eb3b4ef9-d5b9-46da-9bb5-413d02dbcd34.png::CompressedTexture2D::2969398059955933873::1752250642::1779634777::1::::<><><>0<>0<>fae17d5dd0a8e2770f3b5559f1c3072e<>res://.godot/imported/eb3b4ef9-d5b9-46da-9bb5-413d02dbcd34.png-e81cae77d00c1a0c29fd47a7b9446d2f.ctex::
 whackadoodle!.png::CompressedTexture2D::7088193046560415959::1752214746::1779634777::1::::<><><>0<>0<>0d05bf2af3b16bc39b469450e8bf2a22<>res://.godot/imported/whackadoodle!.png-4f386c584a9fd756ffee5767548269e5.ctex::
-::res://images/8bit/::1778519371
+::res://images/8bit/::1779634777
 button-blue-8bit.png::CompressedTexture2D::5157997095903507159::1752212884::1779634777::1::::<><><>0<>0<>d61bfd7ee4e8f79b8f8c208dff6255ff<>res://.godot/imported/button-blue-8bit.png-506b9431f2a274d3b3bf9aa3d2386785.ctex::
 button-green-8bit.png::CompressedTexture2D::4215454974866257487::1752212888::1779634777::1::::<><><>0<>0<>14d8646405dc00981d5bdc89e719df64<>res://.godot/imported/button-green-8bit.png-a4ec3dc21012a3c52dfcf385dc93a57a.ctex::
 button-red-8bit.png::CompressedTexture2D::3143658589445576912::1752212897::1779634777::1::::<><><>0<>0<>0b5bcf4a2c5c70e2832f6dcbe022a8ee<>res://.godot/imported/button-red-8bit.png-d4a05b8704742016ca089182da72bfba.ctex::
@@ -27,7 +27,7 @@ doodle-bad-8bit.png::CompressedTexture2D::4359737073777062681::1752213028::17796
 doodle-good-8bit.png::CompressedTexture2D::2527650960205995445::1752213024::1779634777::1::::<><><>0<>0<>1223596d945751aea3f4279ba33fc036<>res://.godot/imported/doodle-good-8bit.png-2bed3aaff0e5898bb1af39894c880353.ctex::
 instruct-8bit.png::CompressedTexture2D::6507805143919627518::1752213018::1779634777::1::::<><><>0<>0<>5917a89cb9a7e28cef39a810c4f042e7<>res://.godot/imported/instruct-8bit.png-380ec2fe9985442647b52163a60a9987.ctex::
 main-screen-8bit.png::CompressedTexture2D::2126935710350257350::1752213015::1779634777::1::::<><><>0<>0<>8ce99efdad6d4df843ea0641ca436646<>res://.godot/imported/main-screen-8bit.png-7007183346d8de4aa50b306b9344efd4.ctex::
-::res://images/templates/::1778519372
+::res://images/templates/::1779634777
 button-template.png::CompressedTexture2D::617928528952124875::1752213085::1779634777::1::::<><><>0<>0<>a0efeb6982b5316ed16f8e8bb93aa102<>res://.godot/imported/button-template.png-c30570c74e0d882e8b01ce72e3f6c70e.ctex::
 doodle-happyface.png::CompressedTexture2D::1619145960306312689::1752213950::1779634777::1::::<><><>0<>0<>6051067b661346b04570f0a4ab86be87<>res://.godot/imported/doodle-happyface.png-62639c1e3514d9d90c32c1a99489a03b.ctex::
 doodle-heart.png::CompressedTexture2D::8455785243518668277::1752214562::1779634777::1::::<><><>0<>0<>f9d432c30b55670fa742b38a6663dfbb<>res://.godot/imported/doodle-heart.png-804a4f0414e8699e2eb0a92d114a0a8b.ctex::
@@ -42,9 +42,9 @@ AttractScreen.tscn::PackedScene::-1::1779634358::0::1::::<><><>0<>0<><>::res://s
 GameOverScreen.tscn::PackedScene::-1::1779634368::0::1::::<><><>0<>0<><>::res://scripts/GameOverScreen.gd
 GameScreen.tscn::PackedScene::-1::1779634360::0::1::::<><><>0<>0<><>::res://scripts/GameScreen.gd
 Main.tscn::PackedScene::-1::1779634355::0::1::::<><><>0<>0<><>::res://scripts/Main.gd
-::res://scripts/::1779634599
-AttractScreen.gd::GDScript::8174769031764176324::1779634287::0::1::::<>Control<><>0<>0<><>::
+::res://scripts/::1779742302
+AttractScreen.gd::GDScript::8174769031764176324::1779742302::0::1::::<>Control<><>0<>0<><>::
 GameData.gd::GDScript::4228376548984280189::1779634233::0::1::::<>Node<><>0<>0<><>::
 GameOverScreen.gd::GDScript::843147094616429519::1779634350::0::1::::<>Control<><>0<>0<><>::
-GameScreen.gd::GDScript::1235807965750032808::1779634599::0::1::::<>Control<><>0<>0<><>::
+GameScreen.gd::GDScript::1235807965750032808::1779742302::0::1::::<>Control<><>0<>0<><>::
 Main.gd::GDScript::139326480075150184::1779634247::0::1::::<>Node<><>0<>0<><>::
