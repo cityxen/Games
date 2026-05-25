@@ -27,8 +27,10 @@ start:
     jmp initialize
 
 #import "config.asm"
+#import "debug.asm"
 #import "timers.asm"
 #import "random.asm"
+#import "draw_screens.asm"
 #import "hgr.asm"
 #import "joystick.asm"
 #import "score.asm"
@@ -36,6 +38,7 @@ start:
 #import "initialize.asm"
 #import "messages.asm"
 #import "doodles.asm"
+#import "util.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"
 #import "game_over_loop.asm"

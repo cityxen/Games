@@ -96,16 +96,19 @@
 // Row    = HGR row (0-159 for mixed-mode HGR portion)
 // Doodle sprite is drawn 16 rows ABOVE the button centre row.
 // Adjust these to match wherever the user draws the buttons.
-.const BUTT0_COL    = 10   // Red    button area
-.const BUTT0_ROW    = 64   //
-.const BUTT1_COL    = 17   // Green  button area
-.const BUTT1_ROW    = 24   //
-.const BUTT2_COL    = 24   // Yellow button area
-.const BUTT2_ROW    = 64   //
-.const BUTT3_COL    = 31   // Blue   button area
-.const BUTT3_ROW    = 24   //
-.const BUTT4_COL    = 2    // White  button area
-.const BUTT4_ROW    = 64   //
+// Sprites are 4 HGR bytes wide (28 px) × 21 rows tall.
+// Five slots spaced 7 bytes apart: sprites at 1-4, 8-11, 15-18, 22-25, 29-32
+// leaving ~3 byte gaps and centering across the 40-byte screen.
+.const BUTT0_COL    = 1    // Red    button area
+.const BUTT0_ROW    = 70   //
+.const BUTT1_COL    = 8    // Green  button area
+.const BUTT1_ROW    = 28   //
+.const BUTT2_COL    = 15   // Yellow button area
+.const BUTT2_ROW    = 70   //
+.const BUTT3_COL    = 22   // Blue   button area
+.const BUTT3_ROW    = 28   //
+.const BUTT4_COL    = 29   // White  button area
+.const BUTT4_ROW    = 70   //
 
 // ============================================================
 // Game Variables

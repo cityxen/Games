@@ -165,41 +165,23 @@ game_setup_doodle:
     jsr set_message
     jsr beep
 
-gsd_pick_slot:
-    // Random slot, not same as last
-    lda last_slot
-gsd_slot_loop:
-    jsr get_random
-    and #%00000111
-    cmp #5
-    bcs gsd_slot_loop       // reject >= 5
-    cmp last_slot
-    beq gsd_slot_loop       // reject repeat
-    sta button_to_hit
-    sta last_slot
+    jsr random_slot
 
-    // Set doodle position from slot table
-    tax
-    lda slot_col,x
-    sta doodle_col
-    lda slot_row,x
-    sta doodle_row
+    jsr set_draw_place
 
     // Random doodle index
     lda whack_mode
     cmp #MODE_EASY
     beq gsd_easy_doodle
-gsd_doodle_loop:
-    jsr get_random
-    and #%00001111
-    cmp #8
-    bcs gsd_doodle_loop
-    sta doodle
+
+    jsr gsd_doodle_loop_rand
+
     jmp gsd_draw
 gsd_easy_doodle:
     // Easy mode: only doodles 3-6 (star/RAD/skull/poo)
     jsr get_random
     and #%00000011
+    clc
     adc #3
     sta doodle
 
@@ -220,4 +202,36 @@ gsd_draw:
     lda #$FF
     sta button_actually_hit
 
+    rts
+
+gsd_doodle_loop_rand:
+    jsr get_random
+    and #%00001111
+    cmp #8
+    bcs gsd_doodle_loop_rand
+    sta doodle
+    rts
+
+random_slot:
+gsd_pick_slot:
+    // Random slot, not same as last
+    lda last_slot
+gsd_slot_loop:
+    jsr get_random
+    and #%00000111
+    cmp #5
+    bcs gsd_slot_loop       // reject >= 5
+    cmp last_slot
+    beq gsd_slot_loop       // reject repeat
+    sta button_to_hit
+    sta last_slot
+    rts
+
+set_draw_place:
+    // Set doodle position from slot table
+    tax
+    lda slot_col,x
+    sta doodle_col
+    lda slot_row,x
+    sta doodle_row
     rts

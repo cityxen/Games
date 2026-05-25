@@ -37,8 +37,12 @@ timer_fired:  .byte  0,   0,   0,  0   // nonzero = fired this reload
 }
 
 .macro ResetTimerFired(n) {
-    lda #0
+    lda #$00
     sta timer_fired + [n]
+}
+
+.macro GetTimer(n) {
+    lda timer_val + [n]
 }
 
 .macro GetTimerFired(n) {
@@ -67,8 +71,7 @@ ut_loop:
     dec timer_val,x
     bne ut_next
     // Countdown just hit 0 -- fire and reload
-    lda #1
-    sta timer_fired,x
+    inc timer_fired,x
     lda timer_reload,x
     sta timer_val,x
 ut_next:
