@@ -16,6 +16,7 @@ gameon:
 
 game_loop:
     jsr game_input
+    jsr game_animate_player
     jsr game_move_enemies
     jsr game_animate_orbs
     jmp game_loop
@@ -141,11 +142,49 @@ gd_row_done:
     rts
 
 //////////////////////////////////////////////////////////////////////////////////////
-// game_draw_player: position sprite 0 (sutehk) at player_x, player_y
-// Direction frame is chosen from last move_dx/move_dy.
-// Char tiles beneath the player are left as floor (sprite overlays them).
+// game_draw_player: snap sprite 0 (sutehk) to player_x/y; cancels any animation.
+// Called on full redraws, level inits, and restarts. Uses static directional sprite.
 game_draw_player:
-    // Select directional sprite pointer
+    // Compute pixel X = player_x * 16 + 24 as 16-bit lo/hi
+    lda #0
+    sta player_sprite_x_hi
+    lda player_x
+    asl
+    rol player_sprite_x_hi
+    asl
+    rol player_sprite_x_hi
+    asl
+    rol player_sprite_x_hi
+    asl
+    rol player_sprite_x_hi     // hi:A = player_x * 16
+    clc
+    adc #24
+    sta player_sprite_x_lo
+    lda player_sprite_x_hi
+    adc #0
+    sta player_sprite_x_hi
+
+    // Compute pixel Y = player_y * 16 + 90
+    lda player_y
+    asl
+    asl
+    asl
+    asl
+    clc
+    adc #90
+    sta player_sprite_y
+
+    // Snap target to same position; clear animation
+    lda player_sprite_x_lo
+    sta player_target_x_lo
+    lda player_sprite_x_hi
+    sta player_target_x_hi
+    lda player_sprite_y
+    sta player_target_y
+    lda #0
+    sta player_is_moving
+
+    // Static directional sprite based on last move direction
     lda move_dy
     bmi gdp_up
     cmp #1
@@ -154,7 +193,7 @@ game_draw_player:
     bmi gdp_left
     cmp #1
     beq gdp_right
-    lda #sprite_pointer_sutehk_down     // default: face down
+    lda #sprite_pointer_sutehk_down
     jmp gdp_set_ptr
 gdp_up:
     lda #sprite_pointer_sutehk_up
@@ -170,37 +209,220 @@ gdp_right:
 gdp_set_ptr:
     sta SPRITE_0_POINTER
 
-    // Sprite X = player_x * 16 + 24
-    // Tiles 0-14 fit in 8 bits (X <= 248); tiles 15-19 need MSB bit set
-    lda player_x
-    cmp #15
-    bcc gdp_msb_clear
+    // Write sprite registers
+    lda player_sprite_x_hi
+    and #1
+    beq gdp_msb_clear
     lda SPRITE_MSB_X
     ora #%00000001
     sta SPRITE_MSB_X
-    jmp gdp_x_set
+    jmp gdp_write_x
 gdp_msb_clear:
     lda SPRITE_MSB_X
     and #%11111110
     sta SPRITE_MSB_X
-gdp_x_set:
+gdp_write_x:
+    lda player_sprite_x_lo
+    sta SPRITE_0_X
+    lda player_sprite_y
+    sta SPRITE_0_Y
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// game_start_player_move: begin smooth glide from player_sprite_x/y to new tile.
+// player_x/y already hold the new tile coords. Picks walk frame sprite.
+game_start_player_move:
+    // Compute target pixel X = player_x * 16 + 24 (16-bit)
+    lda #0
+    sta player_target_x_hi
     lda player_x
     asl
+    rol player_target_x_hi
     asl
+    rol player_target_x_hi
     asl
-    asl             // * 16
+    rol player_target_x_hi
+    asl
+    rol player_target_x_hi
     clc
     adc #24
-    sta SPRITE_0_X
+    sta player_target_x_lo
+    lda player_target_x_hi
+    adc #0
+    sta player_target_x_hi
 
-    // Sprite Y = player_y * 16 + 90  (max py=9: 9*16+90=234, always fits in byte)
+    // Compute target pixel Y = player_y * 16 + 90
     lda player_y
     asl
     asl
     asl
-    asl             // * 16
+    asl
     clc
     adc #90
+    sta player_target_y
+
+    // Start animation countdown
+    lda #PLAYER_MOVE_STEPS
+    sta player_move_steps_rem
+    lda #1
+    sta player_is_moving
+
+    // Toggle walk frame then pick directional walk sprite
+    lda player_walk_frame
+    eor #1
+    sta player_walk_frame
+
+    lda move_dy
+    bmi gspm_up
+    cmp #1
+    beq gspm_down
+    lda move_dx
+    bmi gspm_left
+    // right
+    lda player_walk_frame
+    beq gspm_right_f1
+    lda #sprite_pointer_sutehk_walk_right_frame2
+    jmp gspm_set
+gspm_right_f1:
+    lda #sprite_pointer_sutehk_walk_right_frame1
+    jmp gspm_set
+gspm_up:
+    lda player_walk_frame
+    beq gspm_up_f1
+    lda #sprite_pointer_sutehk_walk_up_frame2
+    jmp gspm_set
+gspm_up_f1:
+    lda #sprite_pointer_sutehk_walk_up_frame1
+    jmp gspm_set
+gspm_down:
+    lda player_walk_frame
+    beq gspm_down_f1
+    lda #sprite_pointer_sutehk_walk_down_frame2
+    jmp gspm_set
+gspm_down_f1:
+    lda #sprite_pointer_sutehk_walk_down_frame1
+    jmp gspm_set
+gspm_left:
+    lda player_walk_frame
+    beq gspm_left_f1
+    lda #sprite_pointer_sutehk_walk_left_frame2
+    jmp gspm_set
+gspm_left_f1:
+    lda #sprite_pointer_sutehk_walk_left_frame1
+gspm_set:
+    sta SPRITE_0_POINTER
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// game_animate_player: step sprite 0 one tick toward player_target; call each loop.
+game_animate_player:
+    GetTimerTr(TIMER_PLAYER_ANIM)
+    bne gap_tick
+    rts
+gap_tick:
+    FullReset(TIMER_PLAYER_ANIM)
+    lda player_is_moving
+    bne gap_do_step
+    rts
+
+gap_do_step:
+    lda move_dx
+    cmp #1
+    beq gap_step_right
+    cmp #$ff
+    beq gap_step_left
+    jmp gap_step_y
+gap_step_right:
+    lda player_sprite_x_lo
+    clc
+    adc #PLAYER_MOVE_SPEED
+    sta player_sprite_x_lo
+    lda player_sprite_x_hi
+    adc #0
+    sta player_sprite_x_hi
+    jmp gap_step_y
+gap_step_left:
+    lda player_sprite_x_lo
+    sec
+    sbc #PLAYER_MOVE_SPEED
+    sta player_sprite_x_lo
+    lda player_sprite_x_hi
+    sbc #0
+    sta player_sprite_x_hi
+
+gap_step_y:
+    lda move_dy
+    cmp #1
+    beq gap_step_down
+    cmp #$ff
+    beq gap_step_up
+    jmp gap_check_done
+gap_step_down:
+    lda player_sprite_y
+    clc
+    adc #PLAYER_MOVE_SPEED
+    sta player_sprite_y
+    jmp gap_check_done
+gap_step_up:
+    lda player_sprite_y
+    sec
+    sbc #PLAYER_MOVE_SPEED
+    sta player_sprite_y
+
+gap_check_done:
+    dec player_move_steps_rem
+    bne gap_write_pos
+
+    // Arrived: snap exact, clear flag, switch to static sprite
+    lda player_target_x_lo
+    sta player_sprite_x_lo
+    lda player_target_x_hi
+    sta player_sprite_x_hi
+    lda player_target_y
+    sta player_sprite_y
+    lda #0
+    sta player_is_moving
+
+    lda move_dy
+    bmi gap_static_up
+    cmp #1
+    beq gap_static_down
+    lda move_dx
+    bmi gap_static_left
+    cmp #1
+    beq gap_static_right
+    lda #sprite_pointer_sutehk_down
+    jmp gap_set_sprite
+gap_static_up:
+    lda #sprite_pointer_sutehk_up
+    jmp gap_set_sprite
+gap_static_down:
+    lda #sprite_pointer_sutehk_down
+    jmp gap_set_sprite
+gap_static_left:
+    lda #sprite_pointer_sutehk_left
+    jmp gap_set_sprite
+gap_static_right:
+    lda #sprite_pointer_sutehk_right
+gap_set_sprite:
+    sta SPRITE_0_POINTER
+
+gap_write_pos:
+    lda player_sprite_x_hi
+    and #1
+    beq gap_msb_clear
+    lda SPRITE_MSB_X
+    ora #%00000001
+    sta SPRITE_MSB_X
+    jmp gap_write_x
+gap_msb_clear:
+    lda SPRITE_MSB_X
+    and #%11111110
+    sta SPRITE_MSB_X
+gap_write_x:
+    lda player_sprite_x_lo
+    sta SPRITE_0_X
+    lda player_sprite_y
     sta SPRITE_0_Y
     rts
 
@@ -371,8 +593,12 @@ game_input:
     GetTimerTr(TIMER_INPUT)
     bne !+
     jmp gi_done
-!:    
+!:
     FullReset(TIMER_INPUT)
+    lda player_is_moving    // block new input while sprite is gliding
+    beq !+
+    jmp gi_done
+!:
 
     // Read joystick port 2 directly ($DC00)
     // Bits: 0=up 1=down 2=left 3=right 4=fire (active LOW)
@@ -536,7 +762,7 @@ gtm_move:
     sta player_x
     lda gtm_new_y
     sta player_y
-    jsr game_draw_player
+    jsr game_start_player_move
     jsr game_draw_orb_sprites
     jsr game_check_win
 

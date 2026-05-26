@@ -80,8 +80,12 @@
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Timer indices (beyond the standard ones in timers.il.asm)
-.const TIMER_ENEMY_MOVE = 0     // Enemy movement speed
-.const TIMER_WIN_PAUSE  = 1     // Pause after win before next level
+.const TIMER_ENEMY_MOVE  = 0    // Enemy movement speed
+.const TIMER_WIN_PAUSE   = 1    // Pause after win before next level
+.const TIMER_PLAYER_ANIM = 2    // Fires every IRQ tick for smooth player movement
+
+.const PLAYER_MOVE_SPEED = 4    // Pixels per animation tick
+.const PLAYER_MOVE_STEPS = 4    // 16px / 4px = 4 ticks per tile
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Game state variables
@@ -94,6 +98,17 @@ menu_dollar_frame: .byte 0         // 0, 1, or 2 for dollar 3-frame cycle
 // Player position (tile coordinates within level)
 player_x:       .byte 0
 player_y:       .byte 0
+player_walk_frame: .byte 0   // 0 or 1; toggles on every successful step
+
+// Smooth movement state (pixel-level animation between tiles)
+player_is_moving:      .byte 0  // 1 while sprite is gliding between tiles
+player_move_steps_rem: .byte 0  // countdown ticks remaining in current move
+player_sprite_x_lo:    .byte 0  // current sprite pixel X lo byte
+player_sprite_x_hi:    .byte 0  // current sprite pixel X hi byte (MSB, 0 or 1)
+player_sprite_y:       .byte 0  // current sprite pixel Y
+player_target_x_lo:    .byte 0  // destination pixel X lo
+player_target_x_hi:    .byte 0  // destination pixel X hi
+player_target_y:       .byte 0  // destination pixel Y
 
 // Match tracking
 match_count:    .byte 0
@@ -311,6 +326,9 @@ init_timers_user_hook:
     // Set enemy move timer
     lda #30
     SetTimerTo(TIMER_ENEMY_MOVE)
+    // Set player animation timer to 1 tick (fires every IRQ, ~16ms at 60Hz)
+    lda #1
+    SetTimerTo(TIMER_PLAYER_ANIM)
     rts
 
 irq_timer_user_hook:
@@ -352,7 +370,23 @@ irq_timer_user_hook:
 .const sprite_pointer_emerald_frame1 = $d4
 .const sprite_pointer_emerald_frame2 = $d5
 
-.const sprite_pointer_spider_web    = $d6
+.const sprite_pointer_spider_web     = $d6
+
+.const sprite_pointer_sutehk_walk_down_frame1    = $d7
+.const sprite_pointer_sutehk_walk_down_frame2    = $d8
+
+.const sprite_pointer_sutehk_walk_up_frame1    = $d9
+.const sprite_pointer_sutehk_walk_up_frame2    = $da
+
+.const sprite_pointer_sutehk_walk_right_frame1    = $db
+.const sprite_pointer_sutehk_walk_right_frame2    = $dc
+
+.const sprite_pointer_sutehk_walk_left_frame1    = $dd
+.const sprite_pointer_sutehk_walk_left_frame2    = $de
+
+
+
+ 
 
 
 
