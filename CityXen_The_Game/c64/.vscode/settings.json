@@ -1,0 +1,11 @@
+{
+    "kickassembler.assemblerJar": "E:\\commodore_64\\ultimate_usb\\pc_tools\\KickAssemblerv5.13\\KickAss.jar",
+    "kickassembler.autoAssembleTrigger": "onSave only",
+    "kickassembler.assemblerLibraryPaths": [
+        "E:\\youtube\\CityXen\\Assets\\github\\Commodore64_Programming\\include"
+    ],
+    "kickassembler.emulatorRuntime": "E:\\commodore_64\\ultimate_usb\\pc_emulators\\WinVICE-3.0-x64\\x64.exe",
+    "kickassembler.javaRuntime": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath\\java.exe",
+    "kickassembler.trace.server": "messages",
+    "kickassembler.keepWorkFiles": true
+}

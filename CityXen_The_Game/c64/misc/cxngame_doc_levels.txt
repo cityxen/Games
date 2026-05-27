@@ -1,0 +1,38 @@
+Level 1: The BASICs     * Only Vintage Computer and PC are shown on this level
+    Vintage Computer
+        BASIC Disk
+
+Level 2: Fire in the hole
+    Workstation
+        Relay Board
+        Fireworks Stuff
+    Vintage Computer
+        Fireworks DISK
+
+Level 3: The Ultimate Video
+    Workstation
+        Ultimate64
+        Ultimate64 Case
+    Vintage Computer:
+        Ultimate64 Firmware DISK
+
+Level 4: Light Jazz
+    Workstation
+        Lights
+        C64
+        C128
+        Amiga
+    Vintage Computer
+        Lights DISK
+
+Level 5: The Smokerdore
+    Workstation
+        C64
+        Ribs
+        Broken Smoker
+        Thermistor
+    Vintage Computer
+        Smokerdore DISK
+
+Level 6: 
+    
