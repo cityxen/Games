@@ -1,0 +1,182 @@
+.label beep_loop=$2563
+.label beep=$2557
+.label button_actually_hit=$2005
+.label button_to_hit=$2004
+.label clear_message_row=$2935
+.label cmr_loop=$2939
+.label dds_col=$250b
+.label dds_done=$2529
+.label dds_no_carry=$251d
+.label dds_row=$24f9
+.label did_hit=$2007
+.label display_list=$2400
+.label dmr_done=$2950
+.label dmr_loop=$2942
+.label doodle_col=$2017
+.label doodle_row=$2018
+.label doodle_timer_hi=$2011
+.label doodle_timer_lo=$2010
+.label doodle_timer_set_hi=$2013
+.label doodle_timer_set_lo=$2012
+.label doodle=$2006
+.label draw_doodle_sprite=$24ea
+.label draw_message_row=$2940
+.label draw_score_line=$27f3
+.label draw_screen_instruct=$2d5e
+.label draw_screen_main=$2d00
+.label dsl_easy=$28ed
+.label dsl_hard=$2911
+.label dsl_lv_digit=$288c
+.label dsl_lv_ones=$2878
+.label dsl_lv_skip_tens=$2886
+.label dsl_lv_tens=$286e
+.label dsl_tens_done=$2828
+.label dsl_tens=$281e
+.label eds_col=$2543
+.label eds_done=$2556
+.label eds_row=$2531
+.label erase_doodle_sprite=$252a
+.label game_loop=$2e8d
+.label game_over_loop=$300d
+.label game_over=$2f32
+.label game_setup_doodle=$2b40
+.label game_start=$2e39
+.label gc_inner=$24d4
+.label get_random=$206c
+.label gfx_clear=$24c8
+.label gfx_init=$24ae
+.label gfx_row_hi=$2110
+.label gfx_row_lo=$2070
+.label gl_alive=$2e9e
+.label gl_bad_doodle_hit=$2ef6
+.label gl_check_input=$2ebe
+.label gl_doodle_expired=$2eb0
+.label gl_no_fire=$2f2f
+.label gl_no_msg=$2ea9
+.label gl_pow_no_add=$2f00
+.label gl_wrong_button=$2f16
+.label gl_wrong_no_sub=$2edd
+.label go_ones=$2fb1
+.label go_restart=$3020 {
+.label go_tens=$2fa7
+.label gs_lives_done=$2e59
+.label gs_try_hard=$2e4f
+.label gsd_doodle_loop_rand=$2b8f
+.label gsd_draw=$2b78
+.label gsd_easy_doodle=$2b6d
+.label gsd_pick_slot=$2b9c
+.label gsd_slot_loop=$2b9c
+.label inc_screen_draw=$2d9e
+.label initial_life_easy=$200e
+.label initial_life_hard=$200d
+.label initial_life=$200c
+.label initialize=$2951
+.label joy_fired=$2015
+.label joy_prev_btn=$2016
+.label joy_slot=$2014
+.label last_slot=$2009
+.label load_doodle_timer=$205f
+.label main_loop_start=$2dae
+.label main_loop=$2dc7
+.label message=$2008
+.label ml_draw_mode_txt=$2cb6 {
+.label ml_draw_screen=$2e29
+.label ml_s_credit=$2c01 {
+.label ml_s_cxn_itch=$2c1d {
+.label ml_s_deasy=$2c50 {
+.label ml_s_fire=$2c39 {
+.label ml_s_measy=$2c9b {
+.label ml_s_mhard=$2cad {
+.label ml_s_mnormal=$2ca4 {
+.label ml_s_modepfx=$2c94 {
+.label ml_s_scoring=$2c70 {
+.label ml_s_title=$2be2 {
+.label ml_scr_check_out=$2dfd
+.label ml_select_easy=$2e0e
+.label ml_select_normal=$2e16
+.label mmt_easy=$2ce0 {
+.label mmt_hard=$2cf0 {
+.label mmt_normal=$2cd0 {
+.label msg_getready=$29ba
+.label msg_miss=$29c5
+.label msg_pow=$29d0
+.label msg_wrong=$29db
+.label pa_done=$2be0
+.label pa_loop=$2bd5
+.label print_at=$2bc2
+.label random_slot=$2b9c
+.label randomly_flash_buttons=$2be1
+.label read_joystick=$2791
+.label restart=$2dae {
+.label rj_btn_held=$27ec
+.label rj_btn_not_pressed=$27ed
+.label rj_center=$27cd
+.label rj_check_fire=$27d2
+.label rj_not_left=$27af
+.label rj_slot1=$27a7
+.label rj_slot3=$27c5
+.label score=$200b
+.label screen_draw=$200f
+.label sds_check_40=$2ae3
+.label sds_check_80=$2ab3
+.label sds_easy=$2a62
+.label sds_f20_ok=$2ab0
+.label sds_f30_ok=$2ae0
+.label sds_f40_ok=$2b10
+.label sds_hard=$2a73
+.label sds_normal=$2a80
+.label sds_reload=$2b3c
+.label sds_score_039=$2b13
+.label sds_set_f20=$2aa6
+.label sds_set_f30=$2ad6
+.label sds_set_f40=$2b06
+.label sds_set_f50=$2b32
+.label sds_try_hard=$2a6f
+.label set_doodle_speed=$2a5b
+.label set_draw_place=$2bb1
+.label set_message=$29e6
+.label set_sprite_ptr=$2764
+.label show_message=$29f5
+.label slot_col=$2a51
+.label slot_row=$2a56
+.label sm_check_timer=$2a3b {
+.label sm_done=$2a50
+.label sm_try2=$2a0c
+.label sm_try3=$2a1e
+.label sm_try4=$2a30
+.label sprite_data=$256c
+.label start=$2000
+.label tc_loop=$24e3
+.label tick_doodle_timer=$2045
+.label timer_fired=$2021
+.label timer_reload=$2019
+.label timer_val=$201d
+.label tt_expired=$205c
+.label tt_lo_nonzero=$2052
+.label txt_clear=$24df
+.label txt_row_hi=$21b4
+.label txt_row_lo=$21b0
+.label update_timers=$202c
+.label ut_loop=$202e
+.label ut_next=$2041
+.label wait_vbl=$2025
+.label whack_life=$200a
+.label whack_mode=$2003
+.label wv_loop=$2027
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
