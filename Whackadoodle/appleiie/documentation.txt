@@ -1,0 +1,34 @@
+
+Need 22V10 or even smaller GAL chip for 4 bit gameport to 8 bit (from multiplexing) for relay board
+
+Apple IIe game port           74HCT138              Relay board
+AN0 ------------------------> A
+AN1 ------------------------> B
+AN2 ------------------------> C
+AN3 ------------------------> G1 enable
+
+G2A ------------------------> GND
+G2B ------------------------> GND
+
+Y0 -------------------------> Relay IN1
+Y1 -------------------------> Relay IN2
+Y2 -------------------------> Relay IN3
+Y3 -------------------------> Relay IN4
+Y4 -------------------------> Relay IN5
+Y5 -------------------------> Relay IN6
+Y6 -------------------------> Relay IN7
+Y7 -------------------------> Relay IN8
+
+POWER:
+74HCT138 pin 16 -> +5V
+74HCT138 pin 8  -> GND
+0.1uF capacitor between pin 16 and pin 8
+Apple IIe GND must connect to relay board/GND logic side
+
+To enable:
+REM TURN ENABLE ON
+POKE -16289,0  : REM AN3 ON
+
+REM SELECT RELAY NUMBER USING AN0-AN2
+// You’ll need the exact Apple II soft-switch addresses for AN0-AN3 ON/OFF, but electrically this is the right design.
+
