@@ -1,6 +1,20 @@
 // ============================================================
 // WHACKADOODLE for Apple IIe
 // Ported from C64 version by Deadline / CityXen 2024
+// 
+// Special thanks:
+// 
+//  - AHCS Club members for their apple tech support and feedback during development, especially:
+//    - Kyle R. for donating an Apple IIe and providing invaluable feedback during development!
+//    - Josh (Mr. TechGadget) for his help with Apple IIe i/o hardware cards
+//    - Grizzle (David) for creating the relay board interface for the Apple IIe game port
+// 
+// In order to compile this, you will need KickAssembler, and the
+// retro-dev-tools repository:
+// https://github.com/cityxen/retro-dev-tools
+// You will need to put the tools in cityxen-tools folder in your PATH
+// You will need to put the retro-dev-tools\include\appleiie folder
+//        in your KickAssembler include path
 //
 // Target: Apple IIe (65C02), KickAssembler 5.x
 // Load at $6000 via:  BRUN WAD_A2  (DOS 3.3)
