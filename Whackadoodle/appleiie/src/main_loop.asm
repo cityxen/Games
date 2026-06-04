@@ -96,12 +96,18 @@ ml_draw_screen:
     
     jsr draw_screen_instruct
 !:
+
+    cmp #$02
+    bne !+
+    jsr draw_screen_instruct2
+!:
+
     rts
 
 inc_screen_draw:
     inc screen_draw
     lda screen_draw
-    cmp #$02
+    cmp #$03
     bne !+
     lda #$00
     sta screen_draw

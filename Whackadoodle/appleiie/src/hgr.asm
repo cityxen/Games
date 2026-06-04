@@ -77,6 +77,74 @@ hc_inner:
     bne hc_inner
     rts
 
+// ─── hgr_fill_split ───────────────────────────────────────────
+// Fill the mixed-mode HGR area (rows 0-159) with a green left half
+// and an orange ("red") right half, blended through a small dithered
+// band in the middle byte columns.
+//
+//   Green byte  = $2A (even byte col) / $55 (odd byte col)  -- matches
+//                 big_circle_green's fill pattern.
+//   Orange byte = green | $80 (HGR palette bit set, same as big_circle_orange).
+//   Dither band cols [SPLIT_DLO..SPLIT_DHI]: per-byte checkerboard of
+//   green/orange keyed on (col + row) parity.
+//
+// (ZP_TMP),Y indirect-indexed addressing carries Y into the full 16-bit
+// row base, so one base per row covers all 40 byte columns.
+// Trashes A, X, Y, ZP_TMP, ZP_TMP2, ZP_TMP3.
+.const HGR_FILL_ROWS = 160      // mixed-mode visible HGR rows
+.const SPLIT_DLO     = 17       // dither band: first byte column
+.const SPLIT_DHI     = 19       // dither band: last  byte column
+
+hgr_green_byte:
+    .byte $2A, $55              // [even col, odd col]
+hgr_fill_grn:
+    .byte 0
+
+hgr_fill_split:
+    lda #0
+    sta ZP_TMP3                // row = 0
+hfs_row:
+    ldx ZP_TMP3
+    lda hgr_row_lo,x
+    sta ZP_TMP
+    lda hgr_row_hi,x
+    sta ZP_TMP2
+
+    ldy #0                     // col = 0
+hfs_col:
+    tya
+    and #1
+    tax
+    lda hgr_green_byte,x       // green base for this column's parity
+    sta hgr_fill_grn
+
+    cpy #SPLIT_DLO
+    bcc hfs_green              // col < SPLIT_DLO  -> green half
+    cpy #SPLIT_DHI+1
+    bcs hfs_orange             // col > SPLIT_DHI  -> orange half
+    tya                        // dither band: checkerboard (col + row) parity
+    clc
+    adc ZP_TMP3
+    and #1
+    bne hfs_orange             // odd  -> orange
+hfs_green:
+    lda hgr_fill_grn           // palette bit clear
+    jmp hfs_put
+hfs_orange:
+    lda hgr_fill_grn
+    ora #$80                   // palette bit set
+hfs_put:
+    sta (ZP_TMP),y
+    iny
+    cpy #40
+    bne hfs_col
+
+    inc ZP_TMP3
+    lda ZP_TMP3
+    cmp #HGR_FILL_ROWS
+    bne hfs_row
+    rts
+
 // ─── draw_doodle_sprite ────────────────────────────────────────
 // Draw a 21-row × 4-byte sprite at (doodle_col, doodle_row).
 //

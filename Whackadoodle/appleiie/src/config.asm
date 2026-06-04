@@ -186,6 +186,8 @@ ml_s_dnormal:  applestr(" Down (PURPLE)= NORMAL  (6 lives)")
 ml_s_dhard:    applestr(" Fire (WHITE) = HARD    (3 lives, fast)")
 ml_s_start:    applestr(" Right(BLUE)  = START GAME")
 
+ml_s_ddl_fctn: applestr("   GOOD DOODLES          BAD DOODLES")
+
 
 ml_s_modepfx:  applestr("  MODE: ")
 ml_s_measy:    applestr("EASY    ")

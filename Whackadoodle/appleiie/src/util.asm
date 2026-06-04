@@ -64,7 +64,7 @@
 // Draws the doodle with OR-blit so the circle/button shows around it.
 // The doodle (4 bytes x 21 rows) is centered in the circle (8 x 42):
 //   doodle_col = col+2, doodle_row = row+10.
-.macro OverlayDoodle(idx, button) {
+.macro OverlayDoodle(sprite, button) {
     .var col=0
     .var row=0
 
@@ -89,11 +89,55 @@
         .eval row = BUTT4_ROW
     }
 
-    lda #idx
+    lda #sprite
     jsr set_sprite_ptr          // ZP_PTR_LO/HI = doodle data address
     lda #col + 2
     sta doodle_col
     lda #row + 10
+    sta doodle_row
+    jsr draw_doodle_or
+}
+
+.macro OverlayDoodleA(button) {
+    .var col=0
+    .var row=0
+
+    .if(button == BUTTON_RED) { 
+        .eval col = BUTT0_COL
+        .eval row = BUTT0_ROW
+    }
+    .if(button == BUTTON_GREEN) { 
+        .eval col = BUTT1_COL
+        .eval row = BUTT1_ROW
+    }
+    .if(button == BUTTON_PURPLE) { 
+        .eval col = BUTT2_COL
+        .eval row = BUTT2_ROW
+    }
+    .if(button == BUTTON_BLUE) { 
+        .eval col = BUTT3_COL
+        .eval row = BUTT3_ROW
+    }
+    .if(button == BUTTON_WHITE) { 
+        .eval  col = BUTT4_COL
+        .eval row = BUTT4_ROW
+    }
+
+    // lda #sprite
+    jsr set_sprite_ptr          // ZP_PTR_LO/HI = doodle data address
+    lda #col + 2
+    sta doodle_col
+    lda #row + 10
+    sta doodle_row
+    jsr draw_doodle_or
+}
+
+.macro DrawDoodle(sprite, sx, sy) {
+    lda #sprite
+    jsr set_sprite_ptr          // ZP_PTR_LO/HI = doodle data address
+    lda #sx
+    sta doodle_col
+    lda #sy
     sta doodle_row
     jsr draw_doodle_or
 }

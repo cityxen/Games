@@ -16,11 +16,16 @@ draw_screen_main:
     jsr draw_buttons
 
     // Overlay a doodle on each button (OR-blit keeps the circle showing around it)
-    OverlayDoodle(spr_happyface, BUTTON_RED)    // happyface on orange
-    OverlayDoodle(spr_yin_yang, BUTTON_GREEN)    // yin-yang  on green
-    OverlayDoodle(spr_heart, BUTTON_PURPLE)    // heart     on purple
-    OverlayDoodle(spr_star, BUTTON_BLUE)    // star      on blue
-    OverlayDoodle(spr_skull, BUTTON_WHITE)    // skull     on white
+    jsr gsd_doodle_loop_rand
+    OverlayDoodleA(BUTTON_RED)    // happyface on orange
+    jsr gsd_doodle_loop_rand
+    OverlayDoodleA(BUTTON_GREEN)    // yin-yang  on green
+    jsr gsd_doodle_loop_rand
+    OverlayDoodleA(BUTTON_PURPLE)    // heart     on purple
+    jsr gsd_doodle_loop_rand
+    OverlayDoodleA(BUTTON_BLUE)    // star      on blue
+    jsr gsd_doodle_loop_rand
+    OverlayDoodleA(BUTTON_WHITE)    // skull     on white
 
     PrintLine(ml_s_title,    20, 0)
     PrintLine(ml_s_credit,   21, 0)
@@ -53,6 +58,27 @@ draw_screen_instruct:
     PrintLine(ml_s_dhard,   18, 0)
     PrintLine(ml_s_start,   20, 0)
   
+    rts
+
+draw_screen_instruct2:
+
+    jsr hgr_init
+    jsr hgr_clear
+    jsr clear_message_row
+
+    jsr hgr_fill_split          // green left half, orange ("red") right half, dithered seam
+
+    DrawDoodle(spr_happyface, BUTT0_COL+2, BUTT1_ROW+30)
+    DrawDoodle(spr_yin_yang,  BUTT0_COL+2, BUTT0_ROW+30)
+    DrawDoodle(spr_heart,     BUTT1_COL+2, BUTT0_ROW+30)
+    DrawDoodle(spr_star,      BUTT1_COL+2, BUTT1_ROW+30)
+    DrawDoodle(spr_rad,       BUTT3_COL+6, BUTT3_ROW+30)
+    DrawDoodle(spr_skull,     BUTT3_COL+6, BUTT4_ROW+30)
+    DrawDoodle(spr_poo,       BUTT4_COL+6, BUTT3_ROW+30)
+    DrawDoodle(spr_frown,     BUTT4_COL+6, BUTT4_ROW+30)
+
+    PrintLine(ml_s_ddl_fctn,    20, 0)
+
     rts
 
 draw_screen_play:
