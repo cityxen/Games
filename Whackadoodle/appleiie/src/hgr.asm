@@ -33,6 +33,21 @@ hgr_row_lo:
 hgr_row_hi:
     .fill 192, ($20 + (i & 7) * 4 + ((i >> 3) & 7) / 2)
 
+// ─── Scratch buffers for draw_doodle_or outline ──────────────
+// doodle_hbuf: each sprite row dilated horizontally  (21 rows x 4 bytes)
+// doodle_dbuf: full 8-neighbour dilated silhouette    (21 rows x 4 bytes)
+doodle_hbuf:  .fill 84, 0
+doodle_dbuf:  .fill 84, 0
+dd_b0:        .byte 0     // current row's 4 sprite bytes
+dd_b1:        .byte 0
+dd_b2:        .byte 0
+dd_b3:        .byte 0
+dd_cur:       .byte 0     // hdil input: centre / left / right byte
+dd_left:      .byte 0
+dd_right:     .byte 0
+dd_tmp:       .byte 0     // hdil scratch
+dd_rows:      .byte 0     // row counter
+
 // ─── hgr_init ─────────────────────────────────────────────────
 // Enable HGR page 1, mixed mode (160 px HGR + 4 text rows).
 hgr_init:
@@ -121,20 +136,130 @@ dds_done:
     rts
 
 // ─── draw_doodle_or ───────────────────────────────────────────
-// Same as draw_doodle_sprite, but OR-blits: the sprite's lit pixels are
-// added on top of whatever is already on screen, and the sprite's empty
-// bytes leave the background untouched.  Use this to overlay a doodle on
-// a button without erasing the button.
-// Inputs/ZP usage identical to draw_doodle_sprite.  Trashes A, X, Y.
+// Overlay a doodle onto a button with a 1-pixel black outline around it.
+// The doodle's lit pixels are OR'd on top of the button, but a 1-pixel
+// black halo is first cleared around the shape so the white doodle reads
+// cleanly against the coloured button.
+//
+// Method:
+//   1. Build doodle_hbuf = each sprite row dilated 1px horizontally.
+//   2. Build doodle_dbuf = doodle_hbuf OR'd with the rows above/below
+//      (full 8-neighbour dilation of the doodle silhouette).
+//   3. Per row: screen &= ~dbuf  (punch the dilated silhouette to black),
+//      then screen |= sprite     (draw the doodle white on top).
+//      The halo (dbuf AND NOT sprite) is the 1px black outline.
+//
+// Horizontal dilation stays within the 4-byte sprite width and vertical
+// dilation within the 21 rows; all current doodles have blank edge rows,
+// so the outline is never clipped.
+//
+// In: ZP_PTR_LO/HI = sprite base; doodle_col/doodle_row = position.
+// Trashes A, X, Y, ZP_TMP/2, ZP_SPR_LO/HI, ZP_PTR_LO/HI, dd_* scratch.
 draw_doodle_or:
+    // ── Phase 1: horizontal dilation of every sprite row into hbuf ──
     lda ZP_PTR_LO
     sta ZP_SPR_LO
     lda ZP_PTR_HI
     sta ZP_SPR_HI
+    ldx #0                  // X = flat byte offset into hbuf (0..83)
+    lda #21
+    sta dd_rows
 
-    ldx doodle_row
+ddo_h_row:
+    ldy #0
+    lda (ZP_SPR_LO),y
+    sta dd_b0
+    iny
+    lda (ZP_SPR_LO),y
+    sta dd_b1
+    iny
+    lda (ZP_SPR_LO),y
+    sta dd_b2
+    iny
+    lda (ZP_SPR_LO),y
+    sta dd_b3
+
+    lda #0                  // byte 0: no left neighbour
+    sta dd_left
+    lda dd_b0
+    sta dd_cur
+    lda dd_b1
+    sta dd_right
+    jsr hdil
+    sta doodle_hbuf,x
+    inx
+
+    lda dd_b0               // byte 1
+    sta dd_left
+    lda dd_b1
+    sta dd_cur
+    lda dd_b2
+    sta dd_right
+    jsr hdil
+    sta doodle_hbuf,x
+    inx
+
+    lda dd_b1               // byte 2
+    sta dd_left
+    lda dd_b2
+    sta dd_cur
+    lda dd_b3
+    sta dd_right
+    jsr hdil
+    sta doodle_hbuf,x
+    inx
+
+    lda dd_b2               // byte 3: no right neighbour
+    sta dd_left
+    lda dd_b3
+    sta dd_cur
     lda #0
-    sta ZP_TMP3
+    sta dd_right
+    jsr hdil
+    sta doodle_hbuf,x
+    inx
+
+    lda ZP_SPR_LO
+    clc
+    adc #4
+    sta ZP_SPR_LO
+    bcc ddo_h_nc
+    inc ZP_SPR_HI
+ddo_h_nc:
+    dec dd_rows
+    beq ddo_h_done
+    jmp ddo_h_row
+ddo_h_done:
+
+    // ── Phase 2: vertical dilation -> dbuf (8-neighbour silhouette) ──
+    ldx #0                  // X = flat offset 0..83
+ddo_v:
+    lda doodle_hbuf,x
+    cpx #4
+    bcc ddo_v_no_up         // top row: no row above
+    ora doodle_hbuf-4,x
+ddo_v_no_up:
+    cpx #80
+    bcs ddo_v_no_down       // bottom row: no row below
+    ora doodle_hbuf+4,x
+ddo_v_no_down:
+    sta doodle_dbuf,x
+    inx
+    cpx #84
+    bne ddo_v
+
+    // ── Phase 3: clear silhouette to black, then OR the doodle ──
+    lda ZP_PTR_LO
+    sta ZP_SPR_LO           // ZP_SPR = sprite row pointer
+    lda ZP_PTR_HI
+    sta ZP_SPR_HI
+    lda #<doodle_dbuf
+    sta ZP_PTR_LO           // ZP_PTR = dbuf row pointer
+    lda #>doodle_dbuf
+    sta ZP_PTR_HI
+    ldx doodle_row          // X = screen row
+    lda #21
+    sta dd_rows
 
 ddo_row:
     lda hgr_row_lo,x
@@ -147,27 +272,64 @@ ddo_row:
 
     ldy #3
 ddo_col:
-    lda (ZP_SPR_LO),y
-    ora (ZP_TMP),y          // combine with existing screen (button) content
+    lda (ZP_PTR_LO),y       // dilated mask byte
+    eor #$FF
+    and (ZP_TMP),y          // clear the silhouette to black (keeps palette bit)
+    sta (ZP_TMP),y
+    lda (ZP_SPR_LO),y       // draw the doodle on top
+    ora (ZP_TMP),y
     sta (ZP_TMP),y
     dey
     bpl ddo_col
 
+    lda ZP_PTR_LO
+    clc
+    adc #4
+    sta ZP_PTR_LO
+    bcc ddo_dbuf_nc
+    inc ZP_PTR_HI
+ddo_dbuf_nc:
     lda ZP_SPR_LO
     clc
     adc #4
     sta ZP_SPR_LO
-    bcc ddo_no_carry
+    bcc ddo_spr_nc
     inc ZP_SPR_HI
-ddo_no_carry:
-
-    inc ZP_TMP3
-    lda ZP_TMP3
-    cmp #21
-    beq ddo_done
+ddo_spr_nc:
     inx
-    jmp ddo_row
-ddo_done:
+    dec dd_rows
+    bne ddo_row
+    rts
+
+// ─── hdil ─────────────────────────────────────────────────────
+// Horizontally dilate one HGR byte by 1 pixel.
+// In:  dd_cur = centre byte, dd_left / dd_right = neighbour bytes (0 if none).
+// Out: A = dilated byte.  Trashes A, dd_tmp.
+hdil:
+    lda dd_cur
+    asl
+    sta dd_tmp
+    lda dd_cur
+    lsr
+    ora dd_tmp
+    ora dd_cur
+    and #$7F                // in-byte spread, keep pixel bits 0-6
+    sta dd_tmp
+    lda dd_left
+    and #$40                // left neighbour's rightmost pixel ...
+    beq hdil_no_left
+    lda dd_tmp
+    ora #$01                // ... spreads into this byte's bit0
+    sta dd_tmp
+hdil_no_left:
+    lda dd_right
+    and #$01                // right neighbour's leftmost pixel ...
+    beq hdil_no_right
+    lda dd_tmp
+    ora #$40                // ... spreads into this byte's bit6
+    sta dd_tmp
+hdil_no_right:
+    lda dd_tmp
     rts
 
 // ─── erase_doodle_sprite ──────────────────────────────────────

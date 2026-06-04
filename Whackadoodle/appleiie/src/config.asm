@@ -127,6 +127,7 @@ button_actually_hit: .byte $FF  // player's slot ($FF = none yet)
 doodle:              .byte 0    // current doodle index (0-7)
 did_hit:             .byte 0    // outcome flag
 message:             .byte 0    // 0=none 1=getready 2=miss 3=pow 4=wrong
+message_drawn:       .byte 0    // 1 = current message already shown in text mode
 last_slot:           .byte $FF  // previous button slot (avoid repeats)
 
 whack_life:          .byte 0
@@ -145,9 +146,12 @@ doodle_timer_set_lo: .byte 0    // reload value lo
 doodle_timer_set_hi: .byte 0    // reload value hi
 
 // Joystick state (filled each frame by joystick.asm)
-joy_slot:            .byte 0    // PDL0 -> slot 0-4
-joy_fired:           .byte 0    // 1 = fire button newly pressed this frame
+// Direction/fire -> slot:  left=RED(0) up=GREEN(1) down=PURPLE(2) right=BLUE(3) fire=WHITE(4)
+joy_slot:            .byte 1    // slot of the active input (1 = NORMAL default for attract)
+joy_fired:           .byte 0    // 1 = any input (direction or fire) newly pressed this frame
+joy_btn:             .byte 0    // 1 = fire button newly pressed this frame (attract / game-over)
 joy_prev_btn:        .byte 0    // previous fire button state (for edge detect)
+joy_prev_input:      .byte 0    // previous any-input state (for joy_fired edge detect)
 
 // Active doodle sprite position (set by game_setup_doodle)
 doodle_col:          .byte 0    // HGR column byte
@@ -162,8 +166,8 @@ big_spr_row:         .byte 0
 // ─── Attract screen string data ───────────────────────────────
 
 ml_s_title:    applestr("    WHACKADOODLE! (APPLE//e VERSION)")
-ml_s_credit:   applestr("         DEADLINE/CITYXEN 2026")
-ml_s_cxn_itch: applestr("        HTTPS://CITYXEN.ITCH.IO")
+ml_s_credit:   applestr("  DEADLINE / GRIZZLY / KYLE (AHCS) 2026")
+ml_s_cxn_itch: applestr("                 >>> CITYXEN.ITCH.IO")
 
 ml_s_line:     applestr("========================================")
 ml_s_howto:    applestr("            HOW TO PLAY")
@@ -174,16 +178,16 @@ ml_s_aim2:     applestr("   at one of the 5 button slots.")
 ml_s_scoring:  applestr("            SCORING")
 ml_s_bad:      applestr("  Hit a BAD doodle  = +1 score")
 ml_s_good:     applestr("  Hit a GOOD doodle = -1 score -1 life")
-ml_s_wrong:    applestr("  Wrong slot        = -1 life")
+ml_s_wrong:    applestr("  Hit wrong button  = -1 life")
 
 ml_s_diff:     applestr("          DIFFICULTY")
-ml_s_deasy:    applestr("  Left   = EASY   (10 lives, slow)")
-ml_s_dnormal:  applestr("  Center = NORMAL  (6 lives)")
-ml_s_dhard:    applestr("  Right  = HARD    (3 lives, fast)")
+ml_s_deasy:    applestr(" Left (RED)   = EASY   (10 lives, slow)")
+ml_s_dnormal:  applestr(" Down (PURPLE)= NORMAL  (6 lives)")
+ml_s_dhard:    applestr(" Fire (WHITE) = HARD    (3 lives, fast)")
+ml_s_start:    applestr(" Right(BLUE)  = START GAME")
 
 
 ml_s_modepfx:  applestr("  MODE: ")
-ml_s_fire:     applestr("         >> FIRE TO START <<")
 ml_s_measy:    applestr("EASY    ")
 ml_s_mnormal:  applestr("NORMAL  ")
 ml_s_mhard:    applestr("HARD    ")

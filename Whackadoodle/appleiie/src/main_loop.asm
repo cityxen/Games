@@ -24,11 +24,12 @@ restart:
 
 main_loop:
 
-    GetTimer(TIMER_SCREEN)
-    PrintHex(0,0)
-    GetTimerFired(TIMER_SCREEN)
-    PrintHex(4,0)
+    //GetTimer(TIMER_SCREEN)
+    //PrintHex(0,0)
+    //GetTimerFired(TIMER_SCREEN)
+    //PrintHex(4,0)
 
+    jsr ml_draw_mode_txt
     jsr wait_vbl
     jsr update_timers
     jsr read_joystick
@@ -53,29 +54,34 @@ main_loop:
 ml_scr_check_out:
 
 
-    // Mode selection: left (0-1)=EASY, center (2)=NORMAL, right (3-4)=HARD
+    // Mode selection (sticky): LEFT=EASY, UP=NORMAL, RIGHT=HARD
     lda joy_slot
-    cmp #2
-    bcc ml_select_easy
-    beq ml_select_normal
-    lda #MODE_HARD
-    sta whack_mode
-    jmp !+
-ml_select_easy:
+    cmp #BUTTON_RED         // left
+    bne !+
     lda #MODE_EASY
     sta whack_mode
-    jmp !+
-ml_select_normal:
+    jmp ml_sel_done
+!:
+    cmp #BUTTON_PURPLE       // down
+    bne !+
     lda #MODE_NORMAL
     sta whack_mode
+    jmp ml_sel_done
 !:
-
-    lda joy_fired
+    cmp #BUTTON_WHITE        // fire
     bne !+
-    jmp main_loop
+    lda #MODE_HARD
+    sta whack_mode
+    jmp ml_sel_done
 !:
-
+    cmp #BUTTON_BLUE        // right (start game)
+    bne !+
     jmp game_start
+!:
+ml_sel_done:
+    jmp main_loop
+
+    
 
 //////////////////////////////////////////////////////
 // Screen Draw Routine

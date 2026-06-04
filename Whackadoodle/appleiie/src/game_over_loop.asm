@@ -87,7 +87,7 @@ game_over_loop:
     jsr read_joystick
 
     // Fire button -> restart immediately
-    lda joy_fired
+    lda joy_btn
     bne go_restart
 
     // Auto-return after timer expires

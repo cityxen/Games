@@ -2,69 +2,119 @@
 // ============================================================
 // Joystick / Paddle input
 //
-// Reads PDL0 (X axis) -> joy_slot (0-4)
-// Reads Button 0 (Open Apple) with edge-detect -> joy_fired
+// Reads the two analog axes (PDL0 = horizontal, PDL1 = vertical)
+// and the fire button, and maps them to one of the 5 game slots:
 //
-// PDL reading: write any value to PDL_STROBE ($C070), then
-// count loops until PDL0_CMP ($C064) bit 7 goes LOW.
-// Count range: 0 (full left) to ~255 (full right) on a
-// standard Apple joystick (5.6 kΩ to 150 kΩ).
+//   LEFT  -> RED    (slot 0)      RIGHT -> BLUE   (slot 3)
+//   UP    -> GREEN  (slot 1)      FIRE  -> WHITE  (slot 4)
+//   DOWN  -> PURPLE (slot 2)
 //
-// Call read_joystick once per frame (after wait_vbl).
-// Results are in joy_slot and joy_fired.
+// PDL reading: write any value to PDL_STROBE ($C070), then count
+// loops until the comparator bit 7 goes LOW.  0 = full left/up,
+// ~255 = full right/down.  A wide centre dead zone (PDL_LO..PDL_HI)
+// means the stick must be pushed clearly to register a direction.
+//
+// Outputs (call once per frame after wait_vbl):
+//   joy_slot  = slot of the active input (sticky if neutral)
+//   joy_fired = 1 on the rising edge of ANY input  (the whack trigger)
+//   joy_btn   = 1 on the rising edge of the FIRE button only
+//
+// Horizontal has priority over vertical; a pushed direction has
+// priority over the fire button for slot selection.
 // ============================================================
 
+.const PDL_LO = 64      // below this on an axis = left / up
+.const PDL_HI = 192     // at/above this on an axis = right / down
+
 // ─── read_joystick ────────────────────────────────────────────
-// Reads PDL0 and button 0; updates joy_slot and joy_fired.
-// Trashes A, X.
+// Trashes A, X, Y.
 read_joystick:
+    ldy #$FF                // Y = chosen slot; $FF = none yet
 
-    // ── PDL0 → joy_slot ──────────────────────────────────────
-    sta PDL_STROBE          // any write starts timer (A doesn't matter)
+    // ── PDL0 (horizontal) -> left / right ────────────────────
+    sta PDL_STROBE          // any write starts the timers
     ldx #0
-rj_pdl:
-    bit PDL0_CMP            // bit 7: 1 = timer still running
-    bpl rj_pdl_done         // bit 7 cleared = timer expired
+rj_p0:
+    bit PDL0_CMP
+    bpl rj_p0_done          // bit 7 cleared = timer expired
     inx
-    bne rj_pdl              // X wraps at 256 (full-right or disconnected)
-rj_pdl_done:
-    // X is now 0-255 representing joystick position.
-    // Map to slot 0-4: divide by 51 (256/5 ≈ 51).
-    // Thresholds: 0-50=slot0, 51-101=slot1, 102-152=slot2,
-    //             153-203=slot3, 204-255=slot4.
-    lda #4
-    cpx #204
-    bcs rj_slot_done
-    lda #3
-    cpx #153
-    bcs rj_slot_done
-    lda #2
-    cpx #102
-    bcs rj_slot_done
-    lda #1
-    cpx #51
-    bcs rj_slot_done
-    lda #0
-rj_slot_done:
-    sta joy_slot
+    bne rj_p0
+    ldx #$FF                // counter wrapped -> saturate at max (right)
+rj_p0_done:
+    cpx #PDL_LO
+    bcc rj_left
+    cpx #PDL_HI
+    bcs rj_right
+    jmp rj_vert             // horizontal centred -> check vertical
+rj_left:
+    ldy #BUTTON_RED
+    jmp rj_btn              // horizontal wins -> skip vertical
+rj_right:
+    ldy #BUTTON_BLUE
+    jmp rj_btn
 
-    // ── Button 0 edge-detect → joy_fired ─────────────────────
+    // ── PDL1 (vertical) -> up / down ─────────────────────────
+rj_vert:
+    sta PDL_STROBE
+    ldx #0
+rj_p1:
+    bit PDL1_CMP
+    bpl rj_p1_done
+    inx
+    bne rj_p1
+    ldx #$FF                // counter wrapped -> saturate at max (down)
+rj_p1_done:
+    cpx #PDL_LO
+    bcc rj_up
+    cpx #PDL_HI
+    bcs rj_down
+    jmp rj_btn              // vertical centred too
+rj_up:
+    ldy #BUTTON_GREEN
+    jmp rj_btn
+rj_down:
+    ldy #BUTTON_PURPLE
+
+    // ── Fire button (button 0) ───────────────────────────────
+rj_btn:
     lda #0
-    sta joy_fired
+    sta joy_btn
     bit JOY_BTN0            // N flag = bit 7 of $C061
-    bpl rj_btn_not_pressed  // bit 7 clear = button not pressed
+    bpl rj_btn_up           // bit 7 clear = button not pressed
     // button IS pressed
+    cpy #$FF
+    bne rj_btn_edge         // a direction already claimed the slot
+    ldy #BUTTON_WHITE       // no direction -> fire selects WHITE
+rj_btn_edge:
     lda joy_prev_btn
     bne rj_btn_held         // was already held = not a new press
-    // new press this frame
     lda #1
-    sta joy_fired
+    sta joy_btn             // new fire-button press this frame
+rj_btn_held:
     lda #1
     sta joy_prev_btn
-    rts
-rj_btn_held:
-    rts
-rj_btn_not_pressed:
+    jmp rj_resolve
+rj_btn_up:
     lda #0
     sta joy_prev_btn
+
+    // ── Resolve joy_slot + joy_fired (rising edge of any input) ─
+rj_resolve:
+    cpy #$FF
+    beq rj_none             // no input active this frame
+    sty joy_slot
+    lda #0
+    sta joy_fired
+    lda joy_prev_input
+    bne rj_input_held       // input already active last frame
+    lda #1
+    sta joy_fired           // new press
+rj_input_held:
+    lda #1
+    sta joy_prev_input
+    rts
+rj_none:
+    lda #0
+    sta joy_fired
+    sta joy_prev_input
     rts

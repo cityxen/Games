@@ -4,8 +4,8 @@
 //
 // button_to_hit:       slot doodle is on (0-4), set by game_setup_doodle
 // button_actually_hit: slot player selected ($FF = no input yet)
-// joy_slot:            joystick-selected slot (updated by read_joystick)
-// joy_fired:           1 = fire button just pressed this frame
+// joy_slot:            slot of the active input (updated by read_joystick)
+// joy_fired:           1 = any input (direction or fire) just pressed this frame
 // ============================================================
 
 game_start:

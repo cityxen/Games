@@ -15,7 +15,9 @@ initialize:
     sta message
     sta did_hit
     sta joy_fired
+    sta joy_btn
     sta joy_prev_btn
+    sta joy_prev_input
     lda #$FF
     sta button_actually_hit
 

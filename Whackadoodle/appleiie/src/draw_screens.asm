@@ -51,9 +51,8 @@ draw_screen_instruct:
     PrintLine(ml_s_deasy,   16, 0)
     PrintLine(ml_s_dnormal, 17, 0)
     PrintLine(ml_s_dhard,   18, 0)
-
-
-    PrintLine(ml_s_fire,    20, 0)
+    PrintLine(ml_s_start,   20, 0)
+  
     rts
 
 draw_screen_play:
