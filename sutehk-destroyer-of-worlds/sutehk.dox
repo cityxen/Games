@@ -189,14 +189,14 @@ RELIC + RELIC does nothing (if reused later)
 
 Player learns distrust.
 
-SUTEKH SKIN (NO LOGIC CHANGES)
+SUTEHK SKIN (NO LOGIC CHANGES)
 Object	Skin
 ORB	Time Node
 STATUE	Osiran Pillar
 GATE	Seal of Binding
 ENEMY	Lesser Servant
 RELIC	False Relic
-PLAYER	SUTEKH
+PLAYER	SUTEHK
 
 HUD becomes:
 

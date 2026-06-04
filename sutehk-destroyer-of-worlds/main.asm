@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// SUTEKH: DESTROYER OF WORLDS - C64
+// SUTEHK: DESTROYER OF WORLDS - C64
 // By Deadline / CityXen 2026
 // https://cityxen.itch.io
 //
@@ -33,8 +33,8 @@ start:
     sta BACKGROUND_COLOR
     sta BORDER_COLOR
 
-    // Init timers: (t1=10, t2=20, t3=30, t4=60, t5=120, t6=15[TIMER_INPUT], t7=50)
-    InitTimers(10, 20, 30, 60, 120, 15, 50)
+    // Init timers: (t1=10, t2=20, t3=30, t4=60, t5=120, t6=4[TIMER_INPUT], t7=50[TIMER_BAT])
+    InitTimers(10, 20, 30, 60, 120, 4, 50)
 
     jmp mainmenu
 
@@ -52,6 +52,9 @@ start:
 
 #import "mainmenu.asm"
 #import "gameon.asm"
+#import "draw_screens.asm"
+#import "init_sprites.asm"
+#import "animation.asm"
 
 .segment Levels [allowOverlap]
 *=$4200 "LEVELS"

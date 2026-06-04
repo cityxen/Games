@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// SUTEKH: DESTROYER OF WORLDS - C64
+// SUTEHK: DESTROYER OF WORLDS - C64
 // By Deadline / CityXen 2026
 // https://cityxen.itch.io
 //////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,8 @@
 .const OBJ_PYRAMID  = 8   // Eternal Monument - slides; PYRAMID+PYRAMID = match
 .const OBJ_LEVER_UP = 9   // Switch - player activates to open target cell
 .const OBJ_LEVER_DOWN = 10 // Switch in activated state
+.const OBJ_EXIT_CLOSED = 11 // Closed exit wall (fence sprite overlay)
+.const OBJ_EXIT_OPEN   = 12 // Open exit (gate sprite overlay)
 
 //////////////////////////////////////////////////////////////////////////////////////
 // 2x2 tile screen codes (TL=top-left  TR=top-right  BL=bottom-left  BR=bottom-right)
@@ -83,9 +85,12 @@
 .const TIMER_ENEMY_MOVE  = 0    // Enemy movement speed
 .const TIMER_WIN_PAUSE   = 1    // Pause after win before next level
 .const TIMER_PLAYER_ANIM = 2    // Fires every IRQ tick for smooth player movement
+.const TIMER_BAT         = 6    // Bat movement and animation (index 6, period overridden to 3 in hook)
 
-.const PLAYER_MOVE_SPEED = 4    // Pixels per animation tick
-.const PLAYER_MOVE_STEPS = 4    // 16px / 4px = 4 ticks per tile
+.const PLAYER_MOVE_SPEED = 2    // Pixels per animation tick
+.const PLAYER_MOVE_STEPS = 8    // 16px / 4px = 4 ticks per tile
+
+.const BAT_SPEED         = 4    // Bat pixels per timer tick (~100px/sec at 60Hz)
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Game state variables
@@ -131,6 +136,30 @@ enemy_x:        .byte 0,0,0,0
 enemy_y:        .byte 0,0,0,0
 enemy_dx:       .byte 0,0,0,0   // $01=right/down, $FF=left/up
 enemy_dy:       .byte 0,0,0,0
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Bat state (sprite 7)
+bat_active:      .byte 0    // 0=off-screen, 1=flying across
+bat_x_lo:        .byte 0    // current pixel X lo byte
+bat_x_hi:        .byte 0    // current pixel X hi byte (0 or 1)
+bat_y:           .byte 0    // current pixel Y
+bat_dx:          .byte 0    // $01=moving right, $FF=moving left
+bat_anim_sub:    .byte 0    // sub-tick counter for 2-frame animation
+bat_spawn_delay: .byte 80   // ticks until next bat launch
+bat_y_idx:       .byte 0    // cycles through bat_y_table
+
+// 8 Y pixel rows covering the game area (row*16+90 for rows 0-7)
+bat_y_table:
+.byte 88, 104, 120, 136, 152, 168, 184, 200
+
+// Spawn delay table (ticks at TIMER_BAT rate before next bat launch)
+bat_delay_table:
+.byte 70, 90, 60, 100, 80, 50, 110, 75
+
+// Bat spawn locals
+gbs_row:        .byte 0
+gbs_row_tmp:    .byte 0
+gbs_tries:      .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
 // game_map: one byte per tile, LEVEL_W * LEVEL_H = 200 bytes
@@ -190,6 +219,8 @@ type_to_tile_tl:
 .byte TILE_FLOOR_TL     // 8: OBJ_PYRAMID (sprite overlay)
 .byte TILE_FLOOR_TL     // 9: OBJ_LEVER_UP   (sprite overlay)
 .byte TILE_FLOOR_TL     // 10: OBJ_LEVER_DOWN (sprite overlay)
+.byte TILE_FLOOR_TL     // 11: OBJ_EXIT_CLOSED (sprite overlay)
+.byte TILE_FLOOR_TL     // 12: OBJ_EXIT_OPEN   (sprite overlay)
 
 type_to_tile_tr:
 .byte TILE_FLOOR_TR
@@ -203,6 +234,8 @@ type_to_tile_tr:
 .byte TILE_FLOOR_TR     // 8: OBJ_PYRAMID (sprite overlay)
 .byte TILE_FLOOR_TR     // 9: OBJ_LEVER_UP   (sprite overlay)
 .byte TILE_FLOOR_TR     // 10: OBJ_LEVER_DOWN (sprite overlay)
+.byte TILE_FLOOR_TR     // 11: OBJ_EXIT_CLOSED (sprite overlay)
+.byte TILE_FLOOR_TR     // 12: OBJ_EXIT_OPEN   (sprite overlay)
 
 type_to_tile_bl:
 .byte TILE_FLOOR_BL
@@ -216,6 +249,8 @@ type_to_tile_bl:
 .byte TILE_FLOOR_BL     // 8: OBJ_PYRAMID (sprite overlay)
 .byte TILE_FLOOR_BL     // 9: OBJ_LEVER_UP   (sprite overlay)
 .byte TILE_FLOOR_BL     // 10: OBJ_LEVER_DOWN (sprite overlay)
+.byte TILE_FLOOR_BL     // 11: OBJ_EXIT_CLOSED (sprite overlay)
+.byte TILE_FLOOR_BL     // 12: OBJ_EXIT_OPEN   (sprite overlay)
 
 type_to_tile_br:
 .byte TILE_FLOOR_BR
@@ -229,6 +264,8 @@ type_to_tile_br:
 .byte TILE_FLOOR_BR     // 8: OBJ_PYRAMID (sprite overlay)
 .byte TILE_FLOOR_BR     // 9: OBJ_LEVER_UP   (sprite overlay)
 .byte TILE_FLOOR_BR     // 10: OBJ_LEVER_DOWN (sprite overlay)
+.byte TILE_FLOOR_BR     // 11: OBJ_EXIT_CLOSED (sprite overlay)
+.byte TILE_FLOOR_BR     // 12: OBJ_EXIT_OPEN   (sprite overlay)
 
 type_to_color:
 .byte BLACK             // 0: OBJ_NONE
@@ -242,11 +279,21 @@ type_to_color:
 .byte BLACK             // 8: OBJ_PYRAMID (sprite; char color irrelevant)
 .byte BLACK             // 9: OBJ_LEVER_UP   (sprite; char color irrelevant)
 .byte BLACK             // 10: OBJ_LEVER_DOWN (sprite; char color irrelevant)
+.byte BLACK             // 11: OBJ_EXIT_CLOSED (sprite; char color irrelevant)
+.byte BLACK             // 12: OBJ_EXIT_OPEN   (sprite; char color irrelevant)
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Lever target cell (loaded per-level from room-layout tables)
 lever_target_x:     .byte 0
 lever_target_y:     .byte 0
+
+// Exit state
+exit_x:             .byte 0   // tile X of exit wall
+exit_y:             .byte 0   // tile Y of exit wall
+exit_open:          .byte 0   // 0=closed, 1=open
+exit_rng:           .byte $37 // LCG seed (kept nonzero)
+exit_tmp_count:     .byte 0
+exit_wall_idx:      .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Push subroutine locals
@@ -290,7 +337,9 @@ sprite_bit_tbl:
 // Strings (PETSCII uppercase)
 .encoding "petscii_upper"
 str_title:
-.text "SUTEKH: DESTROYER OF WORLDS"
+.byte KEY_YELLOW
+.text "SUTEHK: DESTROYER OF WORLDS"
+.byte KEY_LT_GREEN
 .byte 0
 str_subtitle:
 .text "  A GAME OF INEVITABILITY  "
@@ -308,14 +357,27 @@ str_level_lbl:
 .text "LVL: "
 .byte 0
 str_restart_lbl:
-.text "R=RST Q=QUIT"
+.byte KEY_WHITE
+.text "R"
+.byte KEY_YELLOW
+.text "=RST "
+.byte KEY_WHITE
+.text "Q"
+.byte KEY_YELLOW
+.text "=QUIT"
 .byte 0
 str_level_complete:
+.byte KEY_LT_GREEN
 .text "** RITES COMPLETED **"
 .byte 0
 str_game_complete:
+.byte KEY_RED
 .text "* ALL RITES FULFILLED *"
 .byte 0
+str_credit:
+.text "BY DEADLINE / CITYXEN 2026"
+.byte 0
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 // IRQ timer hooks (required by timers.il.asm)
@@ -329,6 +391,9 @@ init_timers_user_hook:
     // Set player animation timer to 1 tick (fires every IRQ, ~16ms at 60Hz)
     lda #1
     SetTimerTo(TIMER_PLAYER_ANIM)
+    // Bat moves every 3 ticks (~20 times/sec at 60Hz)
+    lda #3
+    SetTimerTo(TIMER_BAT)
     rts
 
 irq_timer_user_hook:
@@ -347,6 +412,9 @@ irq_timer_user_hook:
 
 .const sprite_pointer_bat_frame1   = $c5
 .const sprite_pointer_bat_frame2   = $c6
+.const sprite_bat_color            = LIGHT_RED
+.const sprite_bat_multicolor       = $00
+
 
 .const sprite_pointer_ankh         = $c7
 .const sprite_pointer_orb          = $c8
