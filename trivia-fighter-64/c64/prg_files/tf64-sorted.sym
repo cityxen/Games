@@ -420,7 +420,6 @@
 .label sobj_tick_ysave=$1a91
 .label sobj_tick=$18fd
 .label sobj_yobj_save=$1a8e
-.label sprites=$2800
 .label st_lf_out=$4409 {
 .label start=$817
 .label str_len=$13a5

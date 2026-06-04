@@ -445,7 +445,6 @@
 .label yin_state=$1c11 {
 }
 .label player_2_sprite_color=$1b7c
-.label sprites=$2800
 .label random_init_sid=$16db
 .label ml_detect_cmd_end=$16fd
 .label cxn_avatar_eagull_t=$1ae6
