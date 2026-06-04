@@ -11,19 +11,14 @@ powershell -ExecutionPolicy Bypass -File tools\make_binary.ps1
 if errorlevel 1 goto :error
 
 echo [3/4] Building disk image...
-if not exist tools\ac.jar (
-    echo.
-    echo ERROR: tools\ac.jar not found.
-    echo Download AppleCommander from:
-    echo   https://github.com/AppleCommander/AppleCommander/releases
-    echo Place ac.jar in the tools\ folder, then rebuild.
-    goto :error
-)
-
 copy /b DOS3.3_EMPTY.po prg_files\wad_a2.po >nul
-java -jar tools\ac.jar -p prg_files\wad_a2.po STARTUP bas 0x0801 < prg_files\startup.bin
+rem copy /b DOS3.3_EMPTY.po prg_files\wad_a2-2.po >nul
+rem "C:\Program Files\Java\jdk-26.0.1\bin\java.exe" -jar tools\ac.jar -p prg_files\wad_a2.po STARTUP bas 0x0801 < prg_files\startup.bin
+call diskimage.bat add --name HELLO --type s --addr 0x6000 prg_files\wad_a2.po prg_files\wad_a2.bin
+call diskimage.bat add --name STARTUP --type s --addr 0x6000 prg_files\wad_a2.po prg_files\wad_a2.bin
 if errorlevel 1 goto :error
-java -jar tools\ac.jar -p prg_files\wad_a2.po WADA2 bin 0x0800 < prg_files\wad_a2.bin
+call diskimage.bat add --name WADA2 --type b --addr 0x6000 prg_files\wad_a2.po prg_files\wad_a2.bin
+rem "C:\Program Files\Java\jdk-26.0.1\bin\java.exe" -jar tools\ac.jar -p prg_files\wad_a2-2.po WADA2 bin 0x0800 < prg_files\wad_a2.bin
 if errorlevel 1 goto :error
 
 echo [4/4] Done.

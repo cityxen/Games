@@ -120,6 +120,56 @@ dds_no_carry:
 dds_done:
     rts
 
+// ─── draw_doodle_or ───────────────────────────────────────────
+// Same as draw_doodle_sprite, but OR-blits: the sprite's lit pixels are
+// added on top of whatever is already on screen, and the sprite's empty
+// bytes leave the background untouched.  Use this to overlay a doodle on
+// a button without erasing the button.
+// Inputs/ZP usage identical to draw_doodle_sprite.  Trashes A, X, Y.
+draw_doodle_or:
+    lda ZP_PTR_LO
+    sta ZP_SPR_LO
+    lda ZP_PTR_HI
+    sta ZP_SPR_HI
+
+    ldx doodle_row
+    lda #0
+    sta ZP_TMP3
+
+ddo_row:
+    lda hgr_row_lo,x
+    clc
+    adc doodle_col
+    sta ZP_TMP
+    lda hgr_row_hi,x
+    adc #0
+    sta ZP_TMP2
+
+    ldy #3
+ddo_col:
+    lda (ZP_SPR_LO),y
+    ora (ZP_TMP),y          // combine with existing screen (button) content
+    sta (ZP_TMP),y
+    dey
+    bpl ddo_col
+
+    lda ZP_SPR_LO
+    clc
+    adc #4
+    sta ZP_SPR_LO
+    bcc ddo_no_carry
+    inc ZP_SPR_HI
+ddo_no_carry:
+
+    inc ZP_TMP3
+    lda ZP_TMP3
+    cmp #21
+    beq ddo_done
+    inx
+    jmp ddo_row
+ddo_done:
+    rts
+
 // ─── erase_doodle_sprite ──────────────────────────────────────
 // Write $00 over 21 rows × 4 bytes at (doodle_col, doodle_row).
 // Trashes A, X, Y, ZP_TMP, ZP_TMP2, ZP_TMP3.
@@ -151,6 +201,81 @@ eds_col:
     inx
     jmp eds_row
 eds_done:
+    rts
+
+// ─── draw_big_sprite ──────────────────────────────────────────
+// Draw a 42-row × 8-byte big-circle sprite at (big_spr_col, big_spr_row).
+// Caller sets ZP_PTR_LO/HI to the source sprite (e.g. big_circle_red,
+// big_circle_blue, …) before calling.
+// big_spr_col must be 0-32; big_spr_row must be 0-117 for mixed-mode HGR.
+// Colors are correct only when big_spr_col is EVEN (HGR chroma phase).
+// Trashes A, X, Y, ZP_TMP, ZP_TMP2, ZP_TMP3, ZP_SPR_LO/HI.
+draw_big_sprite:
+    lda ZP_PTR_LO
+    sta ZP_SPR_LO
+    lda ZP_PTR_HI
+    sta ZP_SPR_HI
+    ldx big_spr_row
+    lda #0
+    sta ZP_TMP3
+dbs_row:
+    lda hgr_row_lo,x
+    clc
+    adc big_spr_col
+    sta ZP_TMP
+    lda hgr_row_hi,x
+    adc #0
+    sta ZP_TMP2
+    ldy #7
+dbs_col:
+    lda (ZP_SPR_LO),y
+    sta (ZP_TMP),y
+    dey
+    bpl dbs_col
+    lda ZP_SPR_LO
+    clc
+    adc #8
+    sta ZP_SPR_LO
+    bcc dbs_no_carry
+    inc ZP_SPR_HI
+dbs_no_carry:
+    inc ZP_TMP3
+    lda ZP_TMP3
+    cmp #42
+    beq dbs_done
+    inx
+    jmp dbs_row
+dbs_done:
+    rts
+
+// ─── erase_big_sprite ─────────────────────────────────────────
+// Write $00 over 42 rows × 8 bytes at (big_spr_col, big_spr_row).
+// Trashes A, X, Y, ZP_TMP, ZP_TMP2, ZP_TMP3.
+erase_big_sprite:
+    ldx big_spr_row
+    lda #0
+    sta ZP_TMP3
+ebs_row:
+    lda hgr_row_lo,x
+    clc
+    adc big_spr_col
+    sta ZP_TMP
+    lda hgr_row_hi,x
+    adc #0
+    sta ZP_TMP2
+    ldy #7
+ebs_col:
+    lda #$00
+    sta (ZP_TMP),y
+    dey
+    bpl ebs_col
+    inc ZP_TMP3
+    lda ZP_TMP3
+    cmp #42
+    beq ebs_done
+    inx
+    jmp ebs_row
+ebs_done:
     rts
 
 // ─── beep ─────────────────────────────────────────────────────

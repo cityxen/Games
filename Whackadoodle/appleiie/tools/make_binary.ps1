@@ -1,20 +1,20 @@
 # Strip the 2-byte KickAssembler load-address header and generate the
 # Applesoft STARTUP program that tells ProDOS to BRUN the game binary.
 #
-# Inputs:  prg_files\wad_a2.prg   (KickAss output, first 2 bytes = $00 $08)
-# Outputs: prg_files\wad_a2.bin   (raw binary at $0800, no header)
+# Inputs:  prg_files\wad_a2.prg   (KickAss output, first 2 bytes = $00 $60)
+# Outputs: prg_files\wad_a2.bin   (raw binary at $6000, no header)
 #          prg_files\startup.bin  (tokenized Applesoft BASIC, loads at $0801)
 
 Set-Location $PSScriptRoot\..
 
 # --- strip header ---
 $prg = [System.IO.File]::ReadAllBytes("prg_files\wad_a2.prg")
-if ($prg[0] -ne 0x00 -or $prg[1] -ne 0x08) {
+if ($prg[0] -ne 0x00 -or $prg[1] -ne 0x60) {
     Write-Warning "Unexpected header bytes $($prg[0].ToString('X2')) $($prg[1].ToString('X2')) -- stripping anyway"
 }
 $bin = $prg[2..($prg.Length - 1)]
 [System.IO.File]::WriteAllBytes("prg_files\wad_a2.bin", $bin)
-Write-Host "wad_a2.bin: $($bin.Length) bytes at 0x0800"
+Write-Host "wad_a2.bin: $($bin.Length) bytes at 0x6000"
 
 # --- generate STARTUP Applesoft tokenized binary ---
 #

@@ -3,8 +3,11 @@
 // Ported from C64 version by Deadline / CityXen 2024
 //
 // Target: Apple IIe (65C02), KickAssembler 5.x
-// Load at $0800 via:  BRUN WAD_A2  (DOS 3.3)
-//                     BLOAD WAD_A2,A$800 : CALL 2048  (ProDOS)
+// Load at $6000 via:  BRUN WAD_A2  (DOS 3.3)
+//                     BLOAD WAD_A2,A$6000 : CALL 24576  (ProDOS)
+//
+// Loads at $6000 (above HGR pages 1 $2000-$3FFF and 2 $4000-$5FFF,
+// below DOS at $9600) so the program never collides with HGR memory.
 //
 // Note: KickAss outputs a 2-byte load-address prefix.
 //       Strip it (see Build.bat) before loading on real hardware.
@@ -21,7 +24,7 @@
 .file [name="wad_a2.prg", segments="Program"]
 
 .segment Program [allowOverlap]
-* = $0800 "PROGRAM"
+* = $6000 "PROGRAM"
 
 start:
     jmp initialize
@@ -30,14 +33,14 @@ start:
 #import "debug.asm"
 #import "timers.asm"
 #import "random.asm"
-#import "draw_screens.asm"
 #import "hgr.asm"
 #import "joystick.asm"
 #import "score.asm"
-#import "sprites.asm"
 #import "initialize.asm"
 #import "messages.asm"
 #import "doodles.asm"
+#import "sprites.asm"
+#import "draw_screens.asm"
 #import "util.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"

@@ -51,13 +51,34 @@ timer_fired:  .byte  0,   0,   0,  0   // nonzero = fired this reload
 
 // --- wait_vbl ------------------------------------------------
 // Waits for the start of the next vertical blank (~60 Hz NTSC).
-// Preserves X, Y.  Trashes A.
+// Polls $C019 bit 7, which only toggles on an enhanced IIe with the
+// 80-column / extended-memory card.  Each spin is bounded by a 16-bit
+// counter so that on hardware where VBL is unavailable (bit 7 stuck),
+// the routine bails out instead of hanging forever — the game then
+// free-runs rather than locking up.
+// Trashes A, X, Y.
 wait_vbl:
+    ldx #0
+    ldy #0
+wv_out:
     bit VBL_STATUS      // bit 7 = 1 while in VBL
-    bmi wait_vbl        // wait until we are OUT of VBL
+    bpl wv_in_phase     // bit 7 = 0: we are OUT of VBL, proceed
+    inx
+    bne wv_out
+    iny
+    bne wv_out
+    rts                 // timeout: VBL not toggling — bail (free-run)
+wv_in_phase:
+    ldx #0
+    ldy #0
 wv_in:
     bit VBL_STATUS
-    bpl wv_in           // wait until we are IN VBL
+    bmi wv_done         // bit 7 = 1: we are IN VBL, done
+    inx
+    bne wv_in
+    iny
+    bne wv_in
+wv_done:
     rts
 
 // --- update_timers -------------------------------------------

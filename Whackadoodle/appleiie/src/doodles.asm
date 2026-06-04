@@ -151,25 +151,26 @@ sds_reload:
 game_setup_doodle:
 
     // Erase old doodle from HGR
-    jsr erase_doodle_sprite
+    jsr draw_buttons
 
-    // Handle did_hit == 0 (timeout): if bad doodle, lose a life
+    // Apply timeout penalty only when: did_hit=0 (no player input) AND bad doodle (>=4)
     lda did_hit
-    bne gsd_pick_slot       // nonzero = was hit (any kind)
+    bne gsd_skip_penalty    // player hit something — no timeout penalty
     lda doodle
     cmp #4
-    bcc gsd_pick_slot       // doodle < 4 = good, no penalty on timeout
-    // Bad doodle timed out -> MISS
+    bcc gsd_skip_penalty    // good doodle timed out — no penalty
+    // Bad doodle timed out -> lose a life
     dec whack_life
     lda #2
     jsr set_message
     jsr beep
+gsd_skip_penalty:
+    // Always pick a new slot, draw new doodle, and reset the timer
+    jsr random_slot         // A = new slot, button_to_hit = new slot
+    sta button_to_hit
+    jsr set_draw_place      // A still = slot from random_slot ✓
 
-    jsr random_slot
-
-    jsr set_draw_place
-
-    // Random doodle index
+    // Pick doodle type
     lda whack_mode
     cmp #MODE_EASY
     beq gsd_easy_doodle
@@ -189,7 +190,9 @@ gsd_draw:
     // Point sprite ptr and draw
     lda doodle
     jsr set_sprite_ptr
-    jsr draw_doodle_sprite
+    jsr draw_doodle_or
+
+    //OverlayDoodle(doodle, button_to_hit)   // draw doodle on the correct button
 
     // Update speed and reset doodle timer
     jsr set_doodle_speed
@@ -231,7 +234,11 @@ set_draw_place:
     // Set doodle position from slot table
     tax
     lda slot_col,x
+    clc
+    adc #$02
     sta doodle_col
     lda slot_row,x
+    clc
+    adc #$0a
     sta doodle_row
     rts

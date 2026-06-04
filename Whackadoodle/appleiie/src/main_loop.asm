@@ -36,7 +36,7 @@ main_loop:
     // Check for flashing button lights timers
     GetTimerFired(TIMER_FLASH)
     cmp #$02
-    bne !++
+    bne !+
     ResetTimerFired(TIMER_FLASH)
     ResetTimer(TIMER_FLASH)
     jsr randomly_flash_buttons

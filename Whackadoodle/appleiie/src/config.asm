@@ -96,19 +96,26 @@
 // Row    = HGR row (0-159 for mixed-mode HGR portion)
 // Doodle sprite is drawn 16 rows ABOVE the button centre row.
 // Adjust these to match wherever the user draws the buttons.
-// Sprites are 4 HGR bytes wide (28 px) × 21 rows tall.
+// Sprites are 4 HGR bytes wide (28 px) x 21 rows tall.
 // Five slots spaced 7 bytes apart: sprites at 1-4, 8-11, 15-18, 22-25, 29-32
 // leaving ~3 byte gaps and centering across the 40-byte screen.
-.const BUTT0_COL    = 1    // Red    button area
-.const BUTT0_ROW    = 70   //
+
+.const BUTT0_COL    = 2    // Red    button area
+.const BUTT0_ROW    = 80   //
 .const BUTT1_COL    = 8    // Green  button area
-.const BUTT1_ROW    = 28   //
-.const BUTT2_COL    = 15   // Yellow button area
-.const BUTT2_ROW    = 70   //
-.const BUTT3_COL    = 22   // Blue   button area
-.const BUTT3_ROW    = 28   //
-.const BUTT4_COL    = 29   // White  button area
-.const BUTT4_ROW    = 70   //
+.const BUTT1_ROW    = 20   //
+.const BUTT2_COL    = 14   // Yellow button area
+.const BUTT2_ROW    = 80   //
+.const BUTT3_COL    = 20   // Blue   button area
+.const BUTT3_ROW    = 20   //
+.const BUTT4_COL    = 26   // White  button area
+.const BUTT4_ROW    = 80   //
+
+.const BUTTON_RED = 0
+.const BUTTON_GREEN = 1
+.const BUTTON_PURPLE = 2
+.const BUTTON_BLUE = 3
+.const BUTTON_WHITE = 4
 
 // ============================================================
 // Game Variables
@@ -145,3 +152,53 @@ joy_prev_btn:        .byte 0    // previous fire button state (for edge detect)
 // Active doodle sprite position (set by game_setup_doodle)
 doodle_col:          .byte 0    // HGR column byte
 doodle_row:          .byte 0    // HGR row
+
+// Big circle sprite position (56 px wide x 42 rows tall)
+// col: 0-32 (must leave room for 8 bytes); row: 0-117 (42 rows fit in mixed-mode HGR)
+big_spr_col:         .byte 0
+big_spr_row:         .byte 0
+
+
+// ─── Attract screen string data ───────────────────────────────
+
+ml_s_title:    applestr("    WHACKADOODLE! (APPLE//e VERSION)")
+ml_s_credit:   applestr("         DEADLINE/CITYXEN 2026")
+ml_s_cxn_itch: applestr("        HTTPS://CITYXEN.ITCH.IO")
+
+ml_s_line:     applestr("========================================")
+ml_s_howto:    applestr("            HOW TO PLAY")
+ml_s_aim1:     applestr("     A doodle pops up randomly ")
+ml_s_aim2:     applestr("   at one of the 5 button slots.")
+
+
+ml_s_scoring:  applestr("            SCORING")
+ml_s_bad:      applestr("  Hit a BAD doodle  = +1 score")
+ml_s_good:     applestr("  Hit a GOOD doodle = -1 score -1 life")
+ml_s_wrong:    applestr("  Wrong slot        = -1 life")
+
+ml_s_diff:     applestr("          DIFFICULTY")
+ml_s_deasy:    applestr("  Left   = EASY   (10 lives, slow)")
+ml_s_dnormal:  applestr("  Center = NORMAL  (6 lives)")
+ml_s_dhard:    applestr("  Right  = HARD    (3 lives, fast)")
+
+
+ml_s_modepfx:  applestr("  MODE: ")
+ml_s_fire:     applestr("         >> FIRE TO START <<")
+ml_s_measy:    applestr("EASY    ")
+ml_s_mnormal:  applestr("NORMAL  ")
+ml_s_mhard:    applestr("HARD    ")
+
+
+
+// ─── Text screen row address tables (page 1, 40-column) ───────
+// Apple IIe text layout is non-linear.  Indexed 0-23.
+
+txt_row_lo:
+    .byte <$0400, <$0480, <$0500, <$0580, <$0600, <$0680, <$0700, <$0780
+    .byte <$0428, <$04A8, <$0528, <$05A8, <$0628, <$06A8, <$0728, <$07A8
+    .byte <$0450, <$04D0, <$0550, <$05D0, <$0650, <$06D0, <$0750, <$07D0
+
+txt_row_hi:
+    .byte >$0400, >$0480, >$0500, >$0580, >$0600, >$0680, >$0700, >$0780
+    .byte >$0428, >$04A8, >$0528, >$05A8, >$0628, >$06A8, >$0728, >$07A8
+    .byte >$0450, >$04D0, >$0550, >$05D0, >$0650, >$06D0, >$0750, >$07D0

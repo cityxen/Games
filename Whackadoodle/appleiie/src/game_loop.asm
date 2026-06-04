@@ -51,8 +51,11 @@ gs_lives_done:
     jsr set_message
     jsr show_message
 
+    jsr draw_screen_play
+
     // First doodle
     jsr game_setup_doodle
+
 
 game_loop:
 
