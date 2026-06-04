@@ -5,9 +5,9 @@
 // Special thanks:
 // 
 //  - AHCS Club members for their apple tech support and feedback during development, especially:
-//    - Kyle R. for donating an Apple IIe and providing invaluable feedback during development!
+//    - Kyle R., Bryan B. for donating an Apple IIe and providing invaluable feedback during development!
 //    - Josh (Mr. TechGadget) for his help with Apple IIe i/o hardware cards
-//    - Grizzle (David) for creating the relay board interface for the Apple IIe game port
+//    - Grizzly (David) for creating the relay board interface for the Apple IIe game port
 // 
 // In order to compile this, you will need KickAssembler, and the
 // retro-dev-tools repository:
@@ -69,4 +69,21 @@ POKE -16289,0  : REM AN3 ON
 
 REM SELECT RELAY NUMBER USING AN0-AN2
 // You’ll need the exact Apple II soft-switch addresses for AN0-AN3 ON/OFF, but electrically this is the right design.
+
+
+
+
+For a 3-bit to 8-output decoder, such as a 74HCT138:
+
+| A2 | A1 | A0 | Output Selected |
+| -- | -- | -- | --------------- |
+| 0  | 0  | 0  | Y0              |
+| 0  | 0  | 1  | Y1              |
+| 0  | 1  | 0  | Y2              |
+| 0  | 1  | 1  | Y3              |
+| 1  | 0  | 0  | Y4              |
+| 1  | 0  | 1  | Y5              |
+| 1  | 1  | 0  | Y6              |
+| 1  | 1  | 1  | Y7              |
+
 

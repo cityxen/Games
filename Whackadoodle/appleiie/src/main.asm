@@ -5,9 +5,9 @@
 // Special thanks:
 // 
 //  - AHCS Club members for their apple tech support and feedback during development, especially:
-//    - Kyle R. for donating an Apple IIe and providing invaluable feedback during development!
+//    - Kyle R., Bryan B. for donating an Apple IIe and providing invaluable feedback during development!
 //    - Josh (Mr. TechGadget) for his help with Apple IIe i/o hardware cards
-//    - Grizzle (David) for creating the relay board interface for the Apple IIe game port
+//    - Grizzly (David) for creating the relay board interface for the Apple IIe game port
 // 
 // In order to compile this, you will need KickAssembler, and the
 // retro-dev-tools repository:
