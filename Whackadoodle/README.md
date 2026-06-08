@@ -95,7 +95,7 @@ In development — screenshots coming soon.
 - Game by **Deadline** / CityXen (2024)
 - Cartridge code & Meatloaf high-score support by **Jaime Idolpx** (idolpx)
 - Fairground tune by **Saul Cross**
-- Apple IIe port by **Deadline / Grizzly (David) / Kyle** (AHCS), 2026
+- Apple IIe port by **Deadline / Grizzly (David) / Kyle** Special thanks to Josh (Mr. TechGadget) (AHCS), 2026
 - Thanks to **Logg** & the **Atlanta Historical Computing Society (AHCS)** for
   support, hardware help, and play testing
 
