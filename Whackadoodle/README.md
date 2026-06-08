@@ -60,6 +60,7 @@ The original release, with cartridge support and online **Meatloaf** high scores
 
 `c64/`
 
+![C64 CityXen Whackadoodle](c64/images/wad-01.png)
 ![C64 CityXen cartridge board](c64/images/cart1.png)
 
 ### Apple IIe — *work in progress*
@@ -79,7 +80,7 @@ A modern build in the Godot engine, faithful to the 8-bit look.
 
 `PC/`
 
-![PC port title screen (8-bit style)](PC/images/8bit/main-screen-8bit.png)
+![PC port title screen (8-bit style)](PC/images/instruct.png)
 
 ### Atari 800XL — *work in progress*
 
