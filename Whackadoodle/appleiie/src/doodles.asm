@@ -179,11 +179,12 @@ gsd_skip_penalty:
 
     jmp gsd_draw
 gsd_easy_doodle:
-    // Easy mode: only doodles 3-6 (star/RAD/skull/poo)
+    // Easy mode: only BAD doodles 4-7 (rad/skull/poo/frown) -- every
+    // doodle is a safe target, so there are no "don't hit" traps.
     jsr get_random
     and #%00000011
     clc
-    adc #3
+    adc #4
     sta doodle
 
 gsd_draw:

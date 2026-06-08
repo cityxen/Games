@@ -29,10 +29,8 @@
 // ─── read_joystick ────────────────────────────────────────────
 // Trashes A, X, Y.
 read_joystick:
-    ldy #$FF                // Y = chosen slot; $FF = none yet
-
-    // ── PDL0 (horizontal) -> left / right ────────────────────
-    sta PDL_STROBE          // any write starts the timers
+    // ── PDL0 (horizontal): strobe, count while comparator high ─
+    sta PDL_STROBE          // any write starts ALL paddle timers
     ldx #0
 rj_p0:
     bit PDL0_CMP
@@ -41,20 +39,22 @@ rj_p0:
     bne rj_p0
     ldx #$FF                // counter wrapped -> saturate at max (right)
 rj_p0_done:
-    cpx #PDL_LO
-    bcc rj_left
-    cpx #PDL_HI
-    bcs rj_right
-    jmp rj_vert             // horizontal centred -> check vertical
-rj_left:
-    ldy #BUTTON_RED
-    jmp rj_btn              // horizontal wins -> skip vertical
-rj_right:
-    ldy #BUTTON_BLUE
-    jmp rj_btn
+    stx pdl0_val
 
-    // ── PDL1 (vertical) -> up / down ─────────────────────────
-rj_vert:
+    // Wait for PDL1's timer (started by the SAME strobe above) to
+    // expire before re-triggering.  The 558 ignores a new trigger
+    // while its output is still high, so reading PDL1 right after a
+    // back-to-back strobe gave a short (low) value -> "down" never
+    // registered.  Bounded so a disconnected paddle can't hang us.
+    ldx #0
+rj_p1_wait:
+    bit PDL1_CMP
+    bpl rj_p1_ready         // cleared -> channel ready to retrigger
+    inx
+    bne rj_p1_wait          // ~256 iterations max, then give up
+rj_p1_ready:
+
+    // ── PDL1 (vertical): retrigger, count ────────────────────
     sta PDL_STROBE
     ldx #0
 rj_p1:
@@ -64,11 +64,28 @@ rj_p1:
     bne rj_p1
     ldx #$FF                // counter wrapped -> saturate at max (down)
 rj_p1_done:
-    cpx #PDL_LO
+    stx pdl1_val
+
+    // ── Resolve direction: horizontal has priority ───────────
+    ldy #$FF                // Y = chosen slot; $FF = none yet
+    lda pdl0_val
+    cmp #PDL_LO
+    bcc rj_left
+    cmp #PDL_HI
+    bcs rj_right
+    // horizontal centred -> check vertical
+    lda pdl1_val
+    cmp #PDL_LO
     bcc rj_up
-    cpx #PDL_HI
+    cmp #PDL_HI
     bcs rj_down
-    jmp rj_btn              // vertical centred too
+    jmp rj_btn              // both centred
+rj_left:
+    ldy #BUTTON_RED
+    jmp rj_btn
+rj_right:
+    ldy #BUTTON_BLUE
+    jmp rj_btn
 rj_up:
     ldy #BUTTON_GREEN
     jmp rj_btn
@@ -118,3 +135,7 @@ rj_none:
     sta joy_fired
     sta joy_prev_input
     rts
+
+// Raw paddle counts (0-255) for this frame
+pdl0_val: .byte 0
+pdl1_val: .byte 0
