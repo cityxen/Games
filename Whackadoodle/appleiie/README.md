@@ -24,7 +24,7 @@ button **only when a bad doodle is showing**:
 The longer you play, the faster the doodles come. Survive as long as your lives
 hold out and rack up the highest score you can.
 
-![Instruction screen — good doodles vs bad doodles](c64/images/wad2.png)
+![Instruction screen — good doodles vs bad doodles](images/instruct.png)
 
 ### The doodles
 
