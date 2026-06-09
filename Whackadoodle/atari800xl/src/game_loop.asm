@@ -38,6 +38,7 @@ gs_lives_done:
     // Refresh display
     jsr gfx_clear
     jsr txt_clear
+    jsr draw_circles
     jsr clear_message_row
     jsr draw_score_line
 

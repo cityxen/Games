@@ -54,15 +54,15 @@ mmt_hard:
 draw_screen_main:
     jsr gfx_clear
     jsr txt_clear
+    jsr draw_circles           // 5 colored P/M button circles, one per slot
 
-    // Draw random doodles into the GFX play area.
-    // Hold the loop counter on the stack: draw_doodle_sprite clobbers
-    // ZP_TMP/ZP_TMP2/ZP_TMP3, so it can't be parked there.
-    ldx #$06
+    // One random doodle centred on each of the 5 button circles.
+    // Loop counter on the stack: draw_doodle_sprite clobbers ZP_TMP*.
+    ldx #0
 !:
     txa
     pha
-    jsr random_slot            // sets button_to_hit (0-4)
+    stx button_to_hit          // slot 0-4
     jsr gsd_doodle_loop_rand   // sets doodle (0-7)
     lda doodle
     jsr set_sprite_ptr         // ZP_PTR → sprite data for this doodle
@@ -70,7 +70,8 @@ draw_screen_main:
     jsr draw_doodle_sprite
     pla
     tax
-    dex
+    inx
+    cpx #5
     bne !-
 
     PrintLine(ml_s_title,    0, 0)
@@ -82,6 +83,8 @@ draw_screen_main:
 // ─── draw_screen_instruct ────────────────────────────────────
 // Instruction page: scoring rules in 4 text rows.
 draw_screen_instruct:
+    jsr gfx_clear              // remove leftover doodles from the main page
+    jsr clear_circles          // hide button circles on the rules page
     jsr txt_clear
 
     PrintLine(ml_s_title,   0, 0)
@@ -95,6 +98,7 @@ draw_screen_instruct:
 // left, bad doodles (4-7) on the right.  Mirrors the Apple IIe.
 draw_screen_instruct2:
     jsr gfx_clear
+    jsr clear_circles          // hide button circles on the doodle chart
     jsr txt_clear
 
     DrawDoodleAt(0,  4, 35)    // good: happyface

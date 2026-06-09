@@ -29,6 +29,20 @@
 // ─── ANTIC ───────────────────────────────────────────────────
 .const WSYNC    = $D40A   // write: halt CPU until next HSYNC
 
+// ─── Player/Missile Graphics ─────────────────────────────────
+.const HPOSM0   = $D004   // missile horizontal positions (color clocks)
+.const HPOSM1   = $D005
+.const HPOSM2   = $D006
+.const HPOSM3   = $D007
+.const SIZEP0   = $D008   // player width: 0=normal 1=double 3=quad
+.const SIZEP1   = $D009
+.const SIZEP2   = $D00A
+.const SIZEP3   = $D00B
+.const SIZEM    = $D00C   // all-missile width
+.const COLPF3   = $D019   // playfield 3 / 5th-player (missile) color
+.const GRACTL   = $D01D   // P/M DMA enable: bit0=missiles bit1=players
+.const PMBASE   = $D407   // ANTIC P/M memory base (high byte = page)
+
 // ─── OS Shadows ──────────────────────────────────────────────
 .const SDMCTL   = $022F   // shadow of DMACTL
 .const SDLSTL   = $0230   // display list pointer lo
@@ -36,6 +50,12 @@
 .const COLOR1   = $02C5   // shadow of COLPF1 (GR.8 foreground luminance)
 .const COLOR2   = $02C6   // shadow of COLPF2 (GR.8 bitmap background)
 .const COLOR4   = $02C8   // shadow of COLBK  (border)
+.const COLOR3   = $02C7   // shadow of COLPF3 (5th player / missile color)
+.const PCOLR0   = $02C0   // shadow of COLPM0 (player 0 color)
+.const PCOLR1   = $02C1
+.const PCOLR2   = $02C2
+.const PCOLR3   = $02C3
+.const GPRIOR   = $026F   // shadow of PRIOR (priority + 5th-player enable)
 .const RTCLOK2  = $0014   // real-time clock LSB (increments each VBL)
 
 // ─── OS Joystick Shadows ─────────────────────────────────────
@@ -102,6 +122,23 @@
 .const BUTT3_ROW    = 28
 .const BUTT4_COL    = 33   // slot 4 (rightmost)
 .const BUTT4_ROW    = 70
+
+// ─── Button circle colors (Player/Missile) ───────────────────
+// Atari color byte = (hue << 4) | luminance.
+.const COL_RED    = $3A
+.const COL_GREEN  = $C8
+.const COL_YELLOW = $1E
+.const COL_BLUE   = $86
+.const COL_WHITE  = $0E
+
+// ─── Player/Missile memory (single-line resolution) ──────────
+// PMBASE must be 2KB-aligned; region spans 2KB ($6000-$67FF).
+.const PMG_BASE   = $6000
+.const PM_MISSILE = PMG_BASE + $300
+.const PM_PLAYER0 = PMG_BASE + $400
+.const PM_PLAYER1 = PMG_BASE + $500
+.const PM_PLAYER2 = PMG_BASE + $600
+.const PM_PLAYER3 = PMG_BASE + $700
 
 // ─── Game Variables ──────────────────────────────────────────
 whack_mode:          .byte 0

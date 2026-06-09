@@ -37,6 +37,7 @@ start:
 #import "random.asm"
 #import "gfx.asm"
 #import "sprites.asm"
+#import "buttons.asm"
 #import "joystick.asm"
 #import "score.asm"
 #import "initialize.asm"

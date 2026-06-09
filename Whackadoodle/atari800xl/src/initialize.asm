@@ -47,6 +47,9 @@ initialize:
     jsr gfx_clear
     jsr txt_clear
 
+    // Set up Player/Missile colored button circles
+    jsr pmg_init
+
     cli
 
     jmp main_loop_start

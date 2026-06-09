@@ -57,7 +57,13 @@ txt_row_hi:
 display_list:
     .byte $70, $70, $70                        // 3×8 blank lines (24 total)
     .byte $4F, <GFX_BASE, >GFX_BASE           // GR.8 row 0 with LMS
-    .fill GFX_ROWS - 1, $0F                   // GR.8 rows 1-159
+    .fill 102, $0F                            // GR.8 rows 1-102
+    // ANTIC's playfield memory counter wraps at every 4KB boundary, so a
+    // 6400-byte GR.8 screen based at $4000 would mirror its top onto its
+    // bottom past $5000.  Reload the address with a second LMS at row 103
+    // (linear address $5018) to keep the whole bitmap contiguous.
+    .byte $4F, <(GFX_BASE + 103*GFX_BYTES_PER_ROW), >(GFX_BASE + 103*GFX_BYTES_PER_ROW)
+    .fill GFX_ROWS - 104, $0F                 // GR.8 rows 104-159
     .byte $42, <TXT_SCREEN, >TXT_SCREEN       // text row 0 with LMS
     .byte $02, $02, $02                        // text rows 1-3
     .byte $41, <display_list, >display_list   // JMP+VBL back to start
