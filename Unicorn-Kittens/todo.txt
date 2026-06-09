@@ -1,0 +1,20 @@
+unicorns catching cakes, candy, and other good stuff falling
+from the sky. the unicorns can fly. the unicorn needs to
+take their load (up to 5 goodies at a time), and bring it to the
+treats for good people center to drop off (and score).
+the unicorns can find kittens to rehome along the way
+bad things can drop too, like tools, poo, and email notifications.
+if the unicorn touches these, it can damage him and after enough
+damage is taken, the game will end.
+once enough goodies are delivered to the good people centers, the
+game progresses in difficulty and level introducing more obstacles,
+and new and exciting sweets to deliver
+one level game, keep the area where the MSB sprites as a HUD, only draw sprites in the
+first 256 pixels (for sprites).
+do some placeholders for sprites.
+the unicorn sprite should be animated to fly in four directions
+there should be in between levels a short animation showing how
+many kittens the unicorn rehomed.
+this game should be very funny, and even introduce some kind of crazy
+gimmick in it as well.
+
