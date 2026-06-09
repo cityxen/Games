@@ -24,6 +24,7 @@ ml_s_fire:     ataristr(" >>  FIRE TO START  <<")
 ml_s_deasy:    ataristr("LEFT=EASY  CTR=NORMAL  RGT=HARD")
 
 ml_s_scoring:  ataristr("HIT BAD=+1  HIT GOOD=-1  MISS=-LIFE")
+ml_s_ddl_fctn: ataristr("  GOOD DOODLES      BAD DOODLES")
 ml_s_modepfx:  ataristr("MODE: ")
 ml_s_measy:    ataristr("EASY    ")
 ml_s_mnormal:  ataristr("NORMAL  ")
@@ -54,17 +55,21 @@ draw_screen_main:
     jsr gfx_clear
     jsr txt_clear
 
-    // Draw random doodles into the GFX play area
+    // Draw random doodles into the GFX play area.
+    // Hold the loop counter on the stack: draw_doodle_sprite clobbers
+    // ZP_TMP/ZP_TMP2/ZP_TMP3, so it can't be parked there.
     ldx #$06
 !:
-    stx ZP_TMP3
+    txa
+    pha
     jsr random_slot            // sets button_to_hit (0-4)
     jsr gsd_doodle_loop_rand   // sets doodle (0-7)
     lda doodle
     jsr set_sprite_ptr         // ZP_PTR → sprite data for this doodle
     jsr set_draw_place         // uses button_to_hit → doodle_col/row
     jsr draw_doodle_sprite
-    ldx ZP_TMP3
+    pla
+    tax
     dex
     bne !-
 
@@ -85,11 +90,31 @@ draw_screen_instruct:
     PrintLine(ml_s_fire,    3, 0)
     rts
 
+// ─── draw_screen_instruct2 ───────────────────────────────────
+// Graphical "good vs bad doodles" page: good doodles (0-3) on the
+// left, bad doodles (4-7) on the right.  Mirrors the Apple IIe.
+draw_screen_instruct2:
+    jsr gfx_clear
+    jsr txt_clear
+
+    DrawDoodleAt(0,  4, 35)    // good: happyface
+    DrawDoodleAt(1, 12, 35)    // good: yin-yang
+    DrawDoodleAt(2,  4, 80)    // good: heart
+    DrawDoodleAt(3, 12, 80)    // good: star
+    DrawDoodleAt(4, 24, 35)    // bad: rad
+    DrawDoodleAt(5, 32, 35)    // bad: skull
+    DrawDoodleAt(6, 24, 80)    // bad: poo
+    DrawDoodleAt(7, 32, 80)    // bad: frown
+
+    PrintLine(ml_s_ddl_fctn, 0, 0)
+    PrintLine(ml_s_fire,     3, 0)
+    rts
+
 // ─── inc_screen_draw ─────────────────────────────────────────
 inc_screen_draw:
     inc screen_draw
     lda screen_draw
-    cmp #$02
+    cmp #$03
     bne !+
     lda #$00
     sta screen_draw

@@ -12,8 +12,9 @@
 //
 // GR.8 pixel format:
 //   - Each byte = 8 pixels, bit 7 = leftmost
-//   - COLPF2 (shadow COLOR2) sets the foreground pixel color
-//   - COLBK  (shadow COLOR4) sets the background color
+//   - COLPF1 (shadow COLOR1) sets the foreground pixel luminance
+//   - COLPF2 (shadow COLOR2) sets the bitmap background color
+//   - COLBK  (shadow COLOR4) sets the border color
 //   - Row N starts at GFX_BASE + N * 40  (linear, unlike Apple HGR)
 //
 // Sprite blit (draw_doodle_sprite / erase_doodle_sprite):
@@ -71,22 +72,26 @@ gfx_init:
     sta SDLSTH
     lda #$22            // normal-width DMA, no P/M DMA
     sta SDMCTL
-    lda #$00            // black background
+    // In ANTIC mode F (GR.8): COLPF2 is the bitmap BACKGROUND and
+    // COLPF1 is the foreground luminance (COLBK is just the border).
+    lda #$00            // black border (COLBK) + black background (COLPF2)
     sta COLOR4
-    lda #$0E            // white foreground pixels (hue 0, lum 14)
     sta COLOR2
+    lda #$0E            // white foreground pixels (COLPF1 lum 14, hue 0)
+    sta COLOR1
     rts
 
 // ─── gfx_clear ───────────────────────────────────────────────
 // Zero-fill the GFX bitmap: 160 rows × 40 bytes = 6400 bytes.
 // 6400 = 25 × 256, so we do 25 full-page zero-fills.
 gfx_clear:
-    lda #0
+    lda #<GFX_BASE
     sta ZP_TMP
-    lda #>GFX_BASE      // $40
+    lda #>GFX_BASE
     sta ZP_TMP2
     ldy #0
     ldx #25             // 25 pages × 256 bytes = 6400 bytes
+    lda #0              // fill value 0 (A was clobbered by the pointer setup above)
 gc_inner:
     sta (ZP_TMP),y
     iny

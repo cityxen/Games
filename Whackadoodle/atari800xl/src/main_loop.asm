@@ -29,7 +29,7 @@ main_loop:
     // Flash external button lights (no-op on software-only port)
     GetTimerFired(TIMER_FLASH)
     cmp #$02
-    bne !++
+    bne !+
     ResetTimerFired(TIMER_FLASH)
     ResetTimer(TIMER_FLASH)
     jsr randomly_flash_buttons
@@ -80,5 +80,9 @@ ml_draw_screen:
     cmp #$01
     bne !+
     jsr draw_screen_instruct
+!:
+    cmp #$02
+    bne !+
+    jsr draw_screen_instruct2
 !:
     rts

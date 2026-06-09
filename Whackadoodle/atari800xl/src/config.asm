@@ -8,8 +8,9 @@
 .const HPOSP1   = $D001
 .const HPOSP2   = $D002
 .const HPOSP3   = $D003
-.const COLPF2   = $D018   // GR.8 foreground pixel color
-.const COLBK    = $D01A   // background color
+.const COLPF1   = $D017   // GR.8 foreground luminance
+.const COLPF2   = $D018   // GR.8 bitmap background color
+.const COLBK    = $D01A   // border color
 .const CONSOL   = $D01F   // console keys / speaker (write)
 .const TRIG0    = $D010   // joystick 1 fire (read; bit0=0 when pressed)
 
@@ -32,8 +33,9 @@
 .const SDMCTL   = $022F   // shadow of DMACTL
 .const SDLSTL   = $0230   // display list pointer lo
 .const SDLSTH   = $0231   // display list pointer hi
-.const COLOR2   = $02C6   // shadow of COLPF2
-.const COLOR4   = $02C8   // shadow of COLBK
+.const COLOR1   = $02C5   // shadow of COLPF1 (GR.8 foreground luminance)
+.const COLOR2   = $02C6   // shadow of COLPF2 (GR.8 bitmap background)
+.const COLOR4   = $02C8   // shadow of COLBK  (border)
 .const RTCLOK2  = $0014   // real-time clock LSB (increments each VBL)
 
 // ─── OS Joystick Shadows ─────────────────────────────────────
@@ -69,9 +71,10 @@
 .const MODE_NORMAL  = $01
 .const MODE_HARD    = $02
 
-.const DOODLE_SPEED_INITIAL = 175
-.const DOODLE_SPEED_EASY    = 175
-.const DOODLE_SPEED_HARD    = 48
+// Doodle on-screen time, in frames (~60/sec). Higher = slower.
+.const DOODLE_SPEED_INITIAL = 300   // NORMAL start (~5s)
+.const DOODLE_SPEED_EASY    = 320   // EASY (~5.3s)
+.const DOODLE_SPEED_HARD    = 120   // HARD (~2s)
 
 // Software timer indices
 .const TIMER_FLASH    = 0   // attract: button flash period

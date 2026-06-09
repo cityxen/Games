@@ -28,6 +28,18 @@
     jsr print_at
 }
 
+// ─── DrawDoodleAt macro ──────────────────────────────────────
+// Draw doodle `idx` (0-7) at GFX byte column `col`, row `row`.
+.macro DrawDoodleAt(idx, col, row) {
+    lda #col
+    sta doodle_col
+    lda #row
+    sta doodle_row
+    lda #idx
+    jsr set_sprite_ptr
+    jsr draw_doodle_sprite
+}
+
 // ─── print_at ────────────────────────────────────────────────
 // Write a null-terminated Atari screen-code string to a text row.
 // In:  X  = row (0-3)

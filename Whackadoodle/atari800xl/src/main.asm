@@ -20,10 +20,10 @@
 // Timing:   VBL sync via RTCLOK+2 ($0014) polling
 //
 // Note: KickAss outputs a 2-byte load-address prefix in main.prg.
-//       tools\make_xex.ps1 strips it and wraps the binary as XEX.
+//       kick2xex.py strips it and wraps the binary as XEX.
 // ============================================================
 
-.file [name="wadatari.xex", segments="Program"]
+.file [name="wadatari.prg", segments="Program"]
 
 .segment Program [allowOverlap]
 * = $2000 "Program"

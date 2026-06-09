@@ -142,15 +142,18 @@ game_setup_doodle:
     jsr erase_doodle_sprite
 
     lda did_hit
-    bne gsd_pick_slot
+    bne gsd_skip_penalty
     lda doodle
     cmp #4
-    bcc gsd_pick_slot
+    bcc gsd_skip_penalty
     dec whack_life
     lda #2
     jsr set_message
     jsr beep
-
+gsd_skip_penalty:
+    // Always pick a new slot, draw a new doodle, and reset the timer.
+    // (Previously these branches jumped into random_slot's body, whose
+    //  rts returned early and skipped the draw -> no doodle appeared.)
     jsr random_slot
 
     jsr set_draw_place
@@ -163,10 +166,11 @@ game_setup_doodle:
 
     jmp gsd_draw
 gsd_easy_doodle:
+    // Easy mode: only BAD doodles 4-7 (every doodle is a safe target).
     jsr get_random
     and #%00000011
     clc
-    adc #3
+    adc #4
     sta doodle
 
 gsd_draw:
