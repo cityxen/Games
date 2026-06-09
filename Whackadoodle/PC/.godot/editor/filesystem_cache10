@@ -1,7 +1,7 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1780962089
-::res://images/::1779634777
-067de4bf-25f6-4873-acc5-562973c195dd.png::CompressedTexture2D::970445797591836431::1752250863::1779634777::1::::<><><>0<>0<>3b7a8c5618d2ab0ec8266732486d2cdb<>res://.godot/imported/067de4bf-25f6-4873-acc5-562973c195dd.png-1fc34ea00d6c9ae527014a5b0a890b85.ctex::
+::res://::1780962389
+export_presets.cfg::TextFile::-1::1780962137::0::1::::<><><>0<>0<><>::
+::res://images/::1780962199
 button-blue.png::CompressedTexture2D::3166476655909105232::1752215020::1779634777::1::::<><><>0<>0<>9183262701c99d583d57db5cb33d8fad<>res://.godot/imported/button-blue.png-ed87e11576d53a21ff1cbd13966b90b2.ctex::
 button-green.png::CompressedTexture2D::4457949090669349364::1752215054::1779634777::1::::<><><>0<>0<>248342aa8992bb001a7c7923a551580d<>res://.godot/imported/button-green.png-f2db84cea9fae17c69ea009bd9327041.ctex::
 button-red.png::CompressedTexture2D::7704888266450055099::1752214987::1779634777::1::::<><><>0<>0<>56e4eea5adad57c0bf4f571a87452a5d<>res://.godot/imported/button-red.png-0cbcbce35e963c48973e55499fab8bed.ctex::
@@ -15,7 +15,7 @@ doodle-rads.png::CompressedTexture2D::5820282164258141952::1752216454::177963477
 doodle-skull.png::CompressedTexture2D::5760977739554563285::1752215963::1779634777::1::::<><><>0<>0<>4d7952a363292108b797807991afc679<>res://.godot/imported/doodle-skull.png-c5bae9a7e92e5a10751cf33aa205b331.ctex::
 doodle-star.png::CompressedTexture2D::5815425792534727726::1752216000::1779634777::1::::<><><>0<>0<>a770e7ad437917ea561643a5feb7c991<>res://.godot/imported/doodle-star.png-fca5626168d7196c1c0c4c338473d417.ctex::
 doodle-tao.png::CompressedTexture2D::3880433419450331446::1752216509::1779634777::1::::<><><>0<>0<>0be99c41981c4ebfe6abc4db18808cab<>res://.godot/imported/doodle-tao.png-65b3345032b265653e4eed66d6f300c4.ctex::
-eb3b4ef9-d5b9-46da-9bb5-413d02dbcd34.png::CompressedTexture2D::2969398059955933873::1752250642::1779634777::1::::<><><>0<>0<>fae17d5dd0a8e2770f3b5559f1c3072e<>res://.godot/imported/eb3b4ef9-d5b9-46da-9bb5-413d02dbcd34.png-e81cae77d00c1a0c29fd47a7b9446d2f.ctex::
+instruct.png::CompressedTexture2D::5355231847962804193::1780962195::1780965781::1::::<><><>0<>0<>909867f5718c6dbcff6018351f68a532<>res://.godot/imported/instruct.png-7d0e86e1f5975c25be1dfc689c4357c9.ctex::
 whackadoodle!.png::CompressedTexture2D::7088193046560415959::1752214746::1779634777::1::::<><><>0<>0<>0d05bf2af3b16bc39b469450e8bf2a22<>res://.godot/imported/whackadoodle!.png-4f386c584a9fd756ffee5767548269e5.ctex::
 ::res://images/8bit/::1779634777
 button-blue-8bit.png::CompressedTexture2D::5157997095903507159::1752212884::1779634777::1::::<><><>0<>0<>d61bfd7ee4e8f79b8f8c208dff6255ff<>res://.godot/imported/button-blue-8bit.png-506b9431f2a274d3b3bf9aa3d2386785.ctex::
