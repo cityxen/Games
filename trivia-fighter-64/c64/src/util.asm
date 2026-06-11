@@ -287,23 +287,40 @@ randomly_flash_buttons:
 	sta USER_PORT_DATA
 	rts
 
-randomize_avatars: 
-	GetTimer(12)
+randomize_avatars:
+	// software LFSR, stepped once per pick — the music owns SID voice 3 on
+	// this screen (so $d41b can freeze), and the IRQ timers alias against
+	// the sampling rate (so timer-based picks barely changed)
+	jsr ra_next_avatar
+	sta player_1_avatar
+	jsr ra_next_avatar
+	cmp player_1_avatar     // same head as p1? take the next one instead
+	bne !+
+	clc
+	adc #1
+	cmp #10                 // wrap avatar 10 -> 0
+	bcc !+
+	lda #0
+!:
+	sta player_2_avatar
+	rts
+
+// Advance the LFSR (period 255, never 0) and map to an avatar index:
+// 0-9 as-is, 10-15 clamp to 1.
+ra_next_avatar:
+	lda ra_seed
+	asl
+	bcc !+
+	eor #$1d
+!:
+	sta ra_seed
 	and #%00001111
 	cmp #10
 	bcc !+
 	lda #1
 !:
-	sta player_1_avatar
-
-	GetTimer(13)
-	and #%00001111
-	cmp #10
-	bcc !+
-	lda #1
-!:	
-	sta player_2_avatar
 	rts
+ra_seed: .byte $5a
 
 
 

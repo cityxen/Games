@@ -63,13 +63,13 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_1_
 	bne !+
-	lda #$00
-	sta game_anim
-	jmp game_step_anim_init
+	lda #<anim1_table
+	ldx #>anim1_table
+	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_1
 	bne !+
-	jmp game_step_anim
+	jmp anim_cutscene_run
 !:
 	cmp #GAME_STEP_ROUND_2_
 	bne !+
@@ -83,13 +83,13 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_2_
 	bne !+
-	lda #$00
-	sta game_anim
-	jmp game_step_anim_init
+	lda #<anim2_table
+	ldx #>anim2_table
+	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_2
 	bne !+
-	jmp game_step_anim
+	jmp anim_cutscene_run
 !:
 	cmp #GAME_STEP_ROUND_3_
 	bne !+
@@ -103,13 +103,13 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_3_
 	bne !+
-	lda #$00
-	sta game_anim
-	jmp game_step_anim_init
+	lda #<anim3_table
+	ldx #>anim3_table
+	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_3
 	bne !+
-	jmp game_step_anim
+	jmp anim_cutscene_run
 !:
 	cmp #GAME_STEP_ROUND_4_
 	bne !+
@@ -123,13 +123,13 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_4_
 	bne !+
-	lda #$00
-	sta game_anim
-	jmp game_step_anim_init
+	lda #<anim4_table
+	ldx #>anim4_table
+	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_4
 	bne !+
-	jmp game_step_anim
+	jmp anim_cutscene_run
 !:
 	cmp #GAME_STEP_ROUND_5_
 	bne !+
@@ -290,10 +290,48 @@ game_step_anim: // all anims for now
 	cmp #intro_anim_time
 	beq gsa_out
 	jmp game_loop
-gsa_out:	
+gsa_out:
 	inc game_step
 	jmp game_loop
 // END GAME STEP ANIM
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// BETWEEN-ROUND CUTSCENE GLUE (GAME_STEP_ANIM_1..4)
+// The cutscene engine lives in sprite-animation.il.asm; these wrappers thread
+// it through the game-step state machine. Tables are in config.asm.
+
+// anim_cutscene_init — COMMON initializer, called once per anim step.
+// In: A = <table, X = >table
+anim_cutscene_init:
+	sta anim_tbl_lo
+	stx anim_tbl_hi
+	// heads show the selected avatars: refresh their table colors so
+	// anim_setup picks them up
+	ldx player_1_avatar
+	lda cxn_avatar_sprite_color_i,x
+	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P1_HEAD
+	ldx player_2_avatar
+	lda cxn_avatar_sprite_color_i,x
+	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P2_HEAD
+	jsr anim_setup
+	inc game_step
+	jmp game_loop
+
+// anim_cutscene_run — advance one cutscene row per TIMER_INPUT tick.
+anim_cutscene_run:
+	GetTimerTr(TIMER_INPUT)
+	bne !+
+	jmp game_loop           // not time to advance yet
+!:
+	FullReset(TIMER_INPUT)
+	jsr anim_step_one
+	bcc !+
+	jsr anim_finish         // terminator reached: clean up and advance step
+	inc game_step
+!:
+	jmp game_loop
+// END CUTSCENE GLUE
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////

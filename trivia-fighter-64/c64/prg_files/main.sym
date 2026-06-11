@@ -1,7 +1,7 @@
 .label h2vend=$1615
 .label il_it2_kb_chk_del_first_pos=$1408
 .label MLHL_LOAD_MSG=$483c
-.label button_answer_translator=$1e19
+.label button_answer_translator=$1ec8
 .label file_loc_end_hi=$c48
 .label draw_drive_number=$c6d
 .label sobj_mv_dx=$1b69
@@ -11,11 +11,11 @@
 .label draw_play_screen=$5933 {
 }
 .label ml_i_skip=$180c
-.label anim_finish=$1da8
+.label anim_finish=$1e46
 .label J2_B_GREEN=$12c0
 .label trivia_current_category=$1b9f
-.label anim_p2_x=$1e16
-.label anim_p2_y=$1e17
+.label anim_p2_x=$1ec5
+.label anim_p2_y=$1ec6
 .label anim26_table=$43ff
 .label ml_detect_meatloaf=$17f3
 .label load_address_end_hi=$c61
@@ -24,7 +24,7 @@
 .label p2select=$5040
 .label divLo=$a0b
 .label ra_next_avatar=$5d10
-.label player_1_body_anim=$1ed3
+.label player_1_body_anim=$1f82
 .label player_2_buzzed_in=$1b97
 .label pyn_end=$a58
 .label filename_length=$b42
@@ -59,11 +59,11 @@
 .label J1_B_RED=$12a5
 .label sobj_mv_tbl_hi=$1b64
 .label str_len=$1475
-.label player_1_state=$1edc {
+.label player_1_state=$1f8b {
 }
 .label end=$e4c
 .label reverse_sprite_multicolor=$1619
-.label p_counter_msg=$1e71
+.label p_counter_msg=$1f20
 .label random_num=$17aa
 .label J2_B_RED=$12c2
 .label sobj_mv_slot=$1b68
@@ -106,7 +106,7 @@
 .label game_loop=$4ef3
 .label copy_sprite=$1695
 .label MLHL_URL_COUNT=$4765
-.label button_red_msg=$1e1e
+.label button_red_msg=$1ecd
 .label randomly_flash_buttons=$5ce9
 .label ptf_end=$a30
 .label anim27_table=$4440
@@ -130,8 +130,8 @@
 .label anim7_table=$3fc2
 .label irq_timers=$f03
 .label anim19_table=$4280
-.label player_2_head_anim=$1efc
-.label anim_setup=$1ca9
+.label player_2_head_anim=$1fab
+.label anim_setup=$1ce1
 .label init_sprites_play=$5a61
 .label anim_menu_title=$4566
 .label game_step_round=$533d
@@ -139,7 +139,7 @@
 .label init_sprites_iiy=$5a39
 .label print_yesno=$a3d
 .label il_it2_txt_scr=$135a
-.label player_1_head_anim=$1ed0
+.label player_1_head_anim=$1f7f
 .label dev_mode=$1b6e
 .label buzz_check_done=$5514 {
 }
@@ -147,9 +147,9 @@
 .label print_player_2_name=$5b81
 .label init_sprites_game_init=$5a3a
 .label trivia_fighters_64_entry_point=$817
-.label anim_ptr_color=$1e01
+.label anim_ptr_color=$1e9f
 .label a_reg=$81a
-.label anim_row=$1e18
+.label anim_row=$1ec7
 .label anim20_table=$42af
 .label score_digits=$16b1
 .label sobj_entry_idx=$1b5d
@@ -171,7 +171,7 @@
 .label pr1=$843
 .label nzsp1=$900
 .label get_j2_m2=$12c5
-.label button_white_msg=$1e3e
+.label button_white_msg=$1eed
 .label am_list=$4d8c
 .label irq_timer_to_table=$e63
 .label get_key=$1283
@@ -192,10 +192,10 @@
 .label anim_name_7=$45d1
 .label anim_name_6=$45cb
 .label game_over=$574c
-.label yin_obj=$1e82 {
+.label yin_obj=$1f31 {
 }
 .label subtractLoop=$9d3
-.label cxn_avatar_selected=$1ca8
+.label cxn_avatar_selected=$1ce0
 .label sobj_yobj_save=$1b5e
 .label anim_name_5=$45c5
 .label anim_name_4=$45bc
@@ -279,7 +279,7 @@
 .label init_sprites_ms=$59e9
 .label sobj_mv_done=$1b26
 .label cxn_avatar_f1d0_t=$1be2
-.label button_blue_msg=$1e36
+.label button_blue_msg=$1ee5
 .label save_record_over_string=$c5c
 .label player_2_round_counter=$1b99
 .label calc_sprite_src=$1671
@@ -290,7 +290,7 @@
 .label game_step_anim_init=$506f {
 }
 .label string_hex=$1594
-.label yin_sfx_table=$1eb5 {
+.label yin_sfx_table=$1f64 {
 }
 .label print_h_digit=$97c
 .label who_buzzed_in_first=$5d25
@@ -311,14 +311,14 @@
 .label dpms_loop2=$1903
 .label J1_B_WHITE=$12a7
 .label am_exit=$4e46
-.label p_winner_msg=$1e7a
+.label p_winner_msg=$1f29
 .label load_file=$c83
 .label trivia_category_total=$1b9c
 .label MLHL_LOAD=$4811
 .label il_it2_buffer_end=$1382
 .label anim9_table=$403e
 .label J2_B_BLUE=$12c3
-.label p_right_msg=$1e4f
+.label p_right_msg=$1efe
 .label game_start=$4ec7
 .label sobj_sfx_cur_frame=$1b6c
 .label il_it2_txt_len=$1361
@@ -330,6 +330,7 @@
 .label skip2=$df3
 .label file_size_lo=$c4a
 .label ml_total_trivia=$4851
+.label cxn_avatar_sprite_multi_i=$1ca7
 .label screencode_to_petscii=$893
 .label construct_sprite_body_p2=$5af8
 .label construct_sprite_body_p1=$5af8
@@ -355,8 +356,8 @@
 }
 .label sdsskip=$d97
 .label ml_enabled=$17d0
-.label anim_p1_x=$1e14
-.label anim_p1_y=$1e15
+.label anim_p1_x=$1ec3
+.label anim_p1_y=$1ec4
 .label main_loop=$4993
 .label score_from_str=$16d7
 .label strbuf=$1476
@@ -382,7 +383,7 @@
 .label anim_sprites_main_loop=$4cd4 {
 }
 .label gsr_in=$554d
-.label player_1_obj=$1eb9 {
+.label player_1_obj=$1f68 {
 }
 .label ml_after_anim=$4e47
 .label sobj_flush=$1a57
@@ -401,7 +402,7 @@
 .label sobj_apply_loop=$1998
 .label print=$82c
 .label update_player_1_select_sprites=$5bf8
-.label button_yellow_msg=$1e2e
+.label button_yellow_msg=$1edd
 .label sobj_mv_slotmask=$1b67
 .label anim_menu_tbl_hi=$450f
 .label y_reg=$81c
@@ -410,13 +411,13 @@
 .label trivia_round_text=$1b85
 .label anim29_table=$44b6
 .label il_it2_txt_loc=$135c
-.label anim_tbl_hi=$1e13
+.label anim_tbl_hi=$1ec2
 .label open_file_get_one_byte=$d18
 .label GAME_NAME=$1b6f
 .label anim23_table=$435a
 .label anim15_table=$419a
 .label OL_DATA2_CORRECT=$c5bd
-.label player_2_obj=$1ee5 {
+.label player_2_obj=$1f94 {
 }
 .label il_it2_reverse=$13a4
 .label hex_tmp=$159b
@@ -428,7 +429,7 @@
 .label update_health_bars=$5d32
 .label pp1n_out=$5b7a
 .label il_it2_cursor=$1383
-.label anim_step_one=$1d3f
+.label anim_step_one=$1da9
 .label anim28_table=$4481
 .label sdsloop=$da6
 .label trivia_question_current=$1b9d
@@ -439,7 +440,7 @@
 .label ml_detect_cmd=$17ca
 .label p2buzz=$54b3
 .label tmp_1=$81d
-.label game_anim=$1ca7
+.label game_anim=$1cdf
 .label tmp_3=$81f
 .label k_value=$1282
 .label tmp_2=$81e
@@ -452,7 +453,7 @@
 .label MLHL_DATA_ANS3=$48b4
 .label ml_detect_byte=$17cd
 .label il_it2_kb_not_too_long=$13e5
-.label anim_tbl_lo=$1e12
+.label anim_tbl_lo=$1ec1
 .label game_step_round_init=$5182
 .label show_directory=$dc0
 .label player_2_avatar=$1b92
@@ -460,12 +461,12 @@
 .label ascii_to_petscii_kp=$887
 .label il_get_key=$1283 {
 }
-.label anim_play_loop=$1dba {
+.label anim_play_loop=$1e58 {
 }
 .label il_it2_txt_color_lo=$135f
 .label file_loc=$c45
-.label anim_place_sprites=$1dd6
-.label player_msg=$1e46
+.label anim_place_sprites=$1e74
+.label player_msg=$1ef5
 .label sobj_disable=$1a3f
 .label anim24_table=$4395
 .label J1_B_GREEN=$12a3
@@ -480,9 +481,9 @@
 .label ml_sdsloop=$1839
 .label il_get_j1_m2=$12a8
 .label p1_wins=$56a2
-.label p_wrong_msg=$1e60
+.label p_wrong_msg=$1f0f
 .label ml_sdsclose=$185d
-.label anim_play=$1db1
+.label anim_play=$1e4f
 .label filename=$b43
 .label hexstr16_to_val=$159d
 .label pyn_yes_txt=$a59
@@ -493,7 +494,7 @@
 .label draw_instruct=$5919
 .label print_out=$83f
 .label main_loop_start=$48d6
-.label yin_move_table=$1eb4 {
+.label yin_move_table=$1f63 {
 }
 .label draw_select_char=$5902 {
 }
@@ -509,10 +510,10 @@
 .label cxn_avatar_trish_t=$1bed
 .label cxn_avatar_rg5k_t=$1bcc
 .label anim14_table=$415f
-.label player_2_body_anim=$1eff
-.label button_green_msg=$1e26
+.label player_2_body_anim=$1fae
+.label button_green_msg=$1ed5
 .label ascii_to_petscii=$87b
-.label player_2_state=$1f08 {
+.label player_2_state=$1fb7 {
 }
 .label il_it2_kb_chk_end=$1428
 .label get_j1_m2=$12a8
@@ -537,15 +538,17 @@
 .label string_copy=$145c
 .label wlysz=$930
 .label drive_number=$b41
+.label ANIM_PTR_MULTI_TABLE=$1ca7
 .label init_sprites_select_char=$5a3a
 .label score_reset=$16fb
 .label score_math_o=$16b2
 .label print_hex_color=$988
 .label play_music=$1b8d
-.label yin_state=$1eab {
+.label yin_state=$1f5a {
 }
 .label anim_menu_name_hi=$4549
 .label random_init_sid=$17ab
+.label anim_ptr_multi=$1eb0
 .label ml_detect_cmd_end=$17cd
 .label cxn_avatar_eagull_t=$1bb6
 .label il_it2_txt_color=$135f
@@ -572,7 +575,7 @@
 .label print_player_name=$5bb1
 .label load_loading=$c4b
 .label game_step_select_init=$4fd4
-.label yin_anim_table=$1e92
+.label yin_anim_table=$1f41
 .label il_it2_txt_color_val=$135e
 .label game_step_anim=$508b
 .label sds_devnp=$d75 {

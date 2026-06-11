@@ -19,6 +19,7 @@ init_sprites_ms:
 	
 	ldx player_1_avatar
 	lda cxn_avatar_sprite_color_i,x
+	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P1_HEAD // head color follows avatar
 	ldx #$06
 	jsr sobj_set_color
 
@@ -28,6 +29,7 @@ init_sprites_ms:
 
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
+	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P2_HEAD // head color follows avatar
 	ldx #$03
 	jsr sobj_set_color
 

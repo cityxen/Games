@@ -64,8 +64,9 @@ trivia_fighters_64_entry_point:
 /////////////////////////////////////////////////////////////
 // Trivia Fighters 64 Game Source Here:
 .segment Program [allowOverlap]
-*=$4000
+*=$3e00
 trivia_fighters_64_game_code:
+#import "anim_tables.asm"
 #import "initialize.asm"
 #import "meatloaf_api.asm"
 #import "main_loop.asm"

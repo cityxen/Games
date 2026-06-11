@@ -179,69 +179,69 @@ trivia_current_category: .byte 0 //
 // $bf
 
 .const sp_pointers         = $c0 // Sprite Pointers
-.const sp_hg               = $c0
-.const sp_eagull           = $c1
-.const sp_clicky           = $c2
-.const sp_rg5k             = $c3
-.const sp_msdos            = $c4
-.const sp_f1d0             = $c5
-.const sp_trish            = $c6
-.const sp_pokey            = $c7
-.const sp_amy              = $c8
-.const sp_victoria         = $c9
-.const sp_disk_load        = $ca
+.const sp_hg               = $c0 // multi color - white
+.const sp_eagull           = $c1 // multi color - orange
+.const sp_clicky           = $c2 // multi color - green
+.const sp_rg5k             = $c3 // multi color - red
+.const sp_msdos            = $c4 // multi color - red
+.const sp_f1d0             = $c5 // multi color - green
+.const sp_trish            = $c6 // multi color - yellow
+.const sp_pokey            = $c7 // multi color - light blue
+.const sp_amy              = $c8 // multi color - light red
+.const sp_victoria         = $c9 // multi color - light red
+.const sp_disk_load        = $ca // multi color - red
 
 .const sp_ptr_p1_head      = $cb // p1 head
 .const sp_ptr_p2_head      = $cc // reverse head for p2
 
-.const sp_ptr_atk_lightning= $cd // attack 1
-.const sp_ptr_atk_swirl    = $ce // attack 2
-.const sp_ptr_atk_banana   = $cf
-.const sp_ptr_atk_wifi     = $d0
-.const sp_ptr_atk_cloud    = $d1
-.const sp_ptr_atk_darts    = $d2
-.const sp_ptr_atk_star     = $d3
+.const sp_ptr_atk_lightning= $cd // single color - yellow - attack 1
+.const sp_ptr_atk_swirl    = $ce // single color - red - attack 2
+.const sp_ptr_atk_banana   = $cf // single color - yellow
+.const sp_ptr_atk_wifi     = $d0 // single color - blue
+.const sp_ptr_atk_cloud    = $d1 // single color - white
+.const sp_ptr_atk_darts    = $d2 // single color - red
+.const sp_ptr_atk_star     = $d3 // single color - yellow
 
-.const sp_ptr_yin_1        = $d4
-.const sp_ptr_yin_2        = $d5
-.const sp_ptr_yin_3        = $d6
-.const sp_ptr_yin_4        = $d7
-.const sp_ptr_yin_5        = $d8
-.const sp_ptr_yin_6        = $d9
-.const sp_ptr_yin_7        = $da
-.const sp_ptr_yin_8        = $db
+.const sp_ptr_yin_1        = $d4 // single color - white
+.const sp_ptr_yin_2        = $d5 // single color - white
+.const sp_ptr_yin_3        = $d6 // single color - white
+.const sp_ptr_yin_4        = $d7 // single color - white
+.const sp_ptr_yin_5        = $d8 // single color - white
+.const sp_ptr_yin_6        = $d9 // single color - white
+.const sp_ptr_yin_7        = $da // single color - white
+.const sp_ptr_yin_8        = $db // single color - white
 
-.const sp_ptr_center_body  = $dc
+.const sp_ptr_center_body  = $dc // multi color - light red
 
-.const sp_ptr_body_left_1  = $dd
-.const sp_ptr_body_left_2  = $de
-.const sp_ptr_body_left_3  = $df
-.const sp_ptr_body_left_4  = $e0
-.const sp_ptr_body_left_5  = $e1
-.const sp_ptr_body_left_6  = $e2
-.const sp_ptr_punch_left   = $e3
-.const sp_ptr_kick_left    = $e4
+.const sp_ptr_body_left_1  = $dd // multi color - light red
+.const sp_ptr_body_left_2  = $de // multi color - light red
+.const sp_ptr_body_left_3  = $df // multi color - light red
+.const sp_ptr_body_left_4  = $e0 // multi color - light red
+.const sp_ptr_body_left_5  = $e1 // multi color - light red
+.const sp_ptr_body_left_6  = $e2 // multi color - light red
+.const sp_ptr_punch_left   = $e3 // multi color - light red
+.const sp_ptr_kick_left    = $e4 // multi color - light red
 
-.const sp_ptr_body_right_1 = $e5
-.const sp_ptr_body_right_2 = $e6
-.const sp_ptr_body_right_3 = $e7
-.const sp_ptr_body_right_4 = $e8
-.const sp_ptr_body_right_5 = $e9
-.const sp_ptr_body_right_6 = $ea
-.const sp_ptr_punch_right  = $eb
-.const sp_ptr_kick_right   = $ec
+.const sp_ptr_body_right_1 = $e5 // multi color - light red
+.const sp_ptr_body_right_2 = $e6 // multi color - light red
+.const sp_ptr_body_right_3 = $e7 // multi color - light red
+.const sp_ptr_body_right_4 = $e8 // multi color - light red
+.const sp_ptr_body_right_5 = $e9 // multi color - light red
+.const sp_ptr_body_right_6 = $ea // multi color - light red
+.const sp_ptr_punch_right  = $eb // multi color - light red
+.const sp_ptr_kick_right   = $ec // multi color - light red
 
-.const sp_ptr_heart        = $ed
-.const sp_ptr_star         = $ee
-.const sp_ptr_rad          = $ef
-.const sp_ptr_skull        = $f0
-.const sp_ptr_poo          = $f1
-.const sp_ptr_frown        = $f2
-.const sp_ptr_msdos        = $f3
-.const sp_ptr_dollar       = $f4
-.const sp_ptr_arrow        = $f5
-.const sp_ptr_commodore    = $f6
-.const sp_ptr_comic_bubble = $f7
+.const sp_ptr_heart        = $ed // single color - red
+.const sp_ptr_star         = $ee // single color - yellow
+.const sp_ptr_rad          = $ef // single color - green
+.const sp_ptr_skull        = $f0 // single color - white
+.const sp_ptr_poo          = $f1 // single color - brown
+.const sp_ptr_frown        = $f2 // single color - light red
+.const sp_ptr_msdos        = $f3 // single color - blue
+.const sp_ptr_dollar       = $f4 // single color - green
+.const sp_ptr_arrow        = $f5 // single color - yellow
+.const sp_ptr_commodore    = $f6 // single color - blue
+.const sp_ptr_comic_bubble = $f7 // single color - red
 
 //////////////////////////////////////////////////////////////
 // Local Constants
@@ -338,13 +338,65 @@ cxn_avatar_t_i: // lookup table
 .byte 0,2,4,6,8,10,12,14,16,18
 
 cxn_avatar_sprite_pointer_i: // sprite pointer lookup table
+// first 10 entries = avatars in avatar-index order (don't reorder);
+// the rest list every remaining sprite pointer so the cutscene engine can
+// look up a color for any body frame (parallel with cxn_avatar_sprite_color_i)
 .byte sp_clicky,sp_eagull,sp_hg,sp_rg5k,sp_msdos,sp_f1d0,sp_trish,sp_pokey,sp_amy,sp_victoria
+.byte sp_disk_load,sp_ptr_p1_head,sp_ptr_p2_head
+.byte sp_ptr_atk_lightning,sp_ptr_atk_swirl,sp_ptr_atk_banana,sp_ptr_atk_wifi
+.byte sp_ptr_atk_cloud,sp_ptr_atk_darts,sp_ptr_atk_star
+.byte sp_ptr_yin_1,sp_ptr_yin_2,sp_ptr_yin_3,sp_ptr_yin_4
+.byte sp_ptr_yin_5,sp_ptr_yin_6,sp_ptr_yin_7,sp_ptr_yin_8
+.byte sp_ptr_center_body
+.byte sp_ptr_body_left_1,sp_ptr_body_left_2,sp_ptr_body_left_3
+.byte sp_ptr_body_left_4,sp_ptr_body_left_5,sp_ptr_body_left_6
+.byte sp_ptr_punch_left,sp_ptr_kick_left
+.byte sp_ptr_body_right_1,sp_ptr_body_right_2,sp_ptr_body_right_3
+.byte sp_ptr_body_right_4,sp_ptr_body_right_5,sp_ptr_body_right_6
+.byte sp_ptr_punch_right,sp_ptr_kick_right
+.byte sp_ptr_heart,sp_ptr_star,sp_ptr_rad,sp_ptr_skull,sp_ptr_poo,sp_ptr_frown
+.byte sp_ptr_msdos,sp_ptr_dollar,sp_ptr_arrow,sp_ptr_commodore,sp_ptr_comic_bubble
 
-cxn_avatar_sprite_color_i: // sprite color lookup table
-.byte GREEN,ORANGE,WHITE,RED,RED,GREEN,YELLOW,BLUE,LIGHT_RED,LIGHT_RED
+cxn_avatar_sprite_color_i: // sprite color lookup table (parallel with the above)
+.byte GREEN,ORANGE,WHITE,RED,RED,GREEN,YELLOW,LIGHT_BLUE,LIGHT_RED,LIGHT_RED
+.byte WHITE,WHITE,WHITE                                   // disk_load, p1_head, p2_head
+.byte YELLOW,RED,YELLOW,BLUE                              // atk lightning, swirl, banana, wifi
+.byte WHITE,RED,YELLOW                                    // atk cloud, darts, star
+.byte WHITE,WHITE,WHITE,WHITE                             // yin 1-4
+.byte WHITE,WHITE,WHITE,WHITE                             // yin 5-8
+.byte LIGHT_RED                                           // center_body
+.byte LIGHT_RED,LIGHT_RED,LIGHT_RED                       // body_left 1-3
+.byte LIGHT_RED,LIGHT_RED,LIGHT_RED                       // body_left 4-6
+.byte LIGHT_RED,LIGHT_RED                                 // punch_left, kick_left
+.byte LIGHT_RED,LIGHT_RED,LIGHT_RED                       // body_right 1-3
+.byte LIGHT_RED,LIGHT_RED,LIGHT_RED                       // body_right 4-6
+.byte LIGHT_RED,LIGHT_RED                                 // punch_right, kick_right
+.byte RED,YELLOW,GREEN,WHITE,BROWN,LIGHT_RED              // heart, star, rad, skull, poo, frown
+.byte BLUE,GREEN,YELLOW,BLUE,RED                          // msdos, dollar, arrow, commodore, comic_bubble
 
-player_1_sprite_color: .byte 0
-player_2_sprite_color: .byte 0
+cxn_avatar_sprite_multi_i: // 1 = multicolor, 0 = single color (parallel with the above)
+.byte 1,1,1,1,1,1,1,1,1,1                                 // avatars
+.byte 1,1,1                                               // disk_load, p1_head, p2_head
+.byte 0,0,0,0                                             // atk lightning, swirl, banana, wifi
+.byte 0,0,0                                               // atk cloud, darts, star
+.byte 0,0,0,0                                             // yin 1-4
+.byte 0,0,0,0                                             // yin 5-8
+.byte 1                                                   // center_body
+.byte 1,1,1                                               // body_left 1-3
+.byte 1,1,1                                               // body_left 4-6
+.byte 1,1                                                 // punch_left, kick_left
+.byte 1,1,1                                               // body_right 1-3
+.byte 1,1,1                                               // body_right 4-6
+.byte 1,1                                                 // punch_right, kick_right
+.byte 0,0,0,0,0,0                                         // heart, star, rad, skull, poo, frown
+.byte 0,0,0,0,0                                           // msdos, dollar, arrow, commodore, comic_bubble
+
+.const CXN_SPRITE_PTR_COUNT = 56 // entries in the tables above ($c0-$f7)
+// table indices of the head pointers' colors — the game rewrites these entries
+// whenever an avatar is loaded into a head slot, so the cutscene engine colors
+// the heads with the avatar's color instead of a fixed one
+.const CXN_SPR_COLOR_P1_HEAD = 11
+.const CXN_SPR_COLOR_P2_HEAD = 12
 
 .const print_pointer_lo = $fa
 .const print_pointer_hi = $fb
@@ -360,6 +412,45 @@ cxn_avatar_selected: .byte 0
 // Anim stuff
 .const anim_bg_color    = LIGHT_BLUE
 .const intro_anim_time  = $30
+
+//////////////////////////////////////////////////////////////
+// Between-round cutscene engine — the code lives in the library
+// (sprite-animation.il.asm); these constants configure it and the cutscene
+// tables below feed it. The engine drives the two fighter sprite objects:
+//   player 1 = hw slots 6 (head) + 5 (body)
+//   player 2 = hw slots 3 (head) + 2 (body, reversed)
+// The heads are STATIC (sp_ptr_p1_head / sp_ptr_p2_head) and ride on top of
+// the bodies; the BODY sprite pointer animates and (dx,dy) moves the pair.
+//
+// Each cutscene table is laid out as:
+//   4-byte header : p1_start_x, p1_start_y, p2_start_x, p2_start_y  (body positions)
+//   then 6-byte rows, one consumed per animation tick:
+//     p1_body_ptr, p1_dx, p1_dy, p2_body_ptr, p2_dx, p2_dy   (dx/dy are signed)
+//   a row whose first byte is $ff ends the cutscene.
+// Edit the tables below to author each cutscene.
+.const ANIM_P1_HEAD_SLOT  = 6           // player 1 head / body hw sprite slots
+.const ANIM_P1_BODY_SLOT  = 5
+.const ANIM_P2_HEAD_SLOT  = 3           // player 2 head / body (head reversed)
+.const ANIM_P2_BODY_SLOT  = 2
+.const ANIM_HEAD_Y_OFFSET = 20          // head sits this many px above its body
+.const ANIM_P1_HEAD_PTR   = sp_ptr_p1_head
+.const ANIM_P2_HEAD_PTR   = sp_ptr_p2_head
+.const ANIM_P1_HEAD_COLOR = WHITE
+.const ANIM_P1_BODY_COLOR = LIGHT_RED
+.const ANIM_P2_HEAD_COLOR = WHITE
+.const ANIM_P2_BODY_COLOR = LIGHT_RED
+.const ANIM_BG_COLOR      = anim_bg_color
+.const ANIM_TIMER         = TIMER_INPUT
+// when a cutscene row drops a pointer into a body slot, the engine recolors
+// that slot and sets/clears its multicolor bit from these tables, so effect
+// frames keep their own color and single/multi mode (heart=red single,
+// bodies=light red multi, ...). $d025/$d026 are never touched.
+.const ANIM_PTR_TABLE       = cxn_avatar_sprite_pointer_i
+.const ANIM_PTR_COLOR_TABLE = cxn_avatar_sprite_color_i
+.const ANIM_PTR_MULTI_TABLE = cxn_avatar_sprite_multi_i
+.const ANIM_PTR_TABLE_LEN   = CXN_SPRITE_PTR_COUNT
+#import "sprite-animation.il.asm"
+
 
 //////////////////////////////////////////////////////////////
 // Button stuff
@@ -451,7 +542,8 @@ SpriteObjSfxEnd()
 
 player_1_obj:
 SpriteObjBegin(%01100000, %01100000, %01100000, %00000000, %00000000, %00000000, %00000000, 20)
-SpriteObjEntry(6, 41, 160, player_1_sprite_color, sp_ptr_p1_head, <player_1_head_anim, >player_1_head_anim)
+// head color placeholder only — init_sprites_ms recolors slot 6 from the avatar
+SpriteObjEntry(6, 41, 160, WHITE, sp_ptr_p1_head, <player_1_head_anim, >player_1_head_anim)
 SpriteObjEntry(5, 41, 180, LIGHT_RED, sp_ptr_body_left_1, <player_1_body_anim, >player_1_body_anim)
 SpriteObjEnd()
 player_1_head_anim: .byte sp_ptr_p1_head,sp_ptr_p1_head,$00
@@ -464,7 +556,8 @@ SpriteObjState()
 
 player_2_obj:
 SpriteObjBegin(%00001100, %00001100, %00001100, %00000000, %00000000, %00000000, %00001100, 20)
-SpriteObjEntry(3, 41, 160, player_2_sprite_color, sp_ptr_p2_head, <player_2_head_anim, >player_2_head_anim)
+// head color placeholder only — init_sprites_ms recolors slot 3 from the avatar
+SpriteObjEntry(3, 41, 160, WHITE, sp_ptr_p2_head, <player_2_head_anim, >player_2_head_anim)
 SpriteObjEntry(2, 41, 180, LIGHT_RED, sp_ptr_body_right_2, <player_2_body_anim, >player_2_body_anim)
 SpriteObjEnd()
 player_2_head_anim: .byte sp_ptr_p2_head,sp_ptr_p2_head,$00

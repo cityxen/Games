@@ -39,6 +39,10 @@ restart:
 	EnableSpriteObj(player_1_obj)
 	EnableSpriteObj(player_2_obj)
 
+	// ApplySpriteObj wrote the template colors over the avatar head colors;
+	// re-apply them so the heads start with the right colors
+	jsr init_sprites_ms
+
 	// fall through to main_loop
 //////////////////////////////////////////////////////////////
 // Main loop
@@ -64,6 +68,11 @@ main_loop:
 	jsr ml_screens
 !:
 	jsr input_get_key
+	cmp #KEY_A
+	bne !+
+	jsr anim_menu
+	jmp ml_after_anim
+!:
 	cmp #KEY_M
 	bne !+
 	lda play_music
@@ -237,3 +246,125 @@ anim_sprites_main_loop:
 	jsr wait_vbl
 	FlushSpriteObj(player_2_obj, player_2_state)
 	rts
+
+//////////////////////////////////////////////////////////////
+// Animation player menu (entered from the main screen with the A key).
+// Lists ANIM_MENU_PAGE_SIZE animations per page; SPACE flips to the next page
+// (wrapping back to the first). Plays the chosen one (anim_play in
+// game_loop.asm) and loops back to the list. Q returns to the main screen.
+anim_menu:
+	lda #$00                // always open on the first page
+	sta anim_menu_base
+am_draw:
+	DisableSpriteObj(yin_obj)   // keep the spinning yin-yang off the menu
+	lda #BLUE
+	sta BORDER_COLOR
+	sta BACKGROUND_COLOR
+	PrintClear()
+	PrintLowerCase()
+	PrintChr(KEY_WHITE)
+	PrintDown(1)
+	PrintRight(7)
+	Print(anim_menu_title)
+	PrintLF()
+	ldx #$00
+am_list:
+	stx tmp_1               // tmp_1 = index within the page
+	lda anim_menu_base      // tmp_2 = registry index
+	clc
+	adc tmp_1
+	cmp #ANIM_MENU_COUNT
+	bcs am_list_done        // short last page — stop early
+	sta tmp_2
+	PrintRight(8)
+	// label: page entries 0-8 -> '1'..'9', 9-14 -> 'a'..'f'
+	lda tmp_1
+	cmp #9
+	bcc !digit+
+	clc
+	adc #($41-9)            // 9 -> 'a' ($41) ... 14 -> 'f' ($46)
+	jmp !put+
+!digit:
+	clc
+	adc #$31                // 0 -> '1'
+!put:
+	jsr KERNAL_CHROUT
+	PrintChr('.')
+	PrintChr(' ')
+	ldx tmp_2
+	lda anim_menu_name_lo,x
+	sta zp_tmp_lo
+	lda anim_menu_name_hi,x
+	sta zp_tmp_hi
+	jsr print
+	PrintLF()
+	ldx tmp_1
+	inx
+	cpx #ANIM_MENU_PAGE_SIZE
+	bne am_list
+am_list_done:
+	PrintLF()
+	PrintRight(2)
+	Print(anim_menu_prompt)
+am_wait:
+	jsr input_get_key
+	cmp #KEY_Q
+	beq am_exit
+	cmp #KEY_SPACE          // next page (wraps to the first)
+	bne !+
+	lda anim_menu_base
+	clc
+	adc #ANIM_MENU_PAGE_SIZE
+	cmp #ANIM_MENU_COUNT
+	bcc !nowrap+
+	lda #$00
+!nowrap:
+	sta anim_menu_base
+	jmp am_draw
+!:
+	cmp #$3a                // past '9'? then try the a-f keys
+	bcs am_letter
+	sec
+	sbc #$31                // '1'..'9' -> 0..8
+	bcc am_wait             // below '1'
+	jmp am_select
+am_letter:
+	cmp #$41                // 'a'/'A' key ($41)
+	bcc am_wait
+	sec
+	sbc #($41-9)            // 'a'($41)->9 ... 'f'($46)->14
+	cmp #ANIM_MENU_PAGE_SIZE
+	bcs am_wait             // beyond this page's labels
+am_select:
+	clc                     // page slot -> registry index
+	adc anim_menu_base
+	cmp #ANIM_MENU_COUNT
+	bcs am_wait             // empty slot on the last page
+	tax                     // X = index
+	ldy anim_menu_tbl_lo,x  // Y = <table
+	lda anim_menu_tbl_hi,x
+	tax                     // X = >table
+	tya                     // A = <table
+	jsr anim_play
+	jmp am_draw             // redraw the list, pick again
+am_exit:
+	rts
+
+//////////////////////////////////////////////////////////////
+// Restore the main screen + attract-mode sprites after the animation menu.
+ml_after_anim:
+	lda #$00
+	sta screen_draw
+	jsr ml_screens          // redraw main screen (re-inits its sprites)
+	ApplySpriteObj(yin_obj, yin_state)
+	ApplySpriteObj(player_1_obj, player_1_state)
+	ApplySpriteObj(player_2_obj, player_2_state)
+	EnableSpriteObj(yin_obj)
+	EnableSpriteObj(player_1_obj)
+	EnableSpriteObj(player_2_obj)
+	jsr init_sprites_ms     // restore avatar head colors over the template ones
+	// the trigger counts kept climbing in the menu, past the main loop's
+	// exact-match cmp checks — reset so head cycling / screen flip resume
+	FullReset(TIMER_2)
+	FullReset(TIMER_SCREEN_CHANGE)
+	jmp main_loop
