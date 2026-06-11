@@ -96,3 +96,12 @@ draw_title:
 	Print(VERSION)
 	PrintReverseOff()
 	rts
+
+draw_anim_screen:
+
+	PrintClear()
+	PrintLowerCase()
+	lda #ANIM_BG_COLOR
+	sta BORDER_COLOR
+	sta BACKGROUND_COLOR
+	rts

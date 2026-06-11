@@ -322,6 +322,17 @@ ra_next_avatar:
 	rts
 ra_seed: .byte $5a
 
+// Advance the LFSR and return the full byte (0-255, never 0).
+// Used by the 1-Player CPU for unbiased range draws (caller masks/clampes).
+ra_random_byte:
+	lda ra_seed
+	asl
+	bcc !+
+	eor #$1d
+!:
+	sta ra_seed
+	rts
+
 
 
 ////////////////////////////////////////////////////////////
@@ -359,6 +370,228 @@ update_health_bars:
 // END health bar update
 ////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// 1-Player CPU player 2
+// ================================
+// When number_of_players == 0 the human plays P1 and the CPU plays P2.
+// The CPU drives the same state the joystick would have driven:
+//   * Avatar select — picks a random number of "right" moves (0-9) and fires
+//   * Round answer  — waits a random delay, then buzzes in 50% correct
+//
+// State machine for avatar selection (cpu_p2_avatar_state):
+//   0 = idle / not started (cpu_p2_avatar_reset moves this to 1)
+//   1 = armed: pick random number of moves, wait for debounce
+//   2 = press right (inc_player_2_avatar), loop back to 1
+//   3 = press fire (set cxn_avatar_selected_p2, advance to 4)
+//   4 = done — fire pressed, game_step_select will advance the step
+//
+// Each state is one TIMER_INPUT tick; delays between states are
+// real-frame waits (cpu_p2_wait_frames) so the avatar visibly moves
+// through its picks.
+
+cpu_p2_avatar_reset:
+	lda #0
+	sta cpu_p2_avatar_state
+	sta cpu_p2_avatar_moves
+	sta cpu_p2_avatar_ticks
+	rts
+
+// Start a CPU P2 delay that lasts `frames` vblanks. Stores the target
+// frame so cpu_p2_avatar_tick can poll it non-blockingly. The frame
+// counter is 8-bit (irq_timer_user_hook incs it every frame), so the
+// stored "target" is computed as (current + frames) mod 256. The poll
+// then compares cpu_p2_frame_count against the target and waits for
+// it to match.
+cpu_p2_arm_delay:
+	sta tmp_2                       // frames to wait (1-255)
+	clc
+	lda cpu_p2_frame_count
+	adc tmp_2                       // (now + frames) mod 256
+	sta cpu_p2_avatar_target
+	rts
+
+// Returns 1 if the armed delay has elapsed (carry clear + A=$01),
+// 0 if still waiting. Uses 8-bit arithmetic; the wrap is harmless
+// because the caller armed the target as `now + delay` and we just
+// wait for the counter to land on the target value.
+cpu_p2_delay_done:
+	lda cpu_p2_frame_count
+	cmp cpu_p2_avatar_target
+	bne !not_yet+
+	// On target — return 1
+	lda #$01
+	rts
+!not_yet:
+	clc
+	lda #$00
+	rts
+
+// Non-blocking avatar-pick state machine. Called once per main loop
+// iteration; the main loop runs many times per frame, so this
+// cooperates with the IRQ-driven frame counter (cpu_p2_frame_count)
+// to give real wall-clock delays without busy-waiting on the raster.
+// Because it never blocks, the human's J1 polling in the same loop
+// gets to run between CPU P2 ticks.
+cpu_p2_avatar_tick:
+	lda cpu_p2_avatar_state
+	bne !cpus1+
+	// State 0: arm the CPU — pick a random move count and switch to state 1
+	jsr ra_next_avatar            // 0-9
+	sta cpu_p2_avatar_moves
+	// Lead-in: full LFSR byte (1-255 frames). Some picks will pause
+	// 4+ seconds before moving at all — the "human sat down, picked up
+	// the joystick, is about to press" beat. Min 1 frame so the call
+	// doesn't skip the wait entirely on a zero draw.
+	jsr ra_random_byte
+	bne !+                          // 0 → 1 (avoid no-wait)
+	lda #1
+!:
+	jsr cpu_p2_arm_delay
+	lda #1
+	sta cpu_p2_avatar_state
+	rts
+!cpus1:
+	cmp #1
+	bne !cpus2+
+	// State 1: arm either a move or a fire (if elapsed)
+	jsr cpu_p2_delay_done
+	beq !cpus1go+                  // delay not done (A=0) — return
+	                               //   without changing state
+	// delay done:
+	lda cpu_p2_avatar_moves
+	bne !cpus1move+
+	// No moves left — pre-fire pause: full LFSR byte (1-255 frames,
+	// 17ms-4.25s). Long pauses here are great: the CPU lands on an
+	// avatar, hesitates, then commits.
+	jsr ra_random_byte
+	bne !+
+	lda #1
+!:
+	jsr cpu_p2_arm_delay
+	lda #3
+	sta cpu_p2_avatar_state
+	rts
+!cpus1move:
+	// Do a right-move
+	lda #2
+	sta cpu_p2_avatar_state
+	rts
+!cpus1go:
+	rts
+!cpus2:
+	cmp #2
+	bne !cpus3+
+	// State 2: press right, then arm a delay. Inter-move gap uses the
+	// full LFSR byte (1-255 frames, 17ms-4.25s) so consecutive moves
+	// can happen quickly OR with a noticeable beat between them.
+	jsr cpu_p2_delay_done
+	beq cpu_p2_avatar_done          // delay not done — return
+	jsr inc_player_2_avatar
+	dec cpu_p2_avatar_moves
+	jsr ra_random_byte
+	bne !+
+	lda #1
+!:
+	jsr cpu_p2_arm_delay
+	lda #1
+	sta cpu_p2_avatar_state
+	rts
+!cpus3:
+	cmp #3
+	bne cpu_p2_avatar_done
+	// State 3: press fire (lock in the avatar)
+	sfx_v2_play(SFX_GET_READY)
+	lda cxn_avatar_selected
+	ora #cxn_avatar_selected_p2
+	sta cxn_avatar_selected
+	jsr update_player_2_select_sprites
+	lda #4
+	sta cpu_p2_avatar_state
+cpu_p2_avatar_done:
+	rts
+
+// Per-round CPU P2 state — call cpu_p2_buzz_reset at the start of each round
+// (game_step_round_init) to set a new random buzz delay and clear latches.
+
+cpu_p2_buzz_reset:
+	// Pick a buzz delay in the range 60-220 frames (1-3.7s at 60Hz).
+	// The round lasts ~5.3s (32 timer fires × 10-frame period). The
+	// human typically answers well before 60 frames, so the CPU almost
+	// always lags; on some picks the CPU beats the human and is then
+	// shown correct/wrong when the round ends. The range gives obvious
+	// "the CPU is thinking" beats while keeping the buzz within the
+	// round.
+	jsr ra_random_byte
+	// Clamp into 60..220. The LFSR returns 1-255; we just push values
+	// below 60 up to 60 and values above 220 down to 220.
+	cmp #60
+	bcs !clamp_hi+                  // ≥60 → check upper bound
+	lda #60                          //  <60 → 60
+	bcs !clamp_hi+                  // (always taken; use it to skip the
+	                               //   upper-bound check since A=60 < 220)
+!clamp_hi:
+	cmp #220
+	bcc !store+                     // <220 → keep
+	lda #220
+!store:
+	sta cpu_p2_buzz_delay
+	// arm the delay against the IRQ-driven frame counter
+	clc
+	lda cpu_p2_frame_count
+	adc cpu_p2_buzz_delay
+	sta cpu_p2_buzz_target
+	lda #0
+	sta cpu_p2_buzz_active
+	rts
+
+// Called from game_step_round on every frame. When the delay elapses
+// the CPU buzzes in: 50% chance correct, 50% chance wrong.
+cpu_p2_round_tick:
+	// Latch — don't buzz twice
+	lda cpu_p2_buzz_active
+	bne cpu_p2_round_done
+	// Has the armed delay elapsed?
+	lda cpu_p2_frame_count
+	cmp cpu_p2_buzz_target
+	bne cpu_p2_round_done
+	// Decide correct (bit 0 of LFSR = 50/50)
+	jsr ra_random_byte
+	and #%00000001
+	bne !wrong+
+	// Correct answer — MLHL_DATA_CORRECT holds an ASCII digit ('1'..'4');
+	// player_2_buzzed_in needs a BUTTON_* constant for the round display
+	// to print the right color/label.
+	lda MLHL_DATA_CORRECT
+	sec
+	sbc #$30                        // '1'..'4' → 1..4
+	tax
+	lda button_answer_translator,x
+	sta player_2_buzzed_in
+	jmp !common+
+!wrong:
+	// Wrong answer — pick 1..4, skipping MLHL_DATA_CORRECT. The LFSR is
+	// fast enough that re-rolling on collision is cheaper than a table.
+!pick_wrong:
+	jsr ra_random_byte
+	and #%00000011
+	clc
+	adc #1
+	cmp MLHL_DATA_CORRECT
+	beq !pick_wrong-
+	tax
+	lda button_answer_translator,x
+	sta player_2_buzzed_in
+!common:
+	lda #BUZZER_PLAYER_2
+	jsr who_buzzed_in_first
+	sfx_v2_play(SFX_DING)
+	lda #1
+	sta cpu_p2_buzz_active
+cpu_p2_round_done:
+	rts
+// END 1-Player CPU player 2
+////////////////////////////////////////////////////////////
+
 init_timers_user_hook:
 	lda #TIMER_FADER_SPEED
 	SetTimerTo(TIMER_FADER)
@@ -389,10 +622,14 @@ init_timers_user_hook:
 
 irq_timer_user_hook:
 
+	inc cpu_p2_frame_count         // 8-bit free-running frame counter
+
+	lda ml_hotload_active          // KERNAL LOAD in progress: skip sprite
+	bne !+                         // ticking (sprites are hidden anyway)
 	TickSpriteObj(yin_obj, yin_state)
 	TickSpriteObj(player_1_obj, player_1_state)
 	TickSpriteObj(player_2_obj, player_2_state)
-
+!:
 	rts
 
 begin_fade_in_question:

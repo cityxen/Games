@@ -9,7 +9,7 @@
 
 MLHL_URL:
 .encoding "screencode_mixed"
-.text "HTTPS://CITYXEN.BIZ/HOTLOAD/?EP=TF64RQ&XXX=XXX"
+.text "HTTPS://CITYXEN.BIZ/HOTLOAD/?EP=TF64RQ"
 .byte 0
 MLHL_URL_LEN:
 .byte (MLHL_URL_LEN-MLHL_URL)
@@ -38,14 +38,20 @@ MLHL_HOTLOAD_LOADING_TEXT:
 ///////////////////////////////////////
 // Load routine
 
+// 1 while a KERNAL LOAD is in progress — irq_timer_user_hook checks this
+// and skips sprite ticking so the IRQ stays off KERNAL serial state
+ml_hotload_active:
+.byte 0
+
 MLHL_LOAD_COUNT:
 
     lda SPRITE_ENABLE // disable sprites
     pha
     lda #$00
-    sta SPRITE_ENABLE 
+    sta SPRITE_ENABLE
 
-    // TODO: disable any other conflicting routines here
+    lda #$01
+    sta ml_hotload_active
 
     lda MLHL_URL_LEN_COUNT // url length
     ldx #<MLHL_URL_COUNT
@@ -61,8 +67,11 @@ MLHL_LOAD_COUNT:
     ldx #<ml_total_trivia
     ldy #>ml_total_trivia
     jsr KERNAL_LOAD
-    
+
     // re-enable disabled routines
+
+    lda #$00
+    sta ml_hotload_active
 
     pla
     sta SPRITE_ENABLE // restore Sprite status
@@ -74,9 +83,10 @@ MLHL_LOAD:
     lda SPRITE_ENABLE // disable sprites
     pha
     lda #$00
-    sta SPRITE_ENABLE 
+    sta SPRITE_ENABLE
 
-    // TODO: disable any other conflicting routines here
+    lda #$01
+    sta ml_hotload_active
 
     lda MLHL_URL_LEN // url length
     ldx #<MLHL_URL
@@ -94,6 +104,9 @@ MLHL_LOAD:
     jsr KERNAL_LOAD
 
     // re-enable disabled routines
+
+    lda #$00
+    sta ml_hotload_active
 
     pla
     sta SPRITE_ENABLE // restore Sprite status
@@ -116,20 +129,22 @@ ml_total_trivia:
 MLHL_DATA_TABLE:
 .encoding "screencode_upper"
 MLHL_DATA_QUESTION:
-.text "0123456789012345678901234567890123456789012345678901234567890"
+.text "this question means nothing was loaded!"
+.byte 0
+.text "012345678901234567890"
 .byte 0
 MLHL_DATA_CORRECT:
 .byte 0
 MLHL_DATA_ANS1:
-.text "0123456789012345"
-.byte 0
+.text "0123456789012"
+.byte 0,0,0,0
 MLHL_DATA_ANS2:
-.text "0123456789012345"
-.byte 0
+.text "0123456789012"
+.byte 0,0,0,0
 MLHL_DATA_ANS3:
-.text "0123456789012345"
-.byte 0
+.text "0123456789012"
+.byte 0,0,0,0
 MLHL_DATA_ANS4:
-.text "0123456789012345"
-.byte 0
+.text "0123456789012"
+.byte 0,0,0,0
 

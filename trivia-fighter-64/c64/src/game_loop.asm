@@ -15,21 +15,38 @@ game_loop_init:
 	lda #PLAYER_INITIAL_HEALTH
 	sta player_1_healthbar
 	sta player_2_healthbar
+	// 1-Player mode: pick a random starting avatar for P2 (the human
+	// will see the CPU walk from this start to its final pick). In
+	// 2-Player mode the human starts at Clicky (0) and so does P2 by
+	// convention — leave the default.
+	lda number_of_players
+	bne !p2_init_done+
+	jsr ra_random_byte
+	and #%00001111                // 0-15
+	cmp #10
+	bcc !p2_init_rand+             // 0-9 as-is
+	lda #1
+!p2_init_rand:
+	sta player_2_avatar
+!p2_init_done:
 	lda #$00
 	sta player_1_avatar
-	lda #$01
-	sta player_2_avatar
 	lda #$00
 	sta play_music
 	jsr sfx_clear
 	jsr draw_select_char
 	lda #BUTTON_LIGHT_NONE
 	sta USER_PORT_DATA
-// END Game loop init 
-//////////////////////////////////////////////////////////////
-
+	// Suppress the M2 input poll for a few frames so the player-mode
+	// select button press (which got us here) doesn't immediately fire
+	// an avatar lock-in. The M2 history is over 8 frames; ~12 frames of
+	// dead time guarantees j1_button / j2_button have fully cleared.
+	FullReset(TIMER_INPUT)
+	lda #12
+	SetTimerTo(TIMER_INPUT)
+	// fall through to the game_loop state machine
 ////////////////////////////////////////////////////////////
-// GAME LOOP BEGIN	
+// GAME LOOP BEGIN
 game_loop:
 	// determine game_step
 	lda game_step
@@ -167,6 +184,8 @@ game_step_select_init:
 	jsr update_player_1_select_sprites
 	jsr print_player_2_name
 	jsr update_player_2_select_sprites
+	// arm the 1-Player CPU P2 state machine
+	jsr cpu_p2_avatar_reset
 	inc game_step
 // END GAME STEP SELECT AVATAR INIT
 ////////////////////////////////////////////////////////////
@@ -174,6 +193,21 @@ game_step_select_init:
 ////////////////////////////////////////////////////////////
 // GAME STEP SELECT AVATAR
 game_step_select:
+	lda cxn_avatar_selected
+	cmp #cxn_avatar_selected_both
+	bne !+
+	inc game_step
+	jmp game_loop
+!:
+	// 1-Player mode: tick the CPU P2 avatar state machine first so it
+	// advances regardless of whether the human has picked yet. (In 2-Player
+	// mode, J2 polling below does the work.)
+	lda number_of_players
+	bne !+
+	jsr cpu_p2_avatar_tick
+!:
+	// Bail out early if P2 just locked in on this frame — no need to
+	// poll inputs that don't matter anymore.
 	lda cxn_avatar_selected
 	cmp #cxn_avatar_selected_both
 	bne !+
@@ -213,6 +247,12 @@ p2select:
 	lda cxn_avatar_selected
 	and #cxn_avatar_selected_p2
 	bne pselectout
+	// 1-Player mode: the CPU drives P2's avatar pick; skip the j2 reads
+	lda number_of_players
+	bne !twop_cpu+
+	jsr cpu_p2_avatar_tick
+	jmp pselectout
+!twop_cpu:
 	lda j2_left
 	bne !+
 	jsr dec_player_2_avatar
@@ -314,6 +354,7 @@ anim_cutscene_init:
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
 	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P2_HEAD
+	jsr draw_anim_screen
 	jsr anim_setup
 	inc game_step
 	jmp game_loop
@@ -359,6 +400,8 @@ game_step_round_init:
 	sta player_2_buzzed_in
 	sta game_round_first_buzzer
 	sta game_round_winner
+	// arm the 1-Player CPU P2 (random delay, clears the latched "buzzed" flag)
+	jsr cpu_p2_buzz_reset
 
 	jsr print_question
 
@@ -540,6 +583,12 @@ p2buzz:
 	// Check player 2 Joystick buzz in
 	lda player_2_buzzed_in
 	bne buzz_check_done
+	// 1-Player mode: the CPU buzzes in for P2 (random delay, 50% correct)
+	lda number_of_players
+	bne !twop_p2+
+	jsr cpu_p2_round_tick
+	jmp buzz_check_done
+!twop_p2:
 	lda J2_B_GREEN
 	bne !+
 		lda #BUTTON_GREEN

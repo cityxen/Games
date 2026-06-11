@@ -97,19 +97,28 @@ main_loop:
 	jmp load_trivia_stress_test
 !:
 	//////////////////////////////
-	// Get Joystick Input
-	jsr il_get_j1_m2
+	// Player-mode select:
+	//   P1 WHITE = 1-Player (CPU plays P2)     → number_of_players = 0
+	//   P2 WHITE = 2-Player (real human on P2) → number_of_players = 1
+	// The M2 joy history bytes are debounced over 8 frames, which is too
+	// slow for a menu read. Read the raw fire bits directly — bit 4 of
+	// $DC01 (P1) and $DC00 (P2) are active low when the fire button is
+	// pressed. We still need to feed the M2 history each frame so the
+	// state is correct by the time we hand off to the character-select.
+	jsr il_get_j1_m2        // keep M2 history current (j1_button etc.)
 	jsr il_get_j2_m2
-	// jsr input_get_button 
-	lda J1_B_RED
+	// P1 fire (raw): $00 if pressed, non-zero if released
+	lda JOYSTICK_PORT_1
+	and #%00010000
 	bne !+
-	lda #$00 // set 1 Player Mode
+	lda #$00 // 1 Player Mode
 	sta number_of_players
 	jmp ml_game_start
 !:
-	lda J2_B_RED
+	lda JOYSTICK_PORT_2
+	and #%00010000
 	bne !+
-	lda #$01 // set 2 Player Mode
+	lda #$01 // 2 Player Mode
 	sta number_of_players
 	jmp ml_game_start
 !:
@@ -118,8 +127,13 @@ main_loop:
 //////////////////////////////////////////////////
 
 ml_game_start:
+	// Hold off the next M2 input read until the char-select screen has
+	// settled. ml_game_start fires on the same frame as the press, and the
+	// M2 history byte was just set to $ff — without this reset the fire
+	// press would still be "active" and immediately lock in P1's avatar.
+	FullReset(TIMER_INPUT)
 	lda #BUTTON_LIGHT_NONE // Turn off button lights
-	sta USER_PORT_DATA	
+	sta USER_PORT_DATA
 	jmp game_start
 
 ml_screens:
@@ -255,13 +269,11 @@ anim_sprites_main_loop:
 anim_menu:
 	lda #$00                // always open on the first page
 	sta anim_menu_base
+	DisableSpriteObj(player_1_obj)
+	DisableSpriteObj(player_2_obj)
 am_draw:
 	DisableSpriteObj(yin_obj)   // keep the spinning yin-yang off the menu
-	lda #BLUE
-	sta BORDER_COLOR
-	sta BACKGROUND_COLOR
-	PrintClear()
-	PrintLowerCase()
+	jsr draw_anim_screen
 	PrintChr(KEY_WHITE)
 	PrintDown(1)
 	PrintRight(7)
@@ -336,6 +348,9 @@ am_letter:
 	cmp #ANIM_MENU_PAGE_SIZE
 	bcs am_wait             // beyond this page's labels
 am_select:
+	pha
+	jsr draw_anim_screen
+	pla
 	clc                     // page slot -> registry index
 	adc anim_menu_base
 	cmp #ANIM_MENU_COUNT
@@ -345,7 +360,9 @@ am_select:
 	lda anim_menu_tbl_hi,x
 	tax                     // X = >table
 	tya                     // A = <table
+	
 	jsr anim_play
+
 	jmp am_draw             // redraw the list, pick again
 am_exit:
 	rts

@@ -81,6 +81,15 @@ player_2_buzzed_in:      .byte 0 // BUTTON_GREEN
 player_1_round_counter:  .byte 0
 player_2_round_counter:  .byte 0
 game_round_total:        .byte 5
+// 1-Player (CPU player 2) state
+cpu_p2_avatar_state:     .byte 0   // 0=idle, 1=waiting between moves, 2=pressing right, 3=pressing fire
+cpu_p2_avatar_moves:     .byte 0   // how many right-moves left to perform
+cpu_p2_avatar_ticks:     .byte 0   // debounce ticks between CPU simulated inputs
+cpu_p2_avatar_target:    .byte 0   // 8-bit frame target (current_state fires when frame counter reaches this)
+cpu_p2_frame_count:      .byte 0   // wraps every 256 frames; incremented by irq_timer_user_hook
+cpu_p2_buzz_delay:       .byte 0   // counts down; CPU buzzes in when it hits 0
+cpu_p2_buzz_target:      .byte 0   // 8-bit frame target for the buzz wait
+cpu_p2_buzz_active:      .byte 0   // 1=CPU has buzzed in this round (locks re-entry)
 game_round_current:      .byte 0
 trivia_category_total:   .byte 5
 trivia_question_current: .byte 0
@@ -410,7 +419,7 @@ cxn_avatar_selected: .byte 0
 
 ///////////////////////////////////////////////////////////////
 // Anim stuff
-.const anim_bg_color    = LIGHT_BLUE
+.const anim_bg_color    = BLACK
 .const intro_anim_time  = $30
 
 //////////////////////////////////////////////////////////////
