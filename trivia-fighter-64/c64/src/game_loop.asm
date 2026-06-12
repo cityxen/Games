@@ -1,8 +1,18 @@
 //////////////////////////////////////////////////////////////////////////////////////
+//
 // TRIVIA FIGHTERS 64 for C64
-// By Deadline / CityXen 2026
+//
+//                            by Deadline / CityXen 2026
+// 
+// Dependencies:
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
+// must be in kickassembler path in the KickAss.cfg file:
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
+//
+// CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io
-//////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 // Game loop init
@@ -153,6 +163,15 @@ game_loop:
 	cmp #GAME_STEP_ROUND_5
 	bne !+
 	jmp game_step_round
+!:
+	cmp #GAME_STEP_ANIM_5_
+	bne !+
+	ldx #$04                // registry index: ANIM_5
+	jmp anim_cutscene_init
+!:
+	cmp #GAME_STEP_ANIM_5
+	bne !+
+	jmp anim_cutscene_run
 !:
 	cmp #GAME_STEP_ANIM_FINISH_
 	bne !+
@@ -456,6 +475,7 @@ game_step_round_init:
 !:
 	lda #'('
 	sta 1095
+	jsr fade_qa_start
 	inc game_step
 	sfx_v2_play(SFX_GET_READY)
 	jmp game_loop
@@ -465,6 +485,8 @@ game_step_round_init:
 ////////////////////////////////////////////////////////////
 // Game Step Round
 game_step_round:
+
+	jsr fade_qa_tick
 
 	jsr input_get_key
 	cmp #KEY_Q
@@ -683,21 +705,25 @@ gsr_in: // determine winner of round here
 	sbc #$30
 	cmp #$01
 	bne !+
+	PrintChr(KEY_BLACK)
 	Print(MLHL_DATA_ANS1)
 	jmp pca_o
 !:
 	cmp #$02
 	bne !+
+	PrintChr(KEY_BLACK)
 	Print(MLHL_DATA_ANS2)
 	jmp pca_o
 !:
 	cmp #$03
 	bne !+
+	PrintChr(KEY_BLACK)
 	Print(MLHL_DATA_ANS3)
 	jmp pca_o
 !:
 	cmp #$04
 	bne !+
+	PrintChr(KEY_BLACK)
 	Print(MLHL_DATA_ANS4)
 	jmp pca_o
 !:
@@ -805,7 +831,7 @@ print_question:
 	PrintLF()
 	PrintLF()
 	PrintRight(6)
-	PrintChr(5)
+	PrintChr(KEY_BLACK)
     lda #< MLHL_DATA_QUESTION
     sta zp_tmp_lo
     lda #> MLHL_DATA_QUESTION

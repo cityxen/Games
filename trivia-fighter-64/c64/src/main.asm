@@ -5,9 +5,9 @@
 //                            by Deadline / CityXen 2026
 // 
 // Dependencies:
-// The include folder from: https://github.com/cityxen/Commodore64_Programming/
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
 // must be in kickassembler path in the KickAss.cfg file:
-//   -libdir "PATHTO:\dev\cityxen\Commodore64_Programming\include"
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
 //
 // CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io

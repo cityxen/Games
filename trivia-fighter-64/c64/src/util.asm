@@ -1,8 +1,18 @@
 //////////////////////////////////////////////////////////////////////////////////////
+//
 // TRIVIA FIGHTERS 64 for C64
-// By Deadline / CityXen 2026
+//
+//                            by Deadline / CityXen 2026
+// 
+// Dependencies:
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
+// must be in kickassembler path in the KickAss.cfg file:
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
+//
+// CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io
-//////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 .macro CenterAns(ans) {
 	StrLen(ans)
@@ -593,31 +603,6 @@ cpu_p2_round_done:
 ////////////////////////////////////////////////////////////
 
 init_timers_user_hook:
-	lda #TIMER_FADER_SPEED
-	SetTimerTo(TIMER_FADER)
-	FullReset(TIMER_FADER)
-
-// start times to begin fading
-	lda #TIMER_QUESTION_FADE
-	SetTimer(TIMER_FADE_Q)
-	FullReset(TIMER_FADE_Q)
-
-	lda #TIMER_ANS_1_FADE
-	SetTimer(TIMER_FADE_A1)
-	FullReset(TIMER_FADE_A1)
-
-	lda #TIMER_ANS_2_FADE
-	SetTimer(TIMER_FADE_A2)
-	FullReset(TIMER_FADE_A2)
-
-	lda #TIMER_ANS_3_FADE
-	SetTimer(TIMER_FADE_A3)
-	FullReset(TIMER_FADE_A3)
-
-	lda #TIMER_ANS_4_FADE
-	SetTimer(TIMER_FADE_A4)
-	FullReset(TIMER_FADE_A4)
-
 	rts
 
 irq_timer_user_hook:
@@ -632,17 +617,75 @@ irq_timer_user_hook:
 !:
 	rts
 
-begin_fade_in_question:
+//////////////////////////////////////////////////////////////
+// Question/answer fade-in. fade_qa_start blacks out the question and
+// answer color RAM right after they're printed (the chars stay in screen
+// RAM, invisible on the black background); fade_qa_tick — called every
+// game_step_round pass — then steps one region at a time through
+// dark grey / grey / light grey / white: question, then answers 1-4.
+
+.macro FadeFill(addr, len) {
+	ldx #len-1
+!:	sta addr,x
+	dex
+	bpl !-
+}
+
+fade_qa_start:
+	lda #TIMER_FADER_SPEED
+	SetTimerTo(TIMER_FADER)
+	FullReset(TIMER_FADER)
+	lda #$00
+	sta fade_step
+	sta fade_region
+	lda #BLACK
+	FadeFill(FADE_Q_ROW_A, FADE_Q_LEN)
+	FadeFill(FADE_Q_ROW_B, FADE_Q_LEN)
+	FadeFill(FADE_ANS_1, FADE_ANS_LEN)
+	FadeFill(FADE_ANS_2, FADE_ANS_LEN)
+	FadeFill(FADE_ANS_3, FADE_ANS_LEN)
+	FadeFill(FADE_ANS_4, FADE_ANS_LEN)
 	rts
 
-begin_fade_in_ans_1:
-	rts
-
-begin_fade_in_ans_2:
-	rts
-
-begin_fade_in_ans_3:
-	rts
-
-begin_fade_in_ans_4:
+fade_qa_tick:
+	lda fade_region
+	cmp #$05
+	bcc !+
+	rts                     // sequence finished (or never started)
+!:
+	GetTimerTr(TIMER_FADER)
+	bne !+
+	rts                     // not time for the next shade yet
+!:
+	FullReset(TIMER_FADER)
+	ldx fade_step
+	lda fade_colors,x
+	ldy fade_region
+	bne !+
+	FadeFill(FADE_Q_ROW_A, FADE_Q_LEN)  // region 0: both question rows
+	FadeFill(FADE_Q_ROW_B, FADE_Q_LEN)
+	jmp fqt_advance
+!:	cpy #$01
+	bne !+
+	FadeFill(FADE_ANS_1, FADE_ANS_LEN)
+	jmp fqt_advance
+!:	cpy #$02
+	bne !+
+	FadeFill(FADE_ANS_2, FADE_ANS_LEN)
+	jmp fqt_advance
+!:	cpy #$03
+	bne !+
+	FadeFill(FADE_ANS_3, FADE_ANS_LEN)
+	jmp fqt_advance
+!:
+	FadeFill(FADE_ANS_4, FADE_ANS_LEN)
+fqt_advance:
+	inc fade_step
+	lda fade_step
+	cmp #FADE_STEPS
+	bcc !+
+	lda #$00                // region fully white: move to the next one
+	sta fade_step
+	inc fade_region
+!:
 	rts

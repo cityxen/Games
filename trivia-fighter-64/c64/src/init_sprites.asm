@@ -1,8 +1,18 @@
 //////////////////////////////////////////////////////////////////////////////////////
+//
 // TRIVIA FIGHTERS 64 for C64
-// By Deadline / CityXen 2026
+//
+//                            by Deadline / CityXen 2026
+// 
+// Dependencies:
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
+// must be in kickassembler path in the KickAss.cfg file:
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
+//
+// CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io
-//////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 init_sprites:
 //////////////////////////////////////////////////////////////
@@ -137,7 +147,8 @@ init_sprites_load_screen:
 //////////////////////////////////////////////////////////////
 // Initialize Sprites (Game Over Screen)
 init_sprites_game_over:
-	/*
+	
+	
 	lda #%00010010
 	ora SPRITE_ENABLE
 	sta SPRITE_ENABLE
@@ -169,10 +180,10 @@ init_sprites_game_over:
 	lda cxn_avatar_sprite_color_i,x
 	sta SPRITE_4_COLOR
 	lda cxn_avatar_sprite_pointer_i,x
-	ReverseSpriteMultiColorA(sp_ptr_a)
-	lda #sp_ptr_a
+	ReverseSpriteMultiColorA(sp_ptr_p2_head)
+	lda #sp_ptr_p2_head
 	sta SPRITE_4_POINTER
-	*/
+	
 	rts
 
 

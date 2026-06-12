@@ -1,11 +1,26 @@
-//////////////////////////////////////////////////////////////////
-// Local Disk Trivia Loader
-// Author: deadline
+//////////////////////////////////////////////////////////////////////////////////////
+//
+// TRIVIA FIGHTERS 64 for C64
+//
+//                            by Deadline / CityXen 2026
+// 
+// Dependencies:
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
+// must be in kickassembler path in the KickAss.cfg file:
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
+//
+// CityXen Videos: https://youtube.com/@cityxen
+// CityXen Games: https://cityxen.itch.io
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //
 // Loads trivia from the files written by webtrivia-saver.asm:
 // TOTAL.TRIVIA (2-byte count) and N.TRIVIA (one record, unpadded
 // number). This is the default load source; the meatloaf web
 // loader in meatloaf_api.asm is used only when ml_enabled is on.
+// 
+//////////////////////////////////////////////////////////////////////////////////////
+
 #importonce
 
 ///////////////////////////////////////

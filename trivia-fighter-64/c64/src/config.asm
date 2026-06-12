@@ -5,9 +5,9 @@
 //                            by Deadline / CityXen 2026
 // 
 // Dependencies:
-// The include folder from: https://github.com/cityxen/Commodore64_Programming/
+// The include folder from: https://github.com/cityxen/retro-dev-tools/include/commodore64
 // must be in kickassembler path in the KickAss.cfg file:
-//   -libdir "PATHTO:\dev\cityxen\Commodore64_Programming\include"
+//   -libdir "PATHTO:\dev\cityxen\retro-dev-tools\include\commodore64"
 //
 // CityXen Videos: https://youtube.com/@cityxen
 // CityXen Games: https://cityxen.itch.io
@@ -46,23 +46,35 @@ offline_trivia_q:       .byte 0  // there will be 2 questions in the block this 
 .const ml_loading_screen_bg_color  = PURPLE
 .const ml_loading_screen_txt_color = KEY_YELLOW
 
-.const TIMER_ROUND  = $20
+// TIMER_ROUND is TIMER_1's per-trigger timeout (frames per timer-bar char);
+// the question screen ends at 32 triggers, so round time = 32 x TIMER_ROUND.
+// The answer screen reuses the same timeout: it shows for TIMER_SHOW_ANSWER
+// triggers, so keep TIMER_ROUND x TIMER_SHOW_ANSWER roughly constant when
+// changing the round length.
+.const TIMER_ROUND  = $30
 .const TIMER_STRESS = $10
-.const TIMER_SHOW_ANSWER = $10
+.const TIMER_SHOW_ANSWER = $0b
 
-.const TIMER_FADER_SPEED   = $30 // fade from black, dk gr, m gr, l gr, white
-.const TIMER_FADER         = 9
-// start times to begin fading
-.const TIMER_QUESTION_FADE = $10
-.const TIMER_FADE_Q        = 10
-.const TIMER_ANS_1_FADE    = $30
-.const TIMER_FADE_A1       = 11
-.const TIMER_ANS_2_FADE    = $60
-.const TIMER_FADE_A2       = 12
-.const TIMER_ANS_3_FADE    = $90
-.const TIMER_FADE_A3       = 13
-.const TIMER_ANS_4_FADE    = $c0
-.const TIMER_FADE_A4       = 14
+// Question/answer fade-in (fade_qa_start / fade_qa_tick in util.asm):
+// each region's color RAM steps black, dk grey, grey, lt grey, white —
+// question first, then answers 1-4 in turn
+.const TIMER_FADER_SPEED = $09 // frames per shade step
+.const TIMER_FADER       = 9
+// color RAM spans the printed text occupies (see game_step_round_init):
+// question wraps on rows 4-5 from col 6 (cols 4-35 are clear of screen art),
+// answers are 16-char centered fields at cols 3 / 21 on rows 13 and 21
+.const FADE_Q_ROW_A    = COLOR_RAM + 4*40 + 4
+.const FADE_Q_ROW_B    = COLOR_RAM + 5*40 + 4
+.const FADE_Q_LEN      = 32
+.const FADE_ANS_1      = COLOR_RAM + 13*40 + 3
+.const FADE_ANS_2      = COLOR_RAM + 13*40 + 21
+.const FADE_ANS_3      = COLOR_RAM + 21*40 + 3
+.const FADE_ANS_4      = COLOR_RAM + 21*40 + 21
+.const FADE_ANS_LEN    = 16
+.const FADE_STEPS      = 4
+fade_region: .byte 5  // 0=question, 1-4=answers, 5=idle/done
+fade_step:   .byte 0  // index into fade_colors
+fade_colors: .byte DARK_GRAY, GRAY, LIGHT_GRAY, WHITE
 
 trivia_round_text: .text "Round:"
 .byte 0
@@ -294,8 +306,10 @@ game_step_t: .encoding "petscii_upper"
 .const GAME_STEP_ANIM_4      = 19
 .const GAME_STEP_ROUND_5_    = 20
 .const GAME_STEP_ROUND_5     = 21
-.const GAME_STEP_ANIM_FINISH_= 22
-.const GAME_STEP_ANIM_FINISH = 23
+.const GAME_STEP_ANIM_5_     = 22
+.const GAME_STEP_ANIM_5      = 23
+.const GAME_STEP_ANIM_FINISH_= 24
+.const GAME_STEP_ANIM_FINISH = 25
 
 .const CXN_AVATAR_CLICKY     = 0 // CityXen Avatars
 .const CXN_AVATAR_EAGULL     = 1
