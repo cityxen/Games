@@ -17,34 +17,33 @@
 // Single-line P/M resolution: one strip byte = one scan line.
 // ============================================================
 
-// GFX slot row -> P/M strip byte. Tuned so the 52-row circle is
-// roughly centred on the 21-row doodle at that slot.
-.const PM_VOFF   = 16
-.const CIRCLE_H  = 52
+// GFX slot row -> P/M strip byte. The circle is 8 P/M px wide at QUAD
+// width (32 color clocks) to contain the 24cc doodle, and 40 scan lines
+// tall — the tallest that fits the 42-line row spacing, to be as round
+// as possible at this width. Centre = slot_row+42, PM_VOFF = 42-CIRCLE_H/2.
+.const PM_VOFF   = 22
+.const CIRCLE_H  = 40
 
 // Per-slot horizontal position (color clocks) — left edge of the
-// 32-color-clock-wide circle, centred on each doodle column.
+// 32-color-clock-wide (quad width) circle, centred on each doodle.
 btn_hpos:  .byte 42, 74, 106, 138, 170
 
 // Per-slot P/M strip byte where the circle starts.
 btn_pm_y:  .byte BUTT0_ROW+PM_VOFF, BUTT1_ROW+PM_VOFF, BUTT2_ROW+PM_VOFF, BUTT3_ROW+PM_VOFF, BUTT4_ROW+PM_VOFF
 
-// 8-bit-wide filled circle, 52 rows (bit 7 = leftmost cell).
+// 8-bit-wide filled circle, 40 rows (bit 7 = leftmost cell).
+// Circular taper: 2,4,6 px shoulders into a 10-row 8-px body, then
+// mirrored, spread over 40 rows so the wide quad circle is as round
+// as the layout allows.
 circle_bitmap:
-    .byte %00011000, %00011000, %00011000               // rows 0-2
-    .byte %00111100, %00111100, %00111100               // rows 3-5
-    .byte %01111110, %01111110, %01111110, %01111110    // rows 6-9
-    .byte %11111111, %11111111, %11111111, %11111111    // rows 10-41
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %11111111, %11111111, %11111111, %11111111
-    .byte %01111110, %01111110, %01111110, %01111110    // rows 42-45
-    .byte %00111100, %00111100, %00111100               // rows 46-48
-    .byte %00011000, %00011000, %00011000               // rows 49-51
+    .byte %00011000, %00011000, %00011000                // rows 0-2   (2 px)
+    .byte %00111100, %00111100, %00111100, %00111100, %00111100  // rows 3-7 (4 px)
+    .byte %01111110, %01111110, %01111110, %01111110, %01111110, %01111110, %01111110  // rows 8-14 (6 px)
+    .byte %11111111, %11111111, %11111111, %11111111, %11111111  // rows 15-24 (8 px)
+    .byte %11111111, %11111111, %11111111, %11111111, %11111111
+    .byte %01111110, %01111110, %01111110, %01111110, %01111110, %01111110, %01111110  // rows 25-31 (6 px)
+    .byte %00111100, %00111100, %00111100, %00111100, %00111100  // rows 32-36 (4 px)
+    .byte %00011000, %00011000, %00011000                // rows 37-39 (2 px)
 
 // ─── pmg_init ────────────────────────────────────────────────
 // One-time Player/Missile setup: memory base, widths, colors,
@@ -55,7 +54,7 @@ pmg_init:
     lda #>PMG_BASE         // P/M memory page ($60)
     sta PMBASE
 
-    lda #$03               // quad width for each player (bits 1-0)
+    lda #$03               // quad width for each player (32 color clocks)
     sta SIZEP0
     sta SIZEP1
     sta SIZEP2
@@ -83,8 +82,8 @@ pmg_init:
     lda btn_hpos+3
     sta HPOSP3
 
-    // Four quad-width missiles, 8 color clocks apart, form slot 4.
-    // M3 = leftmost (bits 7-6) ... M0 = rightmost (bits 1-0).
+    // Four quad-width missiles, 8 color clocks apart, form slot 4
+    // (32cc total). M3 = leftmost (bits 7-6) ... M0 = rightmost (bits 1-0).
     lda btn_hpos+4
     sta HPOSM3
     clc
@@ -95,11 +94,11 @@ pmg_init:
     adc #8
     sta HPOSM0
 
-    // In GR.8 (ANTIC mode F / hi-res) the playfield LUMINANCE always
-    // overlays players, so we give players priority over the playfield
-    // ($01): the colored circle shows, and the white doodle drawn in the
-    // bitmap still appears on top.  Plus $10 enables the 5th player.
-    lda #$11
+    // ANTIC mode E playfield: give the PLAYFIELD priority over players
+    // ($04 = PF0-3 > PL0-3 > BAK) so the doodle's fill/outline pixels draw
+    // on top of the colored circle, while the circle still shows through the
+    // doodle's transparent (%00 = COLBK) pixels.  Plus $10 = 5th player.
+    lda #$14
     sta GPRIOR
 
     lda #$3E               // DMACTL: DL + normal PF + 1-line P/M + P + M

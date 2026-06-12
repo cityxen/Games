@@ -8,6 +8,7 @@
 .const HPOSP1   = $D001
 .const HPOSP2   = $D002
 .const HPOSP3   = $D003
+.const COLPF0   = $D016   // mode E color 1 (doodle black outline)
 .const COLPF1   = $D017   // GR.8 foreground luminance
 .const COLPF2   = $D018   // GR.8 bitmap background color
 .const COLBK    = $D01A   // border color
@@ -47,6 +48,7 @@
 .const SDMCTL   = $022F   // shadow of DMACTL
 .const SDLSTL   = $0230   // display list pointer lo
 .const SDLSTH   = $0231   // display list pointer hi
+.const COLOR0   = $02C4   // shadow of COLPF0 (doodle black outline)
 .const COLOR1   = $02C5   // shadow of COLPF1 (GR.8 foreground luminance)
 .const COLOR2   = $02C6   // shadow of COLPF2 (GR.8 bitmap background)
 .const COLOR4   = $02C8   // shadow of COLBK  (border)
@@ -112,15 +114,17 @@
 // col = byte offset within a 40-byte GFX row (0-37 for 3-byte sprite)
 // row = GFX scan line (0-159)
 // Five slots, alternating top/bottom to mirror C64 button layout.
-.const BUTT0_COL    = 1    // slot 0 (leftmost)
+// _COL = doodle left byte column (6-byte / 24cc mode-E doodle), shifted
+// 1 byte left of the old mode-F values to re-center. Nudge if off-center.
+.const BUTT0_COL    = 0    // slot 0 (leftmost)
 .const BUTT0_ROW    = 70
-.const BUTT1_COL    = 9    // slot 1
+.const BUTT1_COL    = 8    // slot 1
 .const BUTT1_ROW    = 28
-.const BUTT2_COL    = 17   // slot 2 (center)
+.const BUTT2_COL    = 16   // slot 2 (center)
 .const BUTT2_ROW    = 70
-.const BUTT3_COL    = 25   // slot 3
+.const BUTT3_COL    = 24   // slot 3
 .const BUTT3_ROW    = 28
-.const BUTT4_COL    = 33   // slot 4 (rightmost)
+.const BUTT4_COL    = 32   // slot 4 (rightmost)
 .const BUTT4_ROW    = 70
 
 // ─── Button circle colors (Player/Missile) ───────────────────
@@ -141,6 +145,7 @@
 .const PM_PLAYER3 = PMG_BASE + $700
 
 // ─── Game Variables ──────────────────────────────────────────
+doodle_hue:          .byte $0E  // COLPF1 fill: hue nibble cycles, luma pinned $0E
 whack_mode:          .byte 0
 button_to_hit:       .byte 0
 button_actually_hit: .byte $FF

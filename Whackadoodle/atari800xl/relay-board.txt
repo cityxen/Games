@@ -1,0 +1,106 @@
+Recommended architecture
+
+Atari SIO port → microcontroller → relay driver → 8 relay module
+
+Use:
+
+SIO connector
+ATmega328P / Arduino Nano / RP2040 / ESP32
+ULN2803A relay driver
+8x relay module or 8 bare relays
+separate 5V relay power supply
+optocouplers optional but recommended
+
+Do not power the relays from Atari SIO. SIO +5V is limited, commonly listed around 50mA, not enough for 8 relays.
+
+SIO lines needed
+
+Minimum useful SIO connection:
+
+SIO pin	Signal	Connect to
+3	DATA IN	MCU TX to Atari
+5	DATA OUT	MCU RX from Atari
+7	COMMAND	MCU input
+4/6	GND	MCU/common ground
+10	+5V/READY	logic reference only, not relay power
+
+SIO command frames are normally 5 bytes: device ID, command, AUX1, AUX2, checksum. The peripheral replies with ACK/NAK, commonly ASCII A or N.
+
+Relay command idea
+
+Create a custom SIO device, for example device ID $70.
+
+Command:
+
+Device ID: $70
+Command:   $52   ; "R" for relay
+AUX1:      relay bitmask
+AUX2:      mode/reserved
+Checksum:  Atari SIO checksum
+
+AUX1 controls all relays:
+
+00000000 = all off
+00000001 = relay 1 on
+00000010 = relay 2 on
+10000000 = relay 8 on
+11111111 = all on
+
+So sending 129 / $81 / %10000001 turns on relays 1 and 8.
+
+Hardware output side
+
+MCU pins:
+
+D2 → ULN2803A IN1 → Relay 1
+D3 → ULN2803A IN2 → Relay 2
+D4 → ULN2803A IN3 → Relay 3
+D5 → ULN2803A IN4 → Relay 4
+D6 → ULN2803A IN5 → Relay 5
+D7 → ULN2803A IN6 → Relay 6
+D8 → ULN2803A IN7 → Relay 7
+D9 → ULN2803A IN8 → Relay 8
+
+ULN2803A is ideal because it has 8 Darlington drivers and built-in flyback diodes for relay coils.
+
+Important electrical notes
+Use external 5V power for relay coils.
+Tie Atari GND, MCU GND, and relay supply GND together unless using full isolation.
+Add series protection/resistors or level shifting on SIO lines.
+Do not connect relay coils directly to the Atari or MCU pins.
+Put fuses or current limiting on relay power.
+Use transistor/driver board even if using “Arduino relay modules.”
+Simplest software behavior
+
+MCU watches SIO:
+
+Wait for /COMMAND low.
+Read 5 bytes at SIO serial speed.
+Validate device ID $70.
+Validate checksum.
+Send ACK "A".
+Set output pins from AUX1 bitmask.
+Optionally send complete "C".
+
+This gives you a clean Atari-controlled 8-bit relay latch.
+
+Atari BASIC concept
+
+Eventually you want something like:
+
+REM SEND VALUE 129 TO RELAY DEVICE
+REM 129 = %10000001 = RELAY 1 AND 8 ON
+
+But the Atari side likely needs either:
+
+a small machine-language SIO routine, or
+a custom handler, or
+a BASIC USR routine that fills the SIO control block and calls the OS SIO routine.
+
+My recommendation: build the board around a microcontroller first, then make a tiny Atari ML routine:
+
+SETRELAYS(value)
+
+where value is 0-255.
+
+The clean solution is: Atari sends one byte bitmask over SIO; relay board latches that byte to 8 relays.

@@ -36,6 +36,7 @@ gs_lives_done:
     sta last_slot
 
     // Refresh display
+    jsr set_gfx_dl             // restore mixed DL (fire may start from text page)
     jsr gfx_clear
     jsr txt_clear
     jsr draw_circles
@@ -58,6 +59,7 @@ gs_lives_done:
 game_loop:
 
     jsr wait_vbl
+    jsr cycle_doodle_hue
     jsr update_timers
     jsr read_joystick
 
