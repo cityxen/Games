@@ -117,10 +117,10 @@ draw_title:
 	rts
 
 draw_anim_screen:
-
 	PrintClear()
 	PrintLowerCase()
-	lda #ANIM_BG_COLOR
-	sta BORDER_COLOR
-	sta BACKGROUND_COLOR
+	DrawPetMateScreen(fight_screen)
+	//lda #ANIM_BG_COLOR
+	//sta BORDER_COLOR
+	//sta BACKGROUND_COLOR
 	rts

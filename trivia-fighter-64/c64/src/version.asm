@@ -16,5 +16,5 @@
 
 VERSION:
 .encoding "petscii_mixed"
-.text " ver:26.06.12.01.02"
+.text " ver:26.06.12.03.25"
 .byte 0

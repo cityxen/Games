@@ -23,8 +23,9 @@
 *=$2800 "SPRITES"
 #import "data/trivia-fighters-64-sprites.asm"
 .segment Screens [allowOverlap]
-*=$6ce0 "SCREENS"
+*=$6467 "SCREENS"
 #import "petmate/screens.asm"
+#import "petmate/fight-scene-screen.asm"
 .segment Music [allowOverlap]
 .var music = LoadSid("data/output.sid")
 *=music.location "MUSIC"
