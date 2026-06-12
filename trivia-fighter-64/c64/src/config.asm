@@ -436,11 +436,19 @@ cxn_avatar_selected: .byte 0
 //   then 6-byte rows, one consumed per animation tick:
 //     p1_body_ptr, p1_dx, p1_dy, p2_body_ptr, p2_dx, p2_dy   (dx/dy are signed)
 //   a row whose first byte is $ff ends the cutscene.
+// Each cutscene also has TWO missile (special attack) tables — one per player,
+// registered in anim_menu_m1_* / anim_menu_m2_* (anim_tables.asm). 5-byte rows,
+// one per tick: x, y, msb, multi, sprite_ptr (absolute position; color comes
+// from the pointer's entry in the color table). sprite_ptr $00 = hidden that
+// tick; first byte $ff = no missile for the rest (a lone $ff = no attack —
+// every animN has animN_p1/p2_missile_table placeholders ready to fill in).
 // Edit the tables below to author each cutscene.
 .const ANIM_P1_HEAD_SLOT  = 6           // player 1 head / body hw sprite slots
 .const ANIM_P1_BODY_SLOT  = 5
 .const ANIM_P2_HEAD_SLOT  = 3           // player 2 head / body (head reversed)
 .const ANIM_P2_BODY_SLOT  = 2
+.const ANIM_P1_MISSILE_SLOT = 0         // missile / special attack sprites
+.const ANIM_P2_MISSILE_SLOT = 1         // (slots 0/1 = in front of the fighters)
 .const ANIM_HEAD_Y_OFFSET = 20          // head sits this many px above its body
 .const ANIM_P1_HEAD_PTR   = sp_ptr_p1_head
 .const ANIM_P2_HEAD_PTR   = sp_ptr_p2_head

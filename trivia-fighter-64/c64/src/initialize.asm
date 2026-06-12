@@ -11,16 +11,12 @@
 initialize:
     lda #$00
     sta ml_detected
-    sta ml_enabled
+    sta ml_enabled // meatloaf off by default, F1 on main screen enables it
+    jsr ldsk_init // trivia load drive = drive the game loaded from,
+                  // must read $ba before ml_detect_meatloaf clobbers it
     jsr ml_detect_meatloaf
-    lda ml_detected   
-    sta ml_enabled
 
-    beq !+
-
-    jsr MLHL_LOAD_COUNT
-
-!:
+    jsr trivia_load_count // from local disk (meatloaf is off)
 
 	lda #$01 // score increment count subtract or add
     sta score_math_o

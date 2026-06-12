@@ -13,15 +13,22 @@ echo //------------------------------------------------------
 REM sidreloc -p 94 -z 80-ff -v data/input.sid data/output.sid
 REM call genkickass-script.bat -t C64 -o ../prg_files -m true -s true -l "RETRO_DEV_LIB"
 REM call Kickass.bat src/jread.asm
+call KickAss.bat src/webtrivia-saver.asm
 call KickAss.bat src/main.asm
 echo //------------------------------------------------------
 
 del "prg_files\\tf64.sym"
 del "prg_files\\tf64-sorted.sym"
+del "prg_files\\tf64.d81"
 
 rename "prg_files\\main.sym" "tf64.sym"
 sort   "prg_files\\tf64.sym" > "prg_files\\tf64-sorted.sym"
 
+echo F | xcopy "data\\tf64-trivia.d81" "prg_files\\tf64.d81" /i /Y >nul 2>&1
+call diskimage.bat add "prg_files\\tf64.d81" "prg_files\\tf64.prg"
+rem call diskimage.bat create "prg_files\\tf64.d81"
+rem call diskimage.bat add "prg_files\\tf64.d81" "prg_files\\webtrivia-saver.prg"
+rem call diskimage.bat add "prg_files\\tf64.d64" "prg_files\\webtrivia-saver.prg"
 
 rem exomizer sfx basic -o prg_files\\tf64x.prg prg_files\\tf64.prg >nul 2>&1
 rem if %ERRORLEVEL% EQU 0 (

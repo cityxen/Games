@@ -11,7 +11,10 @@ draw_main_screen:
 	DrawPetMateScreen(main_screen)
 	PrintHome()
 	PrintChr(KEY_WHITE)
-	PrintDown(15)
+	PrintDown(14)
+	PrintRight(24)
+	jsr ldsk_print_drive
+	PrintLF()
 	PrintRight(24)
 	lda play_music
 	jsr print_yesno
@@ -79,7 +82,13 @@ draw_loading_screen:
 	PrintChr(ml_loading_screen_txt_color)
 	PrintDown(12)
 	PrintRight(7)
+	lda ml_enabled // show which source is loading
+	beq !ldsk+
 	Print(MLHL_HOTLOAD_LOADING_TEXT)
+	jmp !done+
+!ldsk:
+	Print(LDSK_LOADING_TEXT)
+!done:
 	FullReset(TIMER_1)
 !:
 	GetTimerTr(TIMER_1)

@@ -9,7 +9,7 @@
 .label save_file=$cbd
 .label score=$16a1
 .label sobj_mv_dy=$1b6a
-.label draw_play_screen=$5d3c {
+.label draw_play_screen=$5d4e {
 }
 .label ml_i_skip=$180c
 .label anim27_p1_missile_table=$44f6
@@ -26,7 +26,7 @@
 .label anim12_p1_missile_table=$417b
 .label p2select=$53fd
 .label divLo=$a0b
-.label ra_next_avatar=$613f
+.label ra_next_avatar=$6151
 .label player_1_body_anim=$20c3
 .label player_2_buzzed_in=$1b97
 .label pyn_end=$a58
@@ -39,7 +39,7 @@
 .label j1_left=$12a5
 .label calculate_screen_pos=$a61
 .label ldsk_pick_random=$4af6
-.label dec_player_2_avatar=$5f6a
+.label dec_player_2_avatar=$5f7c
 .label cpu_p2_buzz_delay=$1ba0
 .label OL_DATA1_ANS4=$c56f
 .label select_char=$8c28
@@ -54,10 +54,10 @@
 .label anim2_table=$3e96
 .label anim24_p2_missile_table=$4440
 .label ldsk_drive_number=$49e3
-.label draw_title=$5dcd {
+.label draw_title=$5ddf {
 }
 .label offline_trivia_q=$1b84
-.label draw_loading_screen=$5d6d
+.label draw_loading_screen=$5d7f
 .label load_address_end_lo=$c60
 .label anim_menu_name_lo=$461b
 .label anim27_p2_missile_table=$44f7
@@ -67,8 +67,8 @@
 .label anim_m2_done=$2008
 .label anim24_p1_missile_table=$443f
 .label anim19_p2_missile_table=$4315
-.label cpu_p2_arm_delay=$6192
-.label cpu_p2_avatar_reset=$6186
+.label cpu_p2_arm_delay=$61a4
+.label cpu_p2_avatar_reset=$6198
 .label trivia_current_question=$1ba6
 .label J1_B_RED=$12a5
 .label sobj_mv_tbl_hi=$1b64
@@ -99,27 +99,27 @@
 .label anim_m1_row=$2005
 .label ml_drive_number=$17c9
 .label sdserror=$dbd
-.label up2ss_out=$60d7
+.label up2ss_out=$60e9
 .label ml_total_trivia_text=$493b
 .label sc2p_add128=$8b9
 .label show_drive_status=$d81
 .label exit=$e1b
 .label anim6_table=$3fcc
-.label cpu_p2_avatar_tick=$61af
+.label cpu_p2_avatar_tick=$61c1
 .label j1_up=$12a3
 .label sds_loop=$d64
 .label OL_DATA1_QUESTION=$c500
-.label irq_timer_user_hook=$6307
+.label irq_timer_user_hook=$6319
 .label game_step=$1ba8
 .label anim22_table=$4390
-.label game_over_loop=$5b79 {
+.label game_over_loop=$5b8b {
 }
 .label filename_buffer=$b43
 .label p1select=$53d1
 .label file_size=$c49
 .label anim_menu_m1_lo=$45a7
-.label ra_random_byte=$6154
-.label p_win_out=$5a9e
+.label ra_random_byte=$6166
+.label p_win_out=$5ab0
 .label cxn_avatar_sprite_pointer_i=$1c3f
 .label ldsk_rand=$4a6c
 .label draw_petmate_screen=$1869
@@ -127,7 +127,7 @@
 .label copy_sprite=$1695
 .label MLHL_URL_COUNT=$4847
 .label button_red_msg=$200e
-.label randomly_flash_buttons=$6118
+.label randomly_flash_buttons=$612a
 .label ptf_end=$a30
 .label cpu_p2_avatar_state=$1b9b
 .label anim27_table=$44b5
@@ -146,32 +146,32 @@
 .label lda_random_sid=$17b9
 .label input_text2=$1384
 .label anim25_table=$4441
-.label cpu_p2_delay_done=$61a0
+.label cpu_p2_delay_done=$61b2
 .label LDSK_LOAD=$4aaf
 .label print_hex_screencode_conversion_table=$9b9
-.label draw_main_screen=$5c42 {
+.label draw_main_screen=$5c54 {
 }
 .label anim7_table=$400f
 .label irq_timers=$f03
 .label anim19_table=$42e5
 .label player_2_head_anim=$20ec
 .label anim_setup=$1ce9
-.label init_sprites_play=$5e90
+.label init_sprites_play=$5ea2
 .label anim_menu_title=$4655
-.label game_step_round=$5729
-.label up1ss_out=$6056
+.label game_step_round=$573b
+.label up1ss_out=$6068
 .label cpu_p2_avatar_moves=$1b9c
-.label init_sprites_iiy=$5e68
+.label init_sprites_iiy=$5e7a
 .label print_yesno=$a3d
 .label il_it2_txt_scr=$135a
 .label ldsk_drive_text=$49e4
 .label player_1_head_anim=$20c0
 .label dev_mode=$1b6e
-.label buzz_check_done=$590b {
+.label buzz_check_done=$591d {
 }
 .label anim3_table=$3eeb
-.label print_player_2_name=$5fb0
-.label init_sprites_game_init=$5e69
+.label print_player_2_name=$5fc2
+.label init_sprites_game_init=$5e7b
 .label trivia_fighters_64_entry_point=$817
 .label anim_ptr_color=$1fd8
 .label a_reg=$81a
@@ -184,11 +184,11 @@
 .label pyn_no_txt=$a5d
 .label get_any_input=$12de
 .label player_1_healthbar=$1b91
-.label p_win_done=$5aa1 {
+.label p_win_done=$5ab3 {
 }
 .label MLHL_LOAD_COUNT=$48c9
 .label printThisDigit=$9ed
-.label begin_fade_in_question=$6349
+.label begin_fade_in_question=$635b
 .label anim23_p1_missile_table=$4402
 .label ldsk_init=$4a11
 .label game_loop_init=$5253
@@ -224,7 +224,7 @@
 .label anim_name_7=$46c0
 .label anim_name_6=$46ba
 .label anim3_p1_missile_table=$3f44
-.label game_over=$5b43
+.label game_over=$5b55
 .label yin_obj=$2072 {
 }
 .label trivia_load=$49cd
@@ -237,12 +237,12 @@
 .label anim_name_3=$46a2
 .label anim_name_2=$469a
 .label anim_name_1=$4694
-.label debug_stuff=$5bf5
+.label debug_stuff=$5c07
 .label zeroize_filename_buffer=$c62
 .label next=$df1
-.label inc_player_1_avatar=$5f28
+.label inc_player_1_avatar=$5f3a
 .label sobj_tick_done=$1a3e
-.label init_sprites=$5e18
+.label init_sprites=$5e2a
 .label j2_left=$12c2
 .label file_loc_end=$c47
 .label sobj_mv_stopped=$1b66
@@ -270,7 +270,7 @@
 .label MLHL_DATA_CORRECT=$4988
 .label am_wait=$516a
 .label cxn_avatar_sprite_color_i=$1c77
-.label p2_wins=$5a91
+.label p2_wins=$5aa3
 .label dirname=$e51
 .label trivia_load_count=$49d8
 .label anim7_p2_missile_table=$4051
@@ -287,7 +287,7 @@
 .label anim_name_17=$4728
 .label il_it2_kb_chk_crs_not_revd=$13d2
 .label anim_name_19=$4740
-.label cpu_p2_avatar_done=$6227
+.label cpu_p2_avatar_done=$6239
 .label is_hex=$15f9
 .label anim_name_10=$46da
 .label anim_name_12=$46f0
@@ -318,14 +318,14 @@
 .label LDSK_FILENAME_TOTAL=$4a49
 .label reset_input_timer=$1264 {
 }
-.label update_player_2_select_sprites=$6097
+.label update_player_2_select_sprites=$60a9
 .label anim15_p2_missile_table=$422d
 .label il_it2_txt_loc_hi=$135d
-.label anim_cutscene_run=$5547 {
+.label anim_cutscene_run=$5559 {
 }
 .label sobj_tick_no_anim=$1a31
 .label char=$e09
-.label init_sprites_ms=$5e18
+.label init_sprites_ms=$5e2a
 .label sobj_mv_done=$1b26
 .label cxn_avatar_f1d0_t=$1bea
 .label button_blue_msg=$2026
@@ -344,7 +344,7 @@
 .label cpu_p2_frame_count=$1b9f
 .label anim28_p1_missile_table=$452d
 .label print_h_digit=$97c
-.label who_buzzed_in_first=$6160
+.label who_buzzed_in_first=$6172
 .label am_list_done=$5150 {
 }
 .label anim_menu_base=$456c
@@ -352,10 +352,10 @@
 .label wait_vbl=$821
 .label anim25_p2_missile_table=$4471
 .label game_step_select=$5393
-.label draw_anim_screen=$5e05 {
+.label draw_anim_screen=$5e17 {
 }
 .label gameover_screen=$8456
-.label init_sprites_game_over=$5f26
+.label init_sprites_game_over=$5f38
 .label am_letter=$5193
 .label sobj_flush_loop=$1a5e
 .label usend=$814
@@ -390,8 +390,8 @@
 .label ml_total_trivia=$4948
 .label cxn_avatar_sprite_multi_i=$1caf
 .label screencode_to_petscii=$893
-.label construct_sprite_body_p2=$5f27
-.label construct_sprite_body_p1=$5f27
+.label construct_sprite_body_p2=$5f39
+.label construct_sprite_body_p1=$5f39
 .label MLHL_HOTLOAD_MSG=$486f
 .label J2_B_WHITE=$12c4
 .label increment_screen_pos=$aa0
@@ -443,7 +443,7 @@
 .label anim11_table=$4115
 .label anim_sprites_main_loop=$503c {
 }
-.label gsr_in=$5944
+.label gsr_in=$5956
 .label player_1_obj=$20a9 {
 }
 .label ml_after_anim=$51d3
@@ -455,16 +455,16 @@
 .label add_value=$1604
 .label use_file_loc=$c43
 .label sc2p_add0=$8bf
-.label cpu_p2_buzz_reset=$6228
+.label cpu_p2_buzz_reset=$623a
 .label j2_up=$12c0
-.label init_timers_user_hook=$6294
+.label init_timers_user_hook=$62a6
 .label game_round_winner=$1b95
 .label hex_cvrt=$15e8
 .label j2_right=$12c3
 .label sobj_slot_tmp=$1b5b
 .label sobj_apply_loop=$1998
 .label print=$82c
-.label update_player_1_select_sprites=$6027
+.label update_player_1_select_sprites=$6039
 .label trivia_refresh_screen=$4d98
 .label button_yellow_msg=$201e
 .label anim_m2_tbl_lo=$2003
@@ -473,7 +473,7 @@
 .label anim_menu_m2_hi=$45fe
 .label anim_menu_tbl_hi=$458a
 .label y_reg=$81c
-.label print_player_1_name=$5f80
+.label print_player_1_name=$5f92
 .label ml_detected=$17cf
 .label anim10_p1_missile_table=$4113
 .label anim11_p2_missile_table=$414b
@@ -501,9 +501,9 @@
 .label anim16_table=$422e
 .label anim5_table=$3f8f
 .label il_it2_kb_chk=$13bb
-.label draw_gameover=$5d58
-.label update_health_bars=$616d
-.label pp1n_out=$5fa9
+.label draw_gameover=$5d6a
+.label update_health_bars=$617f
+.label pp1n_out=$5fbb
 .label il_it2_cursor=$1383
 .label anim_step_one=$1dc6
 .label anim28_table=$44f8
@@ -512,21 +512,21 @@
 .label anim6_p2_missile_table=$400e
 .label trivia_question_current=$1ba5
 .label no_subroutine=$820
-.label init_sprites_load_screen=$5eee
+.label init_sprites_load_screen=$5f00
 .label anim_menu_m2_lo=$45e1
 .label LDSK_LOADING_TEXT=$49f7
 .label cxn_avatar_msdos_t=$1bdf
 .label anim11_p1_missile_table=$414a
 .label print_r_out=$879
 .label ml_detect_cmd=$17ca
-.label p2buzz=$589f
-.label cpu_p2_round_done=$6293
+.label p2buzz=$58b1
+.label cpu_p2_round_done=$62a5
 .label tmp_1=$81d
 .label game_anim=$1ce7
 .label tmp_3=$81f
 .label k_value=$1282
 .label tmp_2=$81e
-.label dec_player_1_avatar=$5f3e
+.label dec_player_1_avatar=$5f50
 .label MLHL_DATA_ANS2=$499a
 .label sc2p_add64=$8bc
 .label anim_m1_tbl_hi=$2002
@@ -537,7 +537,7 @@
 .label ml_detect_byte=$17cd
 .label il_it2_kb_not_too_long=$13e5
 .label anim_tbl_lo=$1ffa
-.label game_step_round_init=$556b
+.label game_step_round_init=$557d
 .label show_directory=$dc0
 .label anim14_p2_missile_table=$41f6
 .label player_2_avatar=$1b92
@@ -566,7 +566,7 @@
 .label ml_sdsloop=$1839
 .label il_get_j1_m2=$12a8
 .label anim13_p2_missile_table=$41b9
-.label p1_wins=$5a99
+.label p1_wins=$5aab
 .label p_wrong_msg=$2050
 .label anim5_p2_missile_table=$3fcb
 .label ml_sdsclose=$185d
@@ -582,12 +582,12 @@
 .label sec_command=$c44
 .label il_it2_buffer=$1362
 .label i_compare=$12dd
-.label draw_instruct=$5d22
+.label draw_instruct=$5d34
 .label print_out=$83f
 .label main_loop_start=$4bdb
 .label yin_move_table=$20a4 {
 }
-.label draw_select_char=$5d0b {
+.label draw_select_char=$5d1d {
 }
 .label OL_DATA_TABLE=$c500
 .label LDSK_FILENAME=$4a5c
@@ -595,12 +595,12 @@
 .label nextDivisor=$9cf
 .label sobj_enable=$1a4c
 .label anim23_p2_missile_table=$4403
-.label begin_fade_in_ans_1=$634a
+.label begin_fade_in_ans_1=$635c
 .label sobj_set_color=$1aa0
-.label begin_fade_in_ans_4=$634d
+.label begin_fade_in_ans_4=$635f
 .label anim18_p2_missile_table=$42e4
-.label begin_fade_in_ans_2=$634b
-.label begin_fade_in_ans_3=$634c
+.label begin_fade_in_ans_2=$635d
+.label begin_fade_in_ans_3=$635e
 .label LDSK_LOAD_COUNT=$4a6f
 .label show_drive_status2=$d43
 .label cxn_avatar_trish_t=$1bf5
@@ -636,7 +636,7 @@
 .label wlysz=$930
 .label drive_number=$b41
 .label ANIM_PTR_MULTI_TABLE=$1caf
-.label init_sprites_select_char=$5e69
+.label init_sprites_select_char=$5e7b
 .label score_reset=$16fb
 .label score_math_o=$16b2
 .label ldsk_digits=$4a69
@@ -655,9 +655,9 @@
 .label cxn_avatar_eagull_t=$1bbe
 .label il_it2_txt_color=$135f
 .label restart=$4bdb
-.label randomize_avatars=$6124
+.label randomize_avatars=$6136
 .label gsa_out=$54ff
-.label pca_o=$59c0 {
+.label pca_o=$59d2 {
 }
 .label print_hex_inline=$93b
 .label sobj_flush_next=$1a92
@@ -668,24 +668,24 @@
 .label MLHL_HOTLOAD_LOADING_TEXT=$48ad
 .label anim10_table=$40de
 .label sobj_sfx_done=$1b58
-.label VERSION=$634e
+.label VERSION=$6360
 .label file_loc_hi=$c46
 .label load_trivia_stress_test=$4dbc
 .label anim22_p2_missile_table=$43c6
-.label print_question=$5ad8 {
+.label print_question=$5aea {
 }
 .label calc_sprite_dest=$1683
 .label anim12_p2_missile_table=$417c
 .label anim7_p1_missile_table=$4050
 .label LDSK_FILENAME_TOTAL_END=$4a55
-.label print_player_name=$5fe0
+.label print_player_name=$5ff2
 .label load_loading=$c4b
 .label game_step_select_init=$5379
 .label ldsk_num=$4a67
 .label LDSK_FILENAME_LEN=$4a66
 .label yin_anim_table=$2082
 .label il_it2_txt_color_val=$135e
-.label cpu_p2_round_tick=$624c
+.label cpu_p2_round_tick=$625e
 .label game_step_anim=$5453
 .label sds_devnp=$d75 {
 }
@@ -694,11 +694,11 @@
 .label anim_cutscene_init=$5505
 .label print_r_t=$87a
 .label MLHL_URL=$481f
-.label pp2n_out=$5fd9
-.label inc_player_2_avatar=$5f54
+.label pp2n_out=$5feb
+.label inc_player_2_avatar=$5f66
 .label print_hex_poke_no_calc=$990
 .label sc2p_sub128=$8b2
-.label gsr_out=$5ad5
+.label gsr_out=$5ae7
 .label game_round_current=$1ba3
 .label error=$e1b
 .label anim1_p1_missile_table=$3e53
@@ -712,8 +712,8 @@
 .label anim28_p2_missile_table=$452e
 .label sds_eof=$d71
 .label instruct_screen=$7c84
-.label gst_lf_out=$5b3d {
+.label gst_lf_out=$5b4f {
 }
 .label sobj_inv_mask=$1b59
 .label ldsk_build_filename=$4b6f
-.label ra_seed=$6153
+.label ra_seed=$6165

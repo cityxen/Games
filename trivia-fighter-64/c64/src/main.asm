@@ -69,6 +69,7 @@ trivia_fighters_64_game_code:
 #import "anim_tables.asm"
 #import "initialize.asm"
 #import "meatloaf_api.asm"
+#import "local_disk.asm"
 #import "main_loop.asm"
 #import "game_loop.asm"
 #import "game_over_loop.asm"

@@ -80,8 +80,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_1_
 	bne !+
-	lda #<anim1_table
-	ldx #>anim1_table
+	ldx #$00                // registry index: ANIM_1
 	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_1
@@ -100,8 +99,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_2_
 	bne !+
-	lda #<anim2_table
-	ldx #>anim2_table
+	ldx #$01                // registry index: ANIM_2
 	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_2
@@ -120,8 +118,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_3_
 	bne !+
-	lda #<anim3_table
-	ldx #>anim3_table
+	ldx #$02                // registry index: ANIM_3
 	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_3
@@ -140,8 +137,7 @@ game_loop:
 !:
 	cmp #GAME_STEP_ANIM_4_
 	bne !+
-	lda #<anim4_table
-	ldx #>anim4_table
+	ldx #$03                // registry index: ANIM_4
 	jmp anim_cutscene_init
 !:
 	cmp #GAME_STEP_ANIM_4
@@ -342,10 +338,20 @@ gsa_out:
 // it through the game-step state machine. Tables are in config.asm.
 
 // anim_cutscene_init — COMMON initializer, called once per anim step.
-// In: A = <table, X = >table
+// In: X = animation registry index (anim_menu_tbl_* / anim_menu_m*_*)
 anim_cutscene_init:
+	lda anim_menu_tbl_lo,x
 	sta anim_tbl_lo
-	stx anim_tbl_hi
+	lda anim_menu_tbl_hi,x
+	sta anim_tbl_hi
+	lda anim_menu_m1_lo,x   // missile (special attack) tables for this cutscene
+	sta anim_m1_tbl_lo
+	lda anim_menu_m1_hi,x
+	sta anim_m1_tbl_hi
+	lda anim_menu_m2_lo,x
+	sta anim_m2_tbl_lo
+	lda anim_menu_m2_hi,x
+	sta anim_m2_tbl_hi
 	// heads show the selected avatars: refresh their table colors so
 	// anim_setup picks them up
 	ldx player_1_avatar
@@ -354,6 +360,11 @@ anim_cutscene_init:
 	ldx player_2_avatar
 	lda cxn_avatar_sprite_color_i,x
 	sta cxn_avatar_sprite_color_i+CXN_SPR_COLOR_P2_HEAD
+	// the p1 head slot's bitmap is only written by init_sprites_ms (title
+	// screen, attract avatars) — recopy it from the selected avatar here
+	ldx player_1_avatar
+	lda cxn_avatar_sprite_pointer_i,x
+	CopySpriteA(sp_ptr_p1_head)
 	jsr draw_anim_screen
 	jsr anim_setup
 	inc game_step
@@ -381,7 +392,7 @@ game_step_round_init:
 	//////////////////////////////
 	// load random trivia question
 	jsr draw_loading_screen
-	jsr MLHL_LOAD
+	jsr trivia_load
 	//////////////////////////////
 	// Draw play screen
 	jsr draw_play_screen

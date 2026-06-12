@@ -88,6 +88,26 @@ main_loop:
 	jsr print_yesno
 !:
 	
+	cmp #KEY_F1 // toggle meatloaf loading
+	bne !+
+	lda ml_enabled
+	eor #$01
+	sta ml_enabled
+	jsr trivia_load_count // refresh count from the new source
+	jsr trivia_refresh_screen
+!:
+	cmp #KEY_F3 // cycle trivia load drive 8-11
+	bne !+
+	ldx ldsk_drive_number
+	inx
+	cpx #12
+	bne !nowrap+
+	ldx #$08
+!nowrap:
+	stx ldsk_drive_number
+	jsr trivia_load_count // refresh count from the new drive
+	jsr trivia_refresh_screen
+!:
 	cmp #KEY_T
 	bne !+
 	lda #$00
@@ -136,6 +156,14 @@ ml_game_start:
 	sta USER_PORT_DATA
 	jmp game_start
 
+// redraw the main screen (if showing) after F1/F3 change
+// meatloaf status, drive or trivia count
+trivia_refresh_screen:
+	lda screen_draw
+	bne !+
+	jsr draw_main_screen
+!:	rts
+
 ml_screens:
 	lda screen_draw
 	cmp #$02
@@ -155,7 +183,7 @@ ml_screens:
 
 load_trivia_stress_test:
 	jsr draw_loading_screen
-	jsr MLHL_LOAD // load random trivia question
+	jsr trivia_load // load random trivia question
 	jsr draw_play_screen
 	sfx_v2_play(SFX_POW)
 	PrintHome()
@@ -196,6 +224,19 @@ st_lf_out:
 	lda MLHL_DATA_CORRECT
 	sbc #47
 	PrintHexXY(2,2)
+	lda ml_enabled // show loaded question number (local disk only)
+	bne !+
+	PrintPlot(5,2)
+	PrintChr(KEY_YELLOW)
+	ldx #$00
+!lp:
+	lda LDSK_FILENAME,x
+	cmp #$2e // stop at '.' of N.TRIVIA
+	beq !+
+	jsr KERNAL_CHROUT
+	inx
+	bne !lp-
+!:
 	PrintHome()
 	PrintChr(KEY_WHITE)
 	PrintDown(13)
@@ -356,11 +397,19 @@ am_select:
 	cmp #ANIM_MENU_COUNT
 	bcs am_wait             // empty slot on the last page
 	tax                     // X = index
+	lda anim_menu_m1_lo,x   // missile (special attack) tables for this cutscene
+	sta anim_m1_tbl_lo
+	lda anim_menu_m1_hi,x
+	sta anim_m1_tbl_hi
+	lda anim_menu_m2_lo,x
+	sta anim_m2_tbl_lo
+	lda anim_menu_m2_hi,x
+	sta anim_m2_tbl_hi
 	ldy anim_menu_tbl_lo,x  // Y = <table
 	lda anim_menu_tbl_hi,x
 	tax                     // X = >table
 	tya                     // A = <table
-	
+
 	jsr anim_play
 
 	jmp am_draw             // redraw the list, pick again

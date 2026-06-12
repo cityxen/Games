@@ -19,6 +19,26 @@ anim1_table:
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,   0,   0
 .byte $ff
 
+// ANIM_1 player 1 special attack — arrow flies from the punch into p2.
+// One 5-byte row per tick, in step with the rows above:
+//       x    y  msb multi sprite_ptr   (ptr 0 = hidden, first byte $ff = done)
+anim1_p1_missile_table:
+.byte    0,   0,  0,  0,   0                // charge frames: not fired yet
+.byte    0,   0,  0,  0,   0
+.byte    0,   0,  0,  0,   0
+.byte    0,   0,  0,  0,   0
+.byte    0,   0,  0,  0,   0
+.byte    0,   0,  0,  0,   0
+.byte  110, 145,  0,  0,   sp_ptr_arrow     // punch — missile away
+.byte  126, 145,  0,  0,   sp_ptr_arrow
+.byte  142, 145,  0,  0,   sp_ptr_arrow
+.byte  158, 145,  0,  0,   sp_ptr_arrow
+.byte  174, 145,  0,  0,   sp_ptr_arrow
+.byte  190, 145,  0,  0,   sp_ptr_arrow
+.byte  206, 145,  0,  0,   sp_ptr_arrow     // impact on p2
+.byte $ff
+anim1_p2_missile_table: .byte $ff // p2: no special attack
+
 // ANIM_2 "Counter" — p2 rushes in, p1 backpedals then counter-strikes
 anim2_table:
 //      p1x  p1y    p2x  p2y
@@ -38,6 +58,9 @@ anim2_table:
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,   0,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,   0,   0
 .byte $ff
+// special attack placeholders: replace a $ff with 5-byte rows (x,y,msb,multi,ptr)
+anim2_p1_missile_table: .byte $ff
+anim2_p2_missile_table: .byte $ff
 
 // ANIM_3 "Showdown" — both close in, bob, glare (frown), then back off
 anim3_table:
@@ -59,6 +82,8 @@ anim3_table:
 .byte sp_ptr_body_left_2,  -4,   0,   sp_ptr_body_right_2,   4,   0
 .byte sp_ptr_body_left_3,  -4,   0,   sp_ptr_body_right_3,   4,   0
 .byte $ff
+anim3_p1_missile_table: .byte $ff
+anim3_p2_missile_table: .byte $ff
 
 // Effect / attack sprite pointers (sp_ptr_skull, sp_ptr_heart, sp_ptr_star,
 // sp_ptr_poo, sp_ptr_dollar, sp_ptr_atk_lightning, sp_ptr_atk_swirl, ...) can
@@ -82,6 +107,8 @@ anim4_table:
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_skull,          0,   6
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_skull,          0,   0
 .byte $ff
+anim4_p1_missile_table: .byte $ff
+anim4_p2_missile_table: .byte $ff
 
 // ANIM_5 "Dizzy" — both stagger, swirling stars (effect sprites in body slot)
 anim5_table:
@@ -98,6 +125,8 @@ anim5_table:
 .byte sp_ptr_star,          0,   1,   sp_ptr_star,           0,   1
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,   0,   0
 .byte $ff
+anim5_p1_missile_table: .byte $ff
+anim5_p2_missile_table: .byte $ff
 
 // ANIM_6 "Taunt" — p1 struts up taunting (poo/frown), p2 fumes then charges
 anim6_table:
@@ -115,6 +144,8 @@ anim6_table:
 .byte sp_ptr_body_left_3,  -3,   0,   sp_ptr_punch_right,   -2,   0
 .byte sp_ptr_body_left_4,  -3,   0,   sp_ptr_punch_right,    0,   0
 .byte $ff
+anim6_p1_missile_table: .byte $ff
+anim6_p2_missile_table: .byte $ff
 
 // ANIM_7 "Love" — both hop together trailing hearts, meet in the middle
 anim7_table:
@@ -132,6 +163,8 @@ anim7_table:
 .byte sp_ptr_heart,         0,  -3,   sp_ptr_heart,          0,  -3
 .byte sp_ptr_heart,         0,   3,   sp_ptr_heart,          0,   3
 .byte $ff
+anim7_p1_missile_table: .byte $ff
+anim7_p2_missile_table: .byte $ff
 
 // ANIM_8 "Money" — p1 dances with dollar signs, p2 greedily gives chase
 anim8_table:
@@ -148,6 +181,8 @@ anim8_table:
 .byte sp_ptr_dollar,        3,   5,   sp_ptr_body_right_1,   0,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,   0,   0
 .byte $ff
+anim8_p1_missile_table: .byte $ff
+anim8_p2_missile_table: .byte $ff
 
 // ANIM_9 "Lightning Duel" — both charge, lightning clash, bounce, repeat, logo
 anim9_table:
@@ -167,6 +202,8 @@ anim9_table:
 .byte sp_ptr_commodore,      0,  -2,  sp_ptr_commodore,      0,  -2
 .byte sp_ptr_commodore,      0,   2,  sp_ptr_commodore,      0,   2
 .byte $ff
+anim9_p1_missile_table: .byte $ff
+anim9_p2_missile_table: .byte $ff
 
 // ANIM_10 "Banana Slip" — p2 steps on a banana and wipes out
 anim10_table:
@@ -182,6 +219,8 @@ anim10_table:
 .byte sp_ptr_punch_left,    0,   0,   sp_ptr_skull,         0,  10
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_skull,         0,   0
 .byte $ff
+anim10_p1_missile_table: .byte $ff
+anim10_p2_missile_table: .byte $ff
 
 // ANIM_11 "Wifi Hack" — p1 jams p2's signal, p2 glitches into a crash
 anim11_table:
@@ -197,6 +236,8 @@ anim11_table:
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_rad,           0,  -2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_skull,         0,   2
 .byte $ff
+anim11_p1_missile_table: .byte $ff
+anim11_p2_missile_table: .byte $ff
 
 // ANIM_12 "Storm Cloud" — a rain cloud parks over p2, who sinks into gloom
 anim12_table:
@@ -211,6 +252,8 @@ anim12_table:
 .byte sp_ptr_body_left_2,   0,   0,   sp_ptr_atk_cloud,     0,  -2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_frown,         0,   2
 .byte $ff
+anim12_p1_missile_table: .byte $ff
+anim12_p2_missile_table: .byte $ff
 
 // ANIM_13 "Yin Spin" — both whirl through the full yin-yang frame set
 anim13_table:
@@ -227,6 +270,8 @@ anim13_table:
 .byte sp_ptr_yin_8,        -1,   0,   sp_ptr_yin_8,         1,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim13_p1_missile_table: .byte $ff
+anim13_p2_missile_table: .byte $ff
 
 // ANIM_14 "Star Power" — p1 charges up with stars, then unleashes a combo
 anim14_table:
@@ -243,6 +288,8 @@ anim14_table:
 .byte sp_ptr_kick_left,     0,   0,   sp_ptr_body_right_3,  4,   2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim14_p1_missile_table: .byte $ff
+anim14_p2_missile_table: .byte $ff
 
 // ANIM_15 "Trash Talk" — a back-and-forth of comic bubbles, poo and frowns
 anim15_table:
@@ -258,6 +305,8 @@ anim15_table:
 .byte sp_ptr_poo,           0,   0,   sp_ptr_frown,         0,   2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim15_p1_missile_table: .byte $ff
+anim15_p2_missile_table: .byte $ff
 
 // ANIM_16 "Avatar Cameo" — p1 morphs through the whole CityXen roster
 anim16_table:
@@ -275,6 +324,8 @@ anim16_table:
 .byte sp_victoria,          3,   0,   sp_ptr_body_right_1,  0,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim16_p1_missile_table: .byte $ff
+anim16_p2_missile_table: .byte $ff
 
 // ANIM_17 "Arrow Volley" — p1 looses arrows and darts, p2 bobs to dodge
 anim17_table:
@@ -290,6 +341,8 @@ anim17_table:
 .byte sp_ptr_atk_darts,     0,   0,   sp_ptr_body_right_1,  0,  -2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_frown,         0,   2
 .byte $ff
+anim17_p1_missile_table: .byte $ff
+anim17_p2_missile_table: .byte $ff
 
 // ANIM_18 "Center Hug" — both rush to the middle and share hearts
 anim18_table:
@@ -306,6 +359,8 @@ anim18_table:
 .byte sp_ptr_heart,         0,   2,   sp_ptr_heart,         0,   2
 .byte sp_ptr_heart,         0,  -2,   sp_ptr_heart,         0,  -2
 .byte $ff
+anim18_p1_missile_table: .byte $ff
+anim18_p2_missile_table: .byte $ff
 
 // ANIM_19 "Radioactive" — p2 goes critical (rad/skull), p1 backs away
 anim19_table:
@@ -320,6 +375,8 @@ anim19_table:
 .byte sp_ptr_body_left_2,  -3,   0,   sp_ptr_skull,         0,   2
 .byte sp_ptr_body_left_1,  -2,   0,   sp_ptr_rad,           0,   0
 .byte $ff
+anim19_p1_missile_table: .byte $ff
+anim19_p2_missile_table: .byte $ff
 
 // ANIM_20 "Kick Flurry" — p2 storms in with a flurry of kicks, p1 reels back
 anim20_table:
@@ -336,6 +393,8 @@ anim20_table:
 .byte sp_ptr_frown,        -3,   0,   sp_ptr_kick_right,    2,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim20_p1_missile_table: .byte $ff
+anim20_p2_missile_table: .byte $ff
 
 // ANIM_21 "Jackpot" — both bounce for joy as dollar signs rain down
 anim21_table:
@@ -352,6 +411,8 @@ anim21_table:
 .byte sp_ptr_dollar,        0,   4,   sp_ptr_dollar,        0,   4
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim21_p1_missile_table: .byte $ff
+anim21_p2_missile_table: .byte $ff
 
 // ANIM_22 "Blue Screen" — p2 hacks back: p1 glitches into a crash (Wifi Hack mirrored)
 anim22_table:
@@ -367,6 +428,8 @@ anim22_table:
 .byte sp_ptr_rad,           0,  -2,   sp_ptr_body_right_1,  0,   0
 .byte sp_ptr_skull,         0,   2,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim22_p1_missile_table: .byte $ff
+anim22_p2_missile_table: .byte $ff
 
 // ANIM_23 "Leap Frog" — p1 takes a running vault clean over p2's head
 anim23_table:
@@ -383,6 +446,8 @@ anim23_table:
 .byte sp_ptr_body_left_2,  12,   8,   sp_ptr_body_right_2,  0,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim23_p1_missile_table: .byte $ff
+anim23_p2_missile_table: .byte $ff
 
 // ANIM_24 "Frenemies" — a heated glare-off that melts into hearts
 anim24_table:
@@ -399,6 +464,8 @@ anim24_table:
 .byte sp_ptr_heart,         0,   2,   sp_ptr_heart,         0,   2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim24_p1_missile_table: .byte $ff
+anim24_p2_missile_table: .byte $ff
 
 // ANIM_25 "Meteor Shower" — stars crash down while both scramble for cover
 anim25_table:
@@ -413,6 +480,8 @@ anim25_table:
 .byte sp_ptr_star,          0,   8,   sp_ptr_star,          0,   8
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim25_p1_missile_table: .byte $ff
+anim25_p2_missile_table: .byte $ff
 
 // ANIM_26 "Roster Rumble" — p2 morphs through the roster (Avatar Cameo mirrored)
 anim26_table:
@@ -430,6 +499,8 @@ anim26_table:
 .byte sp_ptr_body_left_1,   0,   0,   sp_clicky,           -3,   0
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim26_p1_missile_table: .byte $ff
+anim26_p2_missile_table: .byte $ff
 
 // ANIM_27 "Double KO" — simultaneous haymakers, both turn to skulls and drop
 anim27_table:
@@ -447,6 +518,8 @@ anim27_table:
 .byte sp_ptr_skull,        -2,   6,   sp_ptr_skull,         2,   6
 .byte sp_ptr_skull,         0,   0,   sp_ptr_skull,         0,   0
 .byte $ff
+anim27_p1_missile_table: .byte $ff
+anim27_p2_missile_table: .byte $ff
 
 // ANIM_28 "Victory Dance" — p1 boogies with stars, p2 sulks off stage right
 anim28_table:
@@ -462,6 +535,8 @@ anim28_table:
 .byte sp_ptr_star,          0,  -3,   sp_ptr_body_right_2,  3,   0
 .byte sp_ptr_body_left_1,   0,   3,   sp_ptr_body_right_1,  0,   0
 .byte $ff
+anim28_p1_missile_table: .byte $ff
+anim28_p2_missile_table: .byte $ff
 
 // ANIM_29 "Banana Chaos" — bananas everywhere, both fighters wipe out
 anim29_table:
@@ -478,6 +553,8 @@ anim29_table:
 .byte sp_ptr_body_left_1,   0,  -4,   sp_ptr_skull,         0,   2
 .byte sp_ptr_body_left_1,   0,   0,   sp_ptr_body_right_1,  0,  -4
 .byte $ff
+anim29_p1_missile_table: .byte $ff
+anim29_p2_missile_table: .byte $ff
 
 //////////////////////////////////////////////////////////////
 // Animation registry — drives the main-screen player (press A).
@@ -502,6 +579,36 @@ anim_menu_tbl_hi:
 .byte >anim16_table, >anim17_table, >anim18_table, >anim19_table, >anim20_table
 .byte >anim21_table, >anim22_table, >anim23_table, >anim24_table, >anim25_table
 .byte >anim26_table, >anim27_table, >anim28_table, >anim29_table
+// Missile (special attack) registry — parallel with anim_menu_tbl_*.
+// Every cutscene has its own p1/p2 missile table (a lone $ff = no attack).
+anim_menu_m1_lo: // player 1 missiles
+.byte <anim1_p1_missile_table,  <anim2_p1_missile_table,  <anim3_p1_missile_table,  <anim4_p1_missile_table,  <anim5_p1_missile_table
+.byte <anim6_p1_missile_table,  <anim7_p1_missile_table,  <anim8_p1_missile_table,  <anim9_p1_missile_table,  <anim10_p1_missile_table
+.byte <anim11_p1_missile_table, <anim12_p1_missile_table, <anim13_p1_missile_table, <anim14_p1_missile_table, <anim15_p1_missile_table
+.byte <anim16_p1_missile_table, <anim17_p1_missile_table, <anim18_p1_missile_table, <anim19_p1_missile_table, <anim20_p1_missile_table
+.byte <anim21_p1_missile_table, <anim22_p1_missile_table, <anim23_p1_missile_table, <anim24_p1_missile_table, <anim25_p1_missile_table
+.byte <anim26_p1_missile_table, <anim27_p1_missile_table, <anim28_p1_missile_table, <anim29_p1_missile_table
+anim_menu_m1_hi:
+.byte >anim1_p1_missile_table,  >anim2_p1_missile_table,  >anim3_p1_missile_table,  >anim4_p1_missile_table,  >anim5_p1_missile_table
+.byte >anim6_p1_missile_table,  >anim7_p1_missile_table,  >anim8_p1_missile_table,  >anim9_p1_missile_table,  >anim10_p1_missile_table
+.byte >anim11_p1_missile_table, >anim12_p1_missile_table, >anim13_p1_missile_table, >anim14_p1_missile_table, >anim15_p1_missile_table
+.byte >anim16_p1_missile_table, >anim17_p1_missile_table, >anim18_p1_missile_table, >anim19_p1_missile_table, >anim20_p1_missile_table
+.byte >anim21_p1_missile_table, >anim22_p1_missile_table, >anim23_p1_missile_table, >anim24_p1_missile_table, >anim25_p1_missile_table
+.byte >anim26_p1_missile_table, >anim27_p1_missile_table, >anim28_p1_missile_table, >anim29_p1_missile_table
+anim_menu_m2_lo: // player 2 missiles
+.byte <anim1_p2_missile_table,  <anim2_p2_missile_table,  <anim3_p2_missile_table,  <anim4_p2_missile_table,  <anim5_p2_missile_table
+.byte <anim6_p2_missile_table,  <anim7_p2_missile_table,  <anim8_p2_missile_table,  <anim9_p2_missile_table,  <anim10_p2_missile_table
+.byte <anim11_p2_missile_table, <anim12_p2_missile_table, <anim13_p2_missile_table, <anim14_p2_missile_table, <anim15_p2_missile_table
+.byte <anim16_p2_missile_table, <anim17_p2_missile_table, <anim18_p2_missile_table, <anim19_p2_missile_table, <anim20_p2_missile_table
+.byte <anim21_p2_missile_table, <anim22_p2_missile_table, <anim23_p2_missile_table, <anim24_p2_missile_table, <anim25_p2_missile_table
+.byte <anim26_p2_missile_table, <anim27_p2_missile_table, <anim28_p2_missile_table, <anim29_p2_missile_table
+anim_menu_m2_hi:
+.byte >anim1_p2_missile_table,  >anim2_p2_missile_table,  >anim3_p2_missile_table,  >anim4_p2_missile_table,  >anim5_p2_missile_table
+.byte >anim6_p2_missile_table,  >anim7_p2_missile_table,  >anim8_p2_missile_table,  >anim9_p2_missile_table,  >anim10_p2_missile_table
+.byte >anim11_p2_missile_table, >anim12_p2_missile_table, >anim13_p2_missile_table, >anim14_p2_missile_table, >anim15_p2_missile_table
+.byte >anim16_p2_missile_table, >anim17_p2_missile_table, >anim18_p2_missile_table, >anim19_p2_missile_table, >anim20_p2_missile_table
+.byte >anim21_p2_missile_table, >anim22_p2_missile_table, >anim23_p2_missile_table, >anim24_p2_missile_table, >anim25_p2_missile_table
+.byte >anim26_p2_missile_table, >anim27_p2_missile_table, >anim28_p2_missile_table, >anim29_p2_missile_table
 anim_menu_name_lo:
 .byte <anim_name_1,  <anim_name_2,  <anim_name_3,  <anim_name_4,  <anim_name_5
 .byte <anim_name_6,  <anim_name_7,  <anim_name_8,  <anim_name_9,  <anim_name_10
